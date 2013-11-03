@@ -1,5 +1,5 @@
 <?php
-namespace Coxis\App\Admin\Libs\Form\Widgets;
+namespace App\Admin\Libs\Form\Widgets;
 
 class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 	public function render($options=array()) {

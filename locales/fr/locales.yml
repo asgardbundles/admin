@@ -52,8 +52,8 @@ Administrator created with success.: Administrateur créé avec succès.
 %s administrators deleted.: %s administrateurs supprimés.
 Administrator deleted with succes.: Administrateur supprimé avec succès.
 Invalid username or password.: Utilisateur ou mot de passe invalide.
-'Your username/password: :credentials': 'Votre nom d\'utilisateur/mot de passe: :credentials'
-Your username/password were sent to you by email.: Votre nom d\'utilisateur/mot de passe vous a été envoyé par email
+"Your username/password: :credentials": "Votre nom d'utilisateur/mot de passe: :credentials"
+"Your username/password were sent to you by email.": "Votre nom d'utilisateur/mot de passe vous a été envoyé par email"
 Element updated with success.: Elément modifié avec succès.
 Element created with success.: Elément créé avec succès.
 %s elements deleted.: %s éléments supprimés avec succès.

@@ -1,5 +1,5 @@
 <?php
-namespace Coxis\App\Admin\Libs;
+namespace App\Admin\Libs;
 
 class CoxisAdmin {
 	public static function getModelFor($controller) {

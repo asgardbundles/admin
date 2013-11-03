@@ -1,5 +1,5 @@
 <?php
-namespace Coxis\App\Admin\Libs\Controller;
+namespace App\Admin\Libs\Controller;
 
 abstract class ModelAdminController extends AdminParentController {
 	static $_model = null;#todo model variable name or model name ?

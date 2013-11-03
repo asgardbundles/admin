@@ -1,9 +1,8 @@
 <?php
 if(!defined('_ENV_'))
 	define('_ENV_', 'test');
-require_once(dirname(__FILE__).'/../../../coxis/core/core.php');
-// \Config::set('bundle_directories', array_merge(\Config::get('bundle_directories'), array('tests/app')));
-\BundlesManager::loadBundles();
+require_once(_CORE_DIR_.'core.php');
+\Coxis::load();
 
 class AdminTest extends PHPUnit_Framework_TestCase {
 	public function setUp(){
@@ -28,4 +27,3 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 	public function test0() {
 	}
 }
-?>
