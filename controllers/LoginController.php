@@ -1,7 +1,7 @@
 <?php
-namespace App\Admin\Controllers;
+namespace Coxis\Admin\Controllers;
 
-class LoginController extends \App\Core\Controller {
+class LoginController extends \Coxis\Core\Controller {
 	public function configure() {
 		$this->layout = false;
 	}

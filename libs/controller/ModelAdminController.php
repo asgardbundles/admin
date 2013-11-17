@@ -1,5 +1,5 @@
 <?php
-namespace App\Admin\Libs\Controller;
+namespace Coxis\Admin\Libs\Controller;
 
 abstract class ModelAdminController extends AdminParentController {
 	protected static $_model = null;

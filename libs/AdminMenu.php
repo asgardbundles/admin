@@ -1,5 +1,5 @@
 <?php
-namespace App\Admin\Libs;
+namespace Coxis\Admin\Libs;
 
 class AdminMenu {
 	protected static $instance;

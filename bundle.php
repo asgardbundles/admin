@@ -1,9 +1,9 @@
 <?php
-namespace App\Admin;
+namespace Coxis\Admin;
 
 class Bundle extends \Coxis\Core\BundleLoader {
 	public function run() {
-		\App\Imagecache\Libs\ImageCache::addPreset('admin_thumb', array(
+		\Coxis\Imagecache\Libs\ImageCache::addPreset('admin_thumb', array(
 			'resize'	=>	array(
 				'height'	=>	100,
 				'force'	=>	false
