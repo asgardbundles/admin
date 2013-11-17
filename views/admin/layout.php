@@ -33,29 +33,10 @@
 				<div class="hdrr"></div>
 				<h1><a href=".."><?php echo \App\Value\Models\Value::val('name') ?></a></h1>
 				
-				<!-- <img src="<?php echo URL::to('') ?>" style="height:80px; float:left; margin-left:-50px; margin-top:-10px;"> -->
 				<ul id="nav">
 					<li><a href="#"><?php echo __('Dashboard') ?></a></li>
 					<?php
-					if(!function_exists('showMenu')) {
-					function showMenu($menu) {
-						foreach($menu as $item) {
-							if(is_array($item))
-							?>
-							<li><a href="<?php echo $item['link'] ?>"><?php echo $item['label'] ?></a>
-							<?php
-							if(isset($item['childs']) && $item['childs']) {
-								echo '<ul>';
-								showMenu($item['childs']);
-								echo '</ul>';
-							}
-							?>
-							</li>
-							<?php
-						}
-					}
-					}
-					showMenu(\App\Admin\Libs\AdminMenu::$menu);
+					\App\Admin\Libs\AdminMenu::instance()->showMenu();
 					?>
 				</ul>
 				<p class="user"><a href=".."><?php echo __('See website') ?></a> | <a href="logout"><?php echo __('Disconnect') ?></a></p>

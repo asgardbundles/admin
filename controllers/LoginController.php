@@ -3,7 +3,7 @@ namespace App\Admin\Controllers;
 
 class LoginController extends \App\Core\Controller {
 	public function configure() {
-		\Memory::set('layout', false);
+		$this->layout = false;
 	}
 	
 	/**
@@ -41,24 +41,5 @@ class LoginController extends \App\Core\Controller {
 		\Cookie::remove('coxis_remember');
 		\Session::remove('admin_id');
 		return \Response::redirect('');
-	}
-	
-	/**
-	@Route('admin/forgotten')
-	*/
-	public function forgottenAction($request) {
-		#todo
-		Email::generate(
-			Config::get('website', 'email'), 
-			'Mot de pase oublié', 
-			Config::get('website', 'email'), 
-			__(
-				'Your username/password: :credentials',
-				array('credentials'=>Config::get('admin', 'username').'/'.Config::get('admin', 'password'))
-			)
-		)->send();
-		
-		\Flash::addSuccess(__('Your username/password were sent to you by email.'));
-		$this->setRelativeView('login.php');
 	}
 }

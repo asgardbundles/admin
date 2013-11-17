@@ -25,5 +25,11 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 // libs/form/SimpleAdminForm.php
 
 	public function test0() {
+		$browser = new Browser;
+		$this->assertEquals($browser->get('admin')->getCode(), 401);
+
+		$browser = new Browser;
+		$browser->session['admin_id'] = 1;
+		$this->assertEquals($browser->get('admin')->getCode(), 200);
 	}
 }

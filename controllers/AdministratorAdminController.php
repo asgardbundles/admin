@@ -6,7 +6,6 @@ namespace App\Admin\Controllers;
 */
 class AdministratorAdminController extends \App\Admin\Libs\Controller\ModelAdminController {
 	static $_model = 'administrator';
-	static $_models = 'administrators';
 	
 	function __construct() {
 		$this->_messages = array(

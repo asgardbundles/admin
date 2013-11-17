@@ -2,10 +2,6 @@
 namespace App\Admin;
 
 class Bundle extends \Coxis\Core\BundleLoader {
-	public function load($queue) {
-		parent::load();
-	}
-
 	public function run() {
 		\App\Imagecache\Libs\ImageCache::addPreset('admin_thumb', array(
 			'resize'	=>	array(

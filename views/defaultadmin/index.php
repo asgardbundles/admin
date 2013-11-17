@@ -27,7 +27,7 @@
 
 <ul id="dash-menu">
 	<?php \Flash::showAll() ?>
-	<?php foreach(AdminMenu::$home as $link): ?>
+	<?php foreach(AdminMenu::instance()->home as $link): ?>
 	<li>
 		<a href="<?php echo $link['link'] ?>"><img src="<?php echo $link['img'] ?>"></a>
 		<a class="title" href="<?php echo $link['link'] ?>"><?php echo $link['title'] ?></a>

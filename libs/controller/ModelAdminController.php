@@ -2,9 +2,9 @@
 namespace App\Admin\Libs\Controller;
 
 abstract class ModelAdminController extends AdminParentController {
-	static $_model = null;#todo model variable name or model name ?
-	static $_models = null;
-	static $_index = null;
+	protected static $_model = null;
+	protected static $_singular = null;
+	protected static $_plural = null;
 	protected static $_hooks = array();
 	
 	function __construct() {
@@ -15,25 +15,20 @@ abstract class ModelAdminController extends AdminParentController {
 			'deleted'				=>	__('Element deleted with success.'),
 		);
 
-		#trigger the model behaviors coxisadmin hook
-		$model = static::$_model;
-		$model_behaviors = $model::getDefinition()->behaviors();
-		foreach($model_behaviors as $behavior => $params) {
-			if($params)
-				\Hook::trigger('behaviors_coxisadmin_'.$behavior, static::getControllerName());
-		}
+		\Hook::trigger('coxisadmin', get_called_class());
 
-		if(static::$_models == null)
-			static::$_models = basename(strtolower(static::$_model.'s'));
+		if(static::$_singular === null)
+			static::$_singular = strtolower(\Coxis\Utils\NamespaceUtils::basename(static::$_model));
+		if(static::$_plural === null)
+			static::$_plural = static::$_singular.'s';
 		if(isset($this->_messages))
 			$this->_messages = array_merge($this->__messages, $this->_messages);
 		else
 			$this->_messages = $this->__messages;
-		static::$_index = static::$_index ? static::$_index:basename(static::$_models);
 	}
 	
 	public static function getModel() {
-		return preg_replace('/^\\\/', '', static::$_model);
+		return static::$_model;
 	}
 	
 	public static function getIndexURL() {
@@ -49,7 +44,7 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function indexAction($request) {
 		$_model = static::$_model;
-		$_models = static::$_models;
+		$_plural = static::$_plural;
 		
 		$this->searchForm = new \Coxis\Form\Form(array('method'=>'get'));
 		$this->searchForm->search = new \Coxis\Form\Fields\TextField;
@@ -80,7 +75,6 @@ abstract class ModelAdminController extends AdminParentController {
 		}
 		
 		$conditions = array();
-		#todo with new orm
 		#Search
 		if(GET::get('search')) {
 			$conditions['or'] = array();
@@ -109,7 +103,7 @@ abstract class ModelAdminController extends AdminParentController {
 
 		$this->paginator = null;
 
-		$this->$_models = $this->orm->paginate(
+		$this->$_plural = $this->orm->paginate(
 			GET::get('page', 1),
 			10,
 			$this->paginator
@@ -120,14 +114,14 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route(':id/edit')
 	*/
 	public function editAction($request) {
+		$_singular = static::$_singular;
 		$_model = static::$_model;
-		$modelName = strtolower(basename($_model));#todo namespace utils
 		
-		if(!($this->$modelName = $_model::load($request['id'])))
+		if(!($this->{$_singular} = $_model::load($request['id'])))
 			throw new NotFoundException;
-		$this->original = clone $this->$modelName;
+		$this->original = clone $this->{$_singular};
 
-		$this->form = $this->formConfigure($this->$modelName);
+		$this->form = $this->formConfigure($this->{$_singular});
 	
 		if($this->form->isSent()) {
 			try {
@@ -152,15 +146,14 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route('new')
 	*/
 	public function newAction($request) {
+		$_singular = static::$_singular;
 		$_model = static::$_model;
-		$modelName = strtolower(basename($_model));#todo
 		
-		$this->$modelName = new $_model;
-		$this->original = clone $this->$modelName;
+		$this->{$_singular} = new $_model;
+		$this->original = clone $this->{$_singular};
 	
-		$this->form = $this->formConfigure($this->$modelName);
+		$this->form = $this->formConfigure($this->{$_singular});
 	
-		#todo
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
@@ -168,7 +161,7 @@ abstract class ModelAdminController extends AdminParentController {
 				if(\POST::has('send'))
 					return Server::has('HTTP_REFERER') && Server::get('HTTP_REFERER') !== \URL::full() ? \Response::back():\Response::redirect($this->url_for('index'));
 				else
-					return \Response::redirect('admin/'.static::$_index.'/'.$this->$modelName->id.'/edit');
+					return \Response::redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
 			} catch(\Coxis\Form\FormException $e) {
 				\Flash::addError($this->form->getGeneralErrors());
 				\Response::setCode(400);
@@ -192,7 +185,7 @@ abstract class ModelAdminController extends AdminParentController {
 			\Flash::addError($this->_messages['unexisting']) :
 			\Flash::addSuccess($this->_messages['deleted']);
 			
-		return \Response::redirect('admin/'.static::$_index);
+		return \Response::redirect($this->url_for('index'));
 	}
 	
 	/**
@@ -200,12 +193,13 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function deleteSingleFileAction($request) {
 		$_model = static::$_model;
+		$_singular = static::$_singular;
 		
-		if(!($this->$_model = $_model::load($request['id'])))
+		if(!($this->{$_singular} = $_model::load($request['id'])))
 			$this->forward404();
 			
 		$file = $request['file'];
-		$this->$_model->$file->delete();
+		$this->{$_singular}->$file->delete();
 		\Flash::addSuccess(__('File deleted with success.'));
 		return \Response::back();
 	}
@@ -215,8 +209,8 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function addFileAction($request) {
 		Memory::set('layout', false);
-		$modelName = static::$_model;;
-		if(!($model = $modelName::load($request['id'])))
+		$_model = static::$_model;;
+		if(!($model = $_model::load($request['id'])))
 			$this->forward404();
 		if(!$model->hasProperty($request['file']))
 			$this->forward404();
@@ -243,8 +237,8 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route(':id/:file/delete/:pos')
 	*/
 	public function deleteFileAction($request) {
-		$modelName = static::$_model;
-		if(!($model = $modelName::load($request['id'])))
+		$_model = static::$_model;
+		if(!($model = $_model::load($request['id'])))
 			$this->forward404();
 		if(!$model->hasProperty($request['file']))
 			$this->forward404();
@@ -274,8 +268,8 @@ abstract class ModelAdminController extends AdminParentController {
 	public static function addHook($hook) {
 		static::$_hooks[] = $hook;
 		
-		$hook['route'] = str_replace(':route', $hook['route'], \Router::getRouteFor(array(static::getControllerName(), 'hooks')));
-		$hook['controller'] = static::getControllerName();
+		$hook['route'] = str_replace(':route', $hook['route'], \Router::getRouteFor(array(get_called_class(), 'hooks')));
+		$hook['controller'] = get_called_class();
 		$hook['action'] = 'hooks';
 		\Router::addRoute($hook);
 	}
@@ -289,12 +283,10 @@ abstract class ModelAdminController extends AdminParentController {
 	})
 	*/
 	public function hooksAction($request) {
-		$modelName = static::$_model;
-		import($modelName);
-		
-		$controller = static::getControllerName();
+		$_model = static::$_model;
 
-		#todo sort hooks routes
+		$controller = get_called_class();
+
 		foreach(static::$_hooks as $hook) {
 			if($results = \Router::matchWith($hook['route'], $request['route'])) {
 				$newRequest = new \Coxis\Core\Request;
@@ -303,6 +295,6 @@ abstract class ModelAdminController extends AdminParentController {
 				return Controller::run($hook['controller'], $hook['action'], $newRequest);
 			}
 		}
-		throw new \Exception('Controller hook does not exist!');
+		throw new NotFoundException('Page not found');
 	}
 }

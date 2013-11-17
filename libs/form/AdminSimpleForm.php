@@ -44,10 +44,10 @@ class AdminSimpleForm extends Form {
 			if(isset($options['label']))
 				$label = $options['label'];
 
-			// if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
-			// 	|| get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
-			// 	$label .= '*';
-			#todo required field
+			if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
+				|| get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
+				$label .= '*';
+			
 			$str = '<p>
 				<label for="'.$options['id'].'">'.$label.'</label>';
 			if($error=$field->getError())
