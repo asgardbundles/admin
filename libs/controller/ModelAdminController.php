@@ -268,10 +268,10 @@ abstract class ModelAdminController extends AdminParentController {
 	public static function addHook($hook) {
 		static::$_hooks[] = $hook;
 		
-		$hook['route'] = str_replace(':route', $hook['route'], \Router::getRouteFor(array(get_called_class(), 'hooks')));
+		$hook['route'] = str_replace(':route', $hook['route'], \Resolver::getRouteFor(array(get_called_class(), 'hooks')));
 		$hook['controller'] = get_called_class();
 		$hook['action'] = 'hooks';
-		\Router::addRoute($hook);
+		\Resolver::addRoute($hook);
 	}
 	
 	/**

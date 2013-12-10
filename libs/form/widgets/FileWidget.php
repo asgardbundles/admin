@@ -9,7 +9,7 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 		if(isset($options['attrs']))
 			$attrs = $options['attrs'];
 
-		$str = HTMLHelper::tag('input', array(
+		$str = \Coxis\Form\HTMLHelper::tag('input', array(
 			'type'	=>	'file',
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
@@ -33,8 +33,11 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 				</p>';
 			}
 			
-			if($optional)
-				$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$model->id)).'">'. __('Delete').'</a><br/><br/>';
+			if($optional) {
+				try {
+					$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$model->id)).'">'. __('Delete').'</a><br/><br/>';
+				} catch(\Exception $e) {}
+			}
 		}
 
 		return $str;

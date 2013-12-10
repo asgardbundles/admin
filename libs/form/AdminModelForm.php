@@ -10,27 +10,27 @@ class AdminModelForm extends \Coxis\Form\ModelForm {
 
 		$this->setRenderCallback('text', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::text($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::text($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('textarea', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::textarea($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::textarea($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('password', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::password($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::password($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('select', function($field, $options) {
 			$options['attrs']['class'] = 'styled';
-			return HTMLWidget::select($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::select($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('date', function($field, $options) {
 			$options['attrs']['class'] = 'text date_picker text big';
-			return HTMLWidget::text($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::text($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('file', function($field, $options) {

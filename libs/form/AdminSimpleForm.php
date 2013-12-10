@@ -1,9 +1,9 @@
 <?php
 namespace Coxis\Admin\Libs\Form;
 
-class AdminSimpleForm extends Form {
-	function __construct($controller, $params=array()) {
-		parent::__construct($params);
+class AdminSimpleForm extends \Coxis\Form\Form {
+	function __construct($controller, $name=null, $params=array()) {
+		parent::__construct($name, $params);
 		$this->controller = $controller;
 
 		$this->setRenderCallback('text', function($field, $options) {
@@ -44,9 +44,11 @@ class AdminSimpleForm extends Form {
 			if(isset($options['label']))
 				$label = $options['label'];
 
-			if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
-				|| get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
-				$label .= '*';
+			if($form instanceof \Coxis\Form\ModelForm) {
+				if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
+					|| get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
+					$label .= '*';
+			}
 			
 			$str = '<p>
 				<label for="'.$options['id'].'">'.$label.'</label>';
