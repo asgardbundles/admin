@@ -14,17 +14,17 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
 		)+$attrs);
-		$model = $this->field->form->getModel();
+		$entity = $this->field->form->getEntity();
 		$name = $this->field->name;		
-		$optional = !$model->property($name)->required;
-		$path = $model->$name->get();
+		$optional = !$entity->property($name)->required;
+		$path = $entity->$name->get();
 
-		if($model->isNew())
+		if($entity->isNew())
 			return null;
 		$uid = Tools::randstr(10);
 		HTML::code_js("
 			$(function(){
-				multiple_upload('$uid', '".$this->field->form->controller->url_for('addFile', array('id' => $model->id, 'file' => $name), false)."');
+				multiple_upload('$uid', '".$this->field->form->controller->url_for('addFile', array('id' => $entity->id, 'file' => $name), false)."');
 			});");
 		ob_start();
 		?>
@@ -43,7 +43,7 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 			
 			<div class="block_content">
 				<script>
-				window.parentID = <?php echo $model->id ?>;
+				window.parentID = <?php echo $entity->id ?>;
 				</script>
 				<ul class="imglist">
 					<?php
@@ -54,7 +54,7 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 						<img src="<?php echo \URL::to('imagecache/admin_thumb/'.$one_path) ?>" alt=""/>
 						<ul>
 							<li class="view"><a href="<?php echo \URL::to($one_path) ?>" rel="facebox">Voir</a></li>
-							<li class="delete"><a href="<?php echo $this->field->form->controller->url_for('deleteFile', array('id' => $model->id, 'pos' => $i, 'file' => $name), false) ?>">Suppr.</a></li>
+							<li class="delete"><a href="<?php echo $this->field->form->controller->url_for('deleteFile', array('id' => $entity->id, 'pos' => $i, 'file' => $name), false) ?>">Suppr.</a></li>
 						</ul>
 					</li>
 					<?php
@@ -81,11 +81,11 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 
 		<?php
 		return ob_get_clean();
-		/*if($model->isOld() && $model->$name && $model->$name->exists()) {
-			$path = $model->$name->get();
+		/*if($entity->isOld() && $entity->$name && $entity->$name->exists()) {
+			$path = $entity->$name->get();
 			if(!$path)
 				return $str;
-			if($model->property($name)->filetype == 'image') {
+			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
 					<a href="../'.$path.'" rel="facebox"><img src="'.\URL::to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
@@ -97,7 +97,7 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 			}
 			
 			if($optional)
-				$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$model->id)).'">'. __('Delete').'</a><br/><br/>';
+				$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$entity->id)).'">'. __('Delete').'</a><br/><br/>';
 		}*/
 
 		// return $str;

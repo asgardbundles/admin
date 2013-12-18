@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Models;
+namespace Coxis\Admin\Entities;
 
-class Administrator extends \Coxis\Core\Model {
+class Administrator extends \Coxis\Core\Entity {
 	public static $properties = array(
 		'username'    => array(
 			'length'    =>    100,
@@ -28,7 +28,7 @@ class Administrator extends \Coxis\Core\Model {
 	);
 
 	public static function configure($definition) {
-		$definition->hookBefore('destroy', function($chain, $model) {
+		$definition->hookBefore('destroy', function($chain, $entity) {
 			if(Administrator::count() < 2)
 				$chain->stop();
 		});

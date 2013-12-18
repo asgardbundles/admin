@@ -2,8 +2,8 @@
 namespace Coxis\Admin\Libs;
 
 class CoxisAdmin {
-	public static function getModelFor($controller) {
-		return $controller::getModel();
+	public static function getEntityFor($controller) {
+		return $controller::getEntity();
 	}
 
 	public static function getIndexURLFor($controller) {

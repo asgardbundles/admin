@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=7" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?php echo \Coxis\Value\Models\Value::val('name') ?> &#9679; <?php echo __('Administration') ?></title>
+	<title><?php echo \Coxis\Value\Entities\Value::val('name') ?> &#9679; <?php echo __('Administration') ?></title>
 	<base href="<?php echo \URL::to('admin/') ?>" />
 	<style type="text/css" media="all">
 		@import url("../admin/css/admin.css");
@@ -31,7 +31,7 @@
 			<div id="header">
 				<div class="hdrl"></div>
 				<div class="hdrr"></div>
-				<h1><a href=".."><?php echo \Coxis\Value\Models\Value::val('name') ?></a></h1>
+				<h1><a href=".."><?php echo \Coxis\Value\Entities\Value::val('name') ?></a></h1>
 				
 				<ul id="nav">
 					<li><a href="#"><?php echo __('Dashboard') ?></a></li>

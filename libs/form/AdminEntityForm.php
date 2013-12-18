@@ -1,11 +1,11 @@
 <?php
 namespace Coxis\Admin\Libs\Form;
 
-class AdminModelForm extends \Coxis\Form\ModelForm {
+class AdminEntityForm extends \Coxis\Form\EntityForm {
 	public $controller = null;
 
-	function __construct($model, $controller, $params=array()) {
-		parent::__construct($model, $params);
+	function __construct($entity, $controller, $params=array()) {
+		parent::__construct($entity, $params);
 		$this->controller = $controller;
 
 		$this->setRenderCallback('text', function($field, $options) {
@@ -48,8 +48,8 @@ class AdminModelForm extends \Coxis\Form\ModelForm {
 
 			$label = __($label);
 
-			if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
-				|| \Coxis\Utils\Tools::get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
+			if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required
+				|| \Coxis\Utils\Tools::array_get($form->getEntity()->getDefinition()->relations, array($field->name, 'required')))
 				$label .= '*';
 			$str = '<p>
 				<label for="'.$options['id'].'">'.$label.'</label>';

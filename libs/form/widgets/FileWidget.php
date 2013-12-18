@@ -14,15 +14,15 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
 		)+$attrs);
-		$model = $this->field->form->getModel();
+		$entity = $this->field->form->getEntity();
 		$name = $this->field->name;		
-		$optional = !$model->property($name)->required;
+		$optional = !$entity->property($name)->required;
 
-		if($model->isOld() && $model->$name && $model->$name->exists()) {
-			$path = $model->$name->get();
-			if(!$path || !$model->$name->saved)
+		if($entity->isOld() && $entity->$name && $entity->$name->exists()) {
+			$path = $entity->$name->get();
+			if(!$path || !$entity->$name->saved)
 				return $str;
-			if($model->property($name)->filetype == 'image') {
+			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
 					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\URL::to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
@@ -35,7 +35,7 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 			
 			if($optional) {
 				try {
-					$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$model->id)).'">'. __('Delete').'</a><br/><br/>';
+					$str .= '<a href="'.$this->field->form->controller->url_for('deleteSingleFile', array('file'=>$name, 'id'=>$entity->id)).'">'. __('Delete').'</a><br/><br/>';
 				} catch(\Exception $e) {}
 			}
 		}

@@ -2,7 +2,7 @@
 if(!defined('_ENV_'))
 	define('_ENV_', 'test');
 require_once(_CORE_DIR_.'core.php');
-\Coxis::load();
+Coxis\Core\App::load();
 
 class AdminTest extends PHPUnit_Framework_TestCase {
 	public function setUp(){
@@ -18,18 +18,22 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 // libs/AdminMenu.php
 // libs/CoxisAdmin.php
 // libs/controller/AdminParentController.php
-// libs/controller/ModelAdminController.php
+// libs/controller/EntityAdminController.php
 // libs/form/AdminForm.php
-// libs/form/AdminModelForm.php
+// libs/form/AdminEntityForm.php
 // libs/form/AdminSimpleForm.php
 // libs/form/SimpleAdminForm.php
 
 	public function test0() {
-		$browser = new Browser;
-		$this->assertEquals($browser->get('admin')->getCode(), 401);
+		$browser = new Coxis\Utils\Browser;
 
-		$browser = new Browser;
-		$browser->session['admin_id'] = 1;
-		$this->assertEquals($browser->get('admin')->getCode(), 200);
+		$this->assertEquals($browser->get('admin')->getCode(), 401); #not allowed
+
+		$this->assertEquals($browser->post('admin/login', array('username'=>'admin', 'password'=>'admin'))->getCode(), 200); #login
+
+		$this->assertEquals($browser->get('admin')->getCode(), 200); #allowed
+
+		$browser->get('admin/logout');
+		$this->assertEquals($browser->get('admin')->getCode(), 401); #not allowed
 	}
 }

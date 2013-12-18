@@ -44,9 +44,9 @@ class AdminSimpleForm extends \Coxis\Form\Form {
 			if(isset($options['label']))
 				$label = $options['label'];
 
-			if($form instanceof \Coxis\Form\ModelForm) {
-				if($form->getModel()->hasProperty($field->name) && $form->getModel()->property($field->name)->required
-					|| get($form->getModel()->getDefinition()->relations, array($field->name, 'required')))
+			if($form instanceof \Coxis\Form\EntityForm) {
+				if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required
+					|| get($form->getEntity()->getDefinition()->relations, array($field->name, 'required')))
 					$label .= '*';
 			}
 			

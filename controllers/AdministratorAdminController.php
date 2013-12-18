@@ -4,8 +4,8 @@ namespace Coxis\Admin\Controllers;
 /**
 @Prefix('admin/administrators')
 */
-class AdministratorAdminController extends \Coxis\Admin\Libs\Controller\ModelAdminController {
-	static $_model = 'administrator';
+class AdministratorAdminController extends \Coxis\Admin\Libs\Controller\EntityAdminController {
+	static $_entity = 'Coxis\Admin\Entities\Administrator';
 	
 	function __construct() {
 		$this->_messages = array(
@@ -13,13 +13,13 @@ class AdministratorAdminController extends \Coxis\Admin\Libs\Controller\ModelAdm
 			'created'				=>	__('Administrator created with success.'),
 			'many_deleted'	=>	__('%s administrators deleted.'),
 			'deleted'				=>	__('Administrator deleted with succes.'),
-			'unexisting'			=>	__('Cet administrator does not exist.'),
+			'unexisting'			=>	__('This administrator does not exist.'),
 		);
 		parent::__construct();
 	}
 	
-	public function formConfigure($model) {
-		$form = new AdminModelForm($model, $this);
+	public function formConfigure($entity) {
+		$form = new AdminEntityForm($entity, $this);
 		$form->password->params['view']['value'] = '';
 		
 		return $form;

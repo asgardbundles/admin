@@ -1,8 +1,8 @@
 <?php
 namespace Coxis\Admin\Libs\Controller;
 
-abstract class ModelAdminController extends AdminParentController {
-	protected static $_model = null;
+abstract class EntityAdminController extends AdminParentController {
+	protected static $_entity = null;
 	protected static $_singular = null;
 	protected static $_plural = null;
 	protected static $_hooks = array();
@@ -15,10 +15,12 @@ abstract class ModelAdminController extends AdminParentController {
 			'deleted'				=>	__('Element deleted with success.'),
 		);
 
-		\Hook::trigger('coxisadmin', get_called_class());
+		$_entity = static::$_entity;
+		$definition = $_entity::getDefinition();
+		$definition->trigger('coxisadmin', get_called_class());
 
 		if(static::$_singular === null)
-			static::$_singular = strtolower(\Coxis\Utils\NamespaceUtils::basename(static::$_model));
+			static::$_singular = strtolower(\Coxis\Utils\NamespaceUtils::basename(static::$_entity));
 		if(static::$_plural === null)
 			static::$_plural = static::$_singular.'s';
 		if(isset($this->_messages))
@@ -27,8 +29,8 @@ abstract class ModelAdminController extends AdminParentController {
 			$this->_messages = $this->__messages;
 	}
 	
-	public static function getModel() {
-		return static::$_model;
+	public static function getEntity() {
+		return static::$_entity;
 	}
 	
 	public static function getIndexURL() {
@@ -43,7 +45,8 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route('')
 	*/
 	public function indexAction($request) {
-		$_model = static::$_model;
+		$_entity = static::$_entity;
+		$definition = $_entity::getDefinition();
 		$_plural = static::$_plural;
 		
 		$this->searchForm = new \Coxis\Form\Form(array('method'=>'get'));
@@ -52,15 +55,15 @@ abstract class ModelAdminController extends AdminParentController {
 		//submitted
 		$controller = $this;
 		$this->globalactions = array();
-		\Hook::trigger('coxis_'.static::$_model.'_globalactions', array(&$this->globalactions), function($chain, &$actions) use($_model, $controller) {
+		$definition->trigger('coxisadmin_globalactions', array(&$this->globalactions), function($chain, &$actions) use($_entity, $controller) {
 			$actions[] = array(
 				'text'	=>	__('Delete'),
 				'value'	=>	'delete',
-				'callback'	=>	function() use($_model, $controller) {
+				'callback'	=>	function() use($_entity, $controller) {
 					$i = 0;
 					if(POST::size()>1) {
 						foreach(POST::get('id') as $id)
-							$i += $_model::destroyOne($id);
+							$i += $_entity::destroyOne($id);
 					
 						Flash::addSuccess(sprintf($controller->_messages['many_deleted'], $i));
 					}
@@ -78,7 +81,7 @@ abstract class ModelAdminController extends AdminParentController {
 		#Search
 		if(GET::get('search')) {
 			$conditions['or'] = array();
-			foreach($_model::propertyNames() as $property) {
+			foreach($_entity::propertyNames() as $property) {
 				if($property != 'id')
 					$conditions['or']["`$property` LIKE ?"] = '%'.GET::get('search').'%';
 			}
@@ -92,14 +95,14 @@ abstract class ModelAdminController extends AdminParentController {
 			}
 		}
 
-		$pagination = $_model::where($conditions);
+		$pagination = $_entity::where($conditions);
 		
 		if(isset(static::$_orderby))
 			$pagination->orderBy(static::$_orderby);
 
 		$this->orm = $pagination;
 
-		\Hook::trigger('coxisadmin_'.static::$_model.'_index', array($this));
+		$definition->trigger('coxisadmin_index', array($this));
 
 		$this->paginator = null;
 
@@ -115,10 +118,10 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function editAction($request) {
 		$_singular = static::$_singular;
-		$_model = static::$_model;
+		$_entity = static::$_entity;
 		
-		if(!($this->{$_singular} = $_model::load($request['id'])))
-			throw new NotFoundException;
+		if(!($this->{$_singular} = $_entity::load($request['id'])))
+			throw new \Coxis\Core\Exceptions\NotFoundException;
 		$this->original = clone $this->{$_singular};
 
 		$this->form = $this->formConfigure($this->{$_singular});
@@ -147,9 +150,9 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function newAction($request) {
 		$_singular = static::$_singular;
-		$_model = static::$_model;
+		$_entity = static::$_entity;
 		
-		$this->{$_singular} = new $_model;
+		$this->{$_singular} = new $_entity;
 		$this->original = clone $this->{$_singular};
 	
 		$this->form = $this->formConfigure($this->{$_singular});
@@ -179,9 +182,9 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route(':id/delete')
 	*/
 	public function deleteAction($request) {
-		$_model = static::$_model;
+		$_entity = static::$_entity;
 		
-		!$_model::destroyOne($request['id']) ?
+		!$_entity::destroyOne($request['id']) ?
 			\Flash::addError($this->_messages['unexisting']) :
 			\Flash::addSuccess($this->_messages['deleted']);
 			
@@ -192,10 +195,10 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route(':id/deletefile/:file')
 	*/
 	public function deleteSingleFileAction($request) {
-		$_model = static::$_model;
+		$_entity = static::$_entity;
 		$_singular = static::$_singular;
 		
-		if(!($this->{$_singular} = $_model::load($request['id'])))
+		if(!($this->{$_singular} = $_entity::load($request['id'])))
 			$this->forward404();
 			
 		$file = $request['file'];
@@ -209,10 +212,10 @@ abstract class ModelAdminController extends AdminParentController {
 	*/
 	public function addFileAction($request) {
 		Memory::set('layout', false);
-		$_model = static::$_model;;
-		if(!($model = $_model::load($request['id'])))
+		$_entity = static::$_entity;;
+		if(!($entity = $_entity::load($request['id'])))
 			$this->forward404();
-		if(!$model->hasProperty($request['file']))
+		if(!$entity->hasProperty($request['file']))
 			$this->forward404();
 			
 		if(\File::has('Filedata')) {
@@ -223,12 +226,12 @@ abstract class ModelAdminController extends AdminParentController {
 			return \Response::setCode(500)->setContent(__('An error occured.'));
 
 		$file = $request['file'];
-		$model->$file->add($files);
-		$model->save(array(), true);
-		$final_paths = $model->$file->get();
+		$entity->$file->add($files);
+		$entity->save(array(), true);
+		$final_paths = $entity->$file->get();
 		$response = array(
 			'url' => array_pop($final_paths),
-			'deleteurl' => $this->url_for('deleteFile', array('id' => $model->id, 'pos' => sizeof($final_paths)+1, 'file' => $request['file'])),
+			'deleteurl' => $this->url_for('deleteFile', array('id' => $entity->id, 'pos' => sizeof($final_paths)+1, 'file' => $request['file'])),
 		);
 		return \Response::setCode(200)->setContent(json_encode($response));
 	}
@@ -237,29 +240,29 @@ abstract class ModelAdminController extends AdminParentController {
 	@Route(':id/:file/delete/:pos')
 	*/
 	public function deleteFileAction($request) {
-		$_model = static::$_model;
-		if(!($model = $_model::load($request['id'])))
+		$_entity = static::$_entity;
+		if(!($entity = $_entity::load($request['id'])))
 			$this->forward404();
-		if(!$model->hasProperty($request['file']))
+		if(!$entity->hasProperty($request['file']))
 			$this->forward404();
 		
 		$file = $request['file'];
 			
-		$paths = $model->$file->get();
+		$paths = $entity->$file->get();
 
 		if(!isset($paths[$request['pos']-1]))
-			return \Response::redirect($this->url_for('edit', array('id' => $model->id)), false)->setCode(404);
+			return \Response::redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
 		
 		try {
-			$model->$file->delete($request['pos']-1);
-			$model->save(null, true);
+			$entity->$file->delete($request['pos']-1);
+			$entity->save(null, true);
 			\Flash::addSuccess(__('File deleted with success.'));
 		} catch(\Exception $e) {
 			\Flash::addError(__('There was an error in the file'));
 		}
 		
 		try {
-			return \Response::redirect($this->url_for('edit', array('id' => $model->id)), false);
+			return \Response::redirect($this->url_for('edit', array('id' => $entity->id)), false);
 		} catch(\Exception $e) {
 			return \Response::redirect($this->url_for('index'), false);
 		}
@@ -283,18 +286,18 @@ abstract class ModelAdminController extends AdminParentController {
 	})
 	*/
 	public function hooksAction($request) {
-		$_model = static::$_model;
+		$_entity = static::$_entity;
 
 		$controller = get_called_class();
 
 		foreach(static::$_hooks as $hook) {
-			if($results = \Router::matchWith($hook['route'], $request['route'])) {
+			if($results = \Resolver::matchWith($hook['route'], $request['route'])) {
 				$newRequest = new \Coxis\Core\Request;
 				$newRequest->parentController = $controller;
 				$newRequest->params = array_merge($request->params, $results);
 				return Controller::run($hook['controller'], $hook['action'], $newRequest);
 			}
 		}
-		throw new NotFoundException('Page not found');
+		throw new \Coxis\Core\Exceptions\NotFoundException('Page not found');
 	}
 }

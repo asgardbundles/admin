@@ -2,32 +2,28 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2><?php echo __('Administrators') ?></h2>
+					<h2><a href="<?php echo $this->url_for('index') ?>"><?php echo __('Administrators') ?></a></h2>
 					<ul>
 						<li><a href="administrators/new"><?php echo __('Add') ?></a></li>
 					</ul>
 					<?php
-					//~ $form = Form::create()->open('', 'get');
-					//~ $form->input('search', '', array('placeholder' => 'Search'));
-					//~ $form->close();
+					$searchForm->open();
+					echo $searchForm->search->def(array(
+						'attrs'	=>	array(
+							'class'	=>	'text',
+							'placeholder'	=>	'Search',
+						),
+					));
+					$searchForm->close();
 					?>
 				</div>		<!-- .block_head ends -->
 				
 				<div class="block_content">
-					<div class="block small left" style="width:79%">
-			
-						<div class="block_head">
-							<div class="bheadl"></div>
-							<div class="bheadr"></div>
-							
-							<h2><a href="administrators"><?php echo __('List') ?></a></h2>	
-						</div>		<!-- .block_head ends -->
-						
-						
-						
-						<div class="block_content">
-					<?php Flash::showAll() ?>
+					<?php \Coxis\Core\Flash::showAll() ?>
 				
+					<?php if(sizeof($administrators) == 0): ?>
+					<div style="text-align:center; font-weight:bold"><?php echo __('No element') ?></div>
+					<?php else: ?>
 					<form action="" method="post">
 						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
 							<thead>
@@ -75,40 +71,8 @@
 						?>
 						
 					</form>
-				
+							<?php endif ?>
 						</div>		<!-- .block_content ends -->
-						
-						<div class="bendl"></div>
-						<div class="bendr"></div>
-						
-					</div>
-					
-					<div class="block small right" style="width:19%">
-			
-						<div class="block_head">
-							<div class="bheadl"></div>
-							<div class="bheadr"></div>
-							
-							<h2><?php echo __('Filters') ?></h2>
-						</div>		<!-- .block_head ends -->
-						
-						
-						
-						<div class="block_content">
-						
-							<?php
-							//~ $form = FilterForm::create()->open('', 'get');
-							//~ $form->input('username', 'Utilisateur');
-							//~ $form->close();
-							?>
-							
-						</div>		<!-- .block_content ends -->
-						
-						<div class="bendl"></div>
-						<div class="bendr"></div>
-						
-					</div>
-				
 				<div class="bendl"></div>
 				<div class="bendr"></div>
-			</div>		<!-- .block ends -->
+			</div>		
