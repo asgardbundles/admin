@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Libs\Form\Widgets;
+namespace Asgard\Admin\Libs\Form\Widgets;
 
-class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
+class FileWidget extends \Asgard\Form\Widgets\HTMLWidget {
 	public function render($options=array()) {
 		$options = $this->options+$options;
 		
@@ -9,7 +9,7 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 		if(isset($options['attrs']))
 			$attrs = $options['attrs'];
 
-		$str = \Coxis\Form\HTMLHelper::tag('input', array(
+		$str = \Asgard\Form\HTMLHelper::tag('input', array(
 			'type'	=>	'file',
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
@@ -24,7 +24,7 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 				return $str;
 			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
-					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\Coxis\Core\App::get('url')->to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
+					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\Asgard\Core\App::get('url')->to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
 			}
 			else {

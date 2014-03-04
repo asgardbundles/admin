@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Controllers;
+namespace Asgard\Admin\Controllers;
 
-class DefaultAdminController extends \Coxis\Admin\Libs\Controller\AdminParentController {
+class DefaultAdminController extends \Asgard\Admin\Libs\Controller\AdminParentController {
 	public function configure() {
 		return parent::configure();
 	}

@@ -1,5 +1,5 @@
 <?php
-namespace Coxis\Admin\Libs\Controller;
+namespace Asgard\Admin\Libs\Controller;
 
 abstract class EntityAdminController extends AdminParentController {
 	protected static $_entity = null;
@@ -17,10 +17,10 @@ abstract class EntityAdminController extends AdminParentController {
 
 		$_entity = static::$_entity;
 		$definition = $_entity::getDefinition();
-		$definition->trigger('coxisadmin', get_called_class());
+		$definition->trigger('asgardadmin', get_called_class());
 
 		if(static::$_singular === null)
-			static::$_singular = strtolower(\Coxis\Utils\NamespaceUtils::basename(static::$_entity));
+			static::$_singular = strtolower(\Asgard\Utils\NamespaceUtils::basename(static::$_entity));
 		if(static::$_plural === null)
 			static::$_plural = static::$_singular.'s';
 		if(isset($this->_messages))
@@ -49,19 +49,19 @@ abstract class EntityAdminController extends AdminParentController {
 		$definition = $_entity::getDefinition();
 		$_plural = static::$_plural;
 		
-		$this->searchForm = new \Coxis\Form\Form(array('method'=>'get'));
-		$this->searchForm->search = new \Coxis\Form\Fields\TextField;
+		$this->searchForm = new \Asgard\Form\Form(array('method'=>'get'));
+		$this->searchForm->search = new \Asgard\Form\Fields\TextField;
 	
 		//submitted
 		$controller = $this;
 		$this->globalactions = array();
-		$definition->trigger('coxisadmin_globalactions', array(&$this->globalactions), function($chain, &$actions) use($_entity, $controller) {
+		$definition->trigger('asgardadmin_globalactions', array(&$this->globalactions), function($chain, &$actions) use($_entity, $controller) {
 			$actions[] = array(
 				'text'	=>	__('Delete'),
 				'value'	=>	'delete',
 				'callback'	=>	function() use($_entity, $controller) {
 					$i = 0;
-					if(\Coxis\Core\App::get('post')->size()>1) {
+					if(\Asgard\Core\App::get('post')->size()>1) {
 						foreach(POST::get('id') as $id)
 							$i += $_entity::destroyOne($id);
 					
@@ -71,7 +71,7 @@ abstract class EntityAdminController extends AdminParentController {
 			);
 		});
 		foreach($this->globalactions as $action) {
-			if(\Coxis\Core\App::get('post')->get('action') == $action['value']) {
+			if(\Asgard\Core\App::get('post')->get('action') == $action['value']) {
 				$cb = $action['callback'];
 				$cb();
 			}
@@ -79,17 +79,17 @@ abstract class EntityAdminController extends AdminParentController {
 		
 		$conditions = array();
 		#Search
-		if(\Coxis\Core\App::get('get')->get('search')) {
+		if(\Asgard\Core\App::get('get')->get('search')) {
 			$conditions['or'] = array();
 			foreach($_entity::propertyNames() as $property) {
 				if($property != 'id')
-					$conditions['or']["`$property` LIKE ?"] = '%'.\Coxis\Core\App::get('get')->get('search').'%';
+					$conditions['or']["`$property` LIKE ?"] = '%'.\Asgard\Core\App::get('get')->get('search').'%';
 			}
 		}
 		#Filters
-		elseif(\Coxis\Core\App::get('get')->get('filter')) {
+		elseif(\Asgard\Core\App::get('get')->get('filter')) {
 			$conditions['and'] = array();
-			foreach(\Coxis\Core\App::get('get')->get('filter') as $key=>$value) {
+			foreach(\Asgard\Core\App::get('get')->get('filter') as $key=>$value) {
 				if($value)
 					$conditions['and']["`$key` LIKE ?"] = '%'.$value.'%';
 			}
@@ -102,10 +102,10 @@ abstract class EntityAdminController extends AdminParentController {
 
 		$this->orm = $pagination;
 
-		$definition->trigger('coxisadmin_index', array($this));
+		$definition->trigger('asgardadmin_index', array($this));
 
 		$this->orm->paginate(
-			\Coxis\Core\App::get('get')->get('page', 1),
+			\Asgard\Core\App::get('get')->get('page', 1),
 			10
 		);
 		$this->$_plural = $this->orm->get();
@@ -120,7 +120,7 @@ abstract class EntityAdminController extends AdminParentController {
 		$_entity = static::$_entity;
 		
 		if(!($this->{$_singular} = $_entity::load($request['id'])))
-			throw new \Coxis\Core\Exceptions\NotFoundException;
+			throw new \Asgard\Core\Exceptions\NotFoundException;
 		$this->original = clone $this->{$_singular};
 
 		$this->form = $this->formConfigure($this->{$_singular});
@@ -128,20 +128,20 @@ abstract class EntityAdminController extends AdminParentController {
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
-				\Coxis\Core\App::get('flash')->addSuccess($this->_messages['modified']);
-				if(\Coxis\Core\App::get('post')->has('send'))
-					return \Coxis\Core\App::get('server')->get('HTTP_REFERER') !== \Coxis\Core\App::get('url')->full()
+				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['modified']);
+				if(\Asgard\Core\App::get('post')->has('send'))
+					return \Asgard\Core\App::get('server')->get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
 					       ?
-					       \Coxis\Core\App::get('response')->back()
-					       :\Coxis\Core\App::get('response')->redirect($this->url_for('index'));
-			} catch(\Coxis\Form\FormException $e) {
-				\Coxis\Core\App::get('flash')->addError($this->form->getGeneralErrors());
-				\Coxis\Core\App::get('response')->setCode(400);
+					       \Asgard\Core\App::get('response')->back()
+					       :\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
+			} catch(\Asgard\Form\FormException $e) {
+				\Asgard\Core\App::get('flash')->addError($this->form->getGeneralErrors());
+				\Asgard\Core\App::get('response')->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
-			\Coxis\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Coxis\Core\App::get('response')->setCode(400);
+			\Asgard\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
+			\Asgard\Core\App::get('response')->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -162,21 +162,21 @@ abstract class EntityAdminController extends AdminParentController {
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
-				\Coxis\Core\App::get('flash')->addSuccess($this->_messages['created']);
-				if(\Coxis\Core\App::get('post')->has('send'))
-					return Server::get('HTTP_REFERER') !== \Coxis\Core\App::get('url')->full()
-					? \Coxis\Core\App::get('response')->back()
-					:\Coxis\Core\App::get('response')->redirect($this->url_for('index'));
+				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['created']);
+				if(\Asgard\Core\App::get('post')->has('send'))
+					return Server::get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
+					? \Asgard\Core\App::get('response')->back()
+					:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
 				else
-					return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
-			} catch(\Coxis\Form\FormException $e) {
-				\Coxis\Core\App::get('flash')->addError($this->form->getGeneralErrors());
-				\Coxis\Core\App::get('response')->setCode(400);
+					return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
+			} catch(\Asgard\Form\FormException $e) {
+				\Asgard\Core\App::get('flash')->addError($this->form->getGeneralErrors());
+				\Asgard\Core\App::get('response')->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
-			\Coxis\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Coxis\Core\App::get('response')->setCode(400);
+			\Asgard\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
+			\Asgard\Core\App::get('response')->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -189,10 +189,10 @@ abstract class EntityAdminController extends AdminParentController {
 		$_entity = static::$_entity;
 		
 		!$_entity::destroyOne($request['id']) ?
-			\Coxis\Core\App::get('flash')->addError($this->_messages['unexisting']) :
-			\Coxis\Core\App::get('flash')->addSuccess($this->_messages['deleted']);
+			\Asgard\Core\App::get('flash')->addError($this->_messages['unexisting']) :
+			\Asgard\Core\App::get('flash')->addSuccess($this->_messages['deleted']);
 			
-		return \Coxis\Core\App::get('response')->redirect($this->url_for('index'));
+		return \Asgard\Core\App::get('response')->redirect($this->url_for('index'));
 	}
 	
 	/**
@@ -207,8 +207,8 @@ abstract class EntityAdminController extends AdminParentController {
 			
 		$file = $request['file'];
 		$this->{$_singular}->$file->delete();
-		\Coxis\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
-		return \Coxis\Core\App::get('response')->back();
+		\Asgard\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
+		return \Asgard\Core\App::get('response')->back();
 	}
 	
 	/**
@@ -222,12 +222,12 @@ abstract class EntityAdminController extends AdminParentController {
 		if(!$entity->hasProperty($request['file']))
 			$this->forward404();
 			
-		if(\Coxis\Core\App::get('file')->has('Filedata')) {
-			$file = \Coxis\Core\App::get('file')->get('Filedata');
+		if(\Asgard\Core\App::get('file')->has('Filedata')) {
+			$file = \Asgard\Core\App::get('file')->get('Filedata');
 			$files = array($request['file'] => array('name'=>$file['name'], 'path'=>$file['tmp_name']));
 		}
 		else
-			return \Coxis\Core\App::get('response')->setCode(500)->setContent(__('An error occured.'));
+			return \Asgard\Core\App::get('response')->setCode(500)->setContent(__('An error occured.'));
 
 		$file = $request['file'];
 		$entity->$file->add($files);
@@ -237,7 +237,7 @@ abstract class EntityAdminController extends AdminParentController {
 			'url' => array_pop($final_paths),
 			'deleteurl' => $this->url_for('deleteFile', array('id' => $entity->id, 'pos' => sizeof($final_paths)+1, 'file' => $request['file'])),
 		);
-		return \Coxis\Core\App::get('response')->setCode(200)->setContent(json_encode($response));
+		return \Asgard\Core\App::get('response')->setCode(200)->setContent(json_encode($response));
 	}
 	
 	/**
@@ -255,30 +255,30 @@ abstract class EntityAdminController extends AdminParentController {
 		$paths = $entity->$file->get();
 
 		if(!isset($paths[$request['pos']-1]))
-			return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
+			return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
 		
 		try {
 			$entity->$file->delete($request['pos']-1);
 			$entity->save(null, true);
-			\Coxis\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
+			\Asgard\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
 		} catch(\Exception $e) {
-			\Coxis\Core\App::get('flash')->addError(__('There was an error in the file'));
+			\Asgard\Core\App::get('flash')->addError(__('There was an error in the file'));
 		}
 		
 		try {
-			return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false);
+			return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false);
 		} catch(\Exception $e) {
-			return \Coxis\Core\App::get('response')->redirect($this->url_for('index'), false);
+			return \Asgard\Core\App::get('response')->redirect($this->url_for('index'), false);
 		}
 	}
 	
 	public static function addHook($hook) {
 		static::$_hooks[] = $hook;
 		
-		$hook['route'] = str_replace(':route', $hook['route'], \Coxis\Core\Controller::getRouteFor(array(get_called_class(), 'hooks')));
+		$hook['route'] = str_replace(':route', $hook['route'], \Asgard\Core\Controller::getRouteFor(array(get_called_class(), 'hooks')));
 		$hook['controller'] = get_called_class();
 		$hook['action'] = 'hooks';
-		\Coxis\Core\App::get('resolver')->addRoute($hook);
+		\Asgard\Core\App::get('resolver')->addRoute($hook);
 	}
 	
 	/**
@@ -295,13 +295,13 @@ abstract class EntityAdminController extends AdminParentController {
 		$controller = get_called_class();
 
 		foreach(static::$_hooks as $hook) {
-			if($results = \Coxis\Core\App::get('resolver')->matchWith($hook['route'], $request['route'])) {
-				$newRequest = new \Coxis\Core\Request;
+			if($results = \Asgard\Core\App::get('resolver')->matchWith($hook['route'], $request['route'])) {
+				$newRequest = new \Asgard\Core\Request;
 				$newRequest->parentController = $controller;
 				$newRequest->params = array_merge($request->params, $results);
 				return Controller::run($hook['controller'], $hook['action'], $newRequest);
 			}
 		}
-		throw new \Coxis\Core\Exceptions\NotFoundException('Page not found');
+		throw new \Asgard\Core\Exceptions\NotFoundException('Page not found');
 	}
 }

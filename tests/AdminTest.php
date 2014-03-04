@@ -2,11 +2,11 @@
 if(!defined('_ENV_'))
 	define('_ENV_', 'test');
 require_once(_CORE_DIR_.'core.php');
-Coxis\Core\App::load();
+Asgard\Core\App::load();
 
 class AdminTest extends PHPUnit_Framework_TestCase {
 	public function setUp(){
-		DB::import('tests/coxis.sql');
+		DB::import('tests/asgard.sql');
 	}
 
 	public function tearDown(){}
@@ -16,7 +16,7 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 // controllers/DefaultAdminController.php
 // controllers/LoginController.php
 // libs/AdminMenu.php
-// libs/CoxisAdmin.php
+// libs/AsgardAdmin.php
 // libs/controller/AdminParentController.php
 // libs/controller/EntityAdminController.php
 // libs/form/AdminForm.php
@@ -25,7 +25,7 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 // libs/form/SimpleAdminForm.php
 
 	public function test0() {
-		$browser = new Coxis\Utils\Browser;
+		$browser = new Asgard\Utils\Browser;
 
 		$this->assertEquals($browser->get('admin')->getCode(), 401); #not allowed
 

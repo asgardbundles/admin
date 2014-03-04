@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Entities;
+namespace Asgard\Admin\Entities;
 
-class Administrator extends \Coxis\Core\Entity {
+class Administrator extends \Asgard\Core\Entity {
 	public static $properties = array(
 		'username'    => array(
 			'length'    =>    100,
@@ -12,7 +12,7 @@ class Administrator extends \Coxis\Core\Entity {
 				'hidden'	=>	true,
 			),
 			'length'    =>    100,
-			'setHook'  =>    array('Coxis\Utils\Tools', 'hash'),
+			'setHook'  =>    array('Asgard\Utils\Tools', 'hash'),
 		),
 	);
 

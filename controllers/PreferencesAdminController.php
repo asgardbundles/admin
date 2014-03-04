@@ -1,10 +1,10 @@
 <?php
-namespace Coxis\Admin\Controllers;
+namespace Asgard\Admin\Controllers;
 
 /**
 @Prefix('admin/preferences')
 */
-class PreferencesAdminController extends \Coxis\Admin\Libs\Controller\AdminParentController {
+class PreferencesAdminController extends \Asgard\Admin\Libs\Controller\AdminParentController {
 	function __construct() {
 		$this->_messages = array(
 			'modified'			=>	__('Preferences modified with success.'),
@@ -12,13 +12,13 @@ class PreferencesAdminController extends \Coxis\Admin\Libs\Controller\AdminParen
 	}
 	
 	public function formConfigure() {
-		$form = new \Coxis\Admin\Libs\Form\AdminSimpleForm($this, 'preferences');
+		$form = new \Asgard\Admin\Libs\Form\AdminSimpleForm($this, 'preferences');
 		
 		$form->values = array();
 		$vars = array('email', 'head_script');
 		foreach($vars as $valueName) {
-			$value = \Coxis\Value\Entities\Data::fetch($valueName);
-			$a = new \Coxis\Admin\Libs\Form\AdminEntityForm($value, $this);
+			$value = \Asgard\Value\Entities\Data::fetch($valueName);
+			$a = new \Asgard\Admin\Libs\Form\AdminEntityForm($value, $this);
 			unset($a->key);
 			$form->values[$value->key] = $a;
 		}
@@ -35,10 +35,10 @@ class PreferencesAdminController extends \Coxis\Admin\Libs\Controller\AdminParen
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
-				\Coxis\Core\App::get('flash')->addSuccess($this->_messages['modified']);
-				if(\Coxis\Core\App::get('post')->has('send'))
-					return \Coxis\Core\App::get('response')->back();
-			} catch(\Coxis\Form\FormException $e) {}
+				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['modified']);
+				if(\Asgard\Core\App::get('post')->has('send'))
+					return \Asgard\Core\App::get('response')->back();
+			} catch(\Asgard\Form\FormException $e) {}
 		}
 		
 		$this->setRelativeView('form.php');

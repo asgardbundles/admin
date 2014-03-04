@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Libs;
+namespace Asgard\Admin\Libs;
 
-class CoxisAdmin {
+class AsgardAdmin {
 	public static function getEntityFor($controller) {
 		return $controller::getEntity();
 	}

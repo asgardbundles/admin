@@ -1,11 +1,11 @@
 <?php
-namespace Coxis\Admin\Controllers;
+namespace Asgard\Admin\Controllers;
 
 /**
 @Prefix('admin/administrators')
 */
-class AdministratorAdminController extends \Coxis\Admin\Libs\Controller\EntityAdminController {
-	static $_entity = 'Coxis\Admin\Entities\Administrator';
+class AdministratorAdminController extends \Asgard\Admin\Libs\Controller\EntityAdminController {
+	static $_entity = 'Asgard\Admin\Entities\Administrator';
 	
 	function __construct() {
 		$this->_messages = array(

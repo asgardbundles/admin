@@ -1,7 +1,7 @@
 <?php
-namespace Coxis\Admin\Controllers;
+namespace Asgard\Admin\Controllers;
 
-class AdminController extends \Coxis\Core\Controller {
+class AdminController extends \Asgard\Core\Controller {
 	public function layout($content) {
 		$this->content = $content;
 		$this->setRelativeView('layout.php');

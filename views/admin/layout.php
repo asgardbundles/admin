@@ -3,8 +3,8 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=7" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?php echo \Coxis\Data\Entities\Data::val('name') ?> &#9679; <?php echo __('Administration') ?></title>
-	<base href="<?php echo \Coxis\Core\App::get('url')->to('admin/') ?>" />
+	<title><?php echo \Asgard\Data\Entities\Data::val('name') ?> &#9679; <?php echo __('Administration') ?></title>
+	<base href="<?php echo \Asgard\Core\App::get('url')->to('admin/') ?>" />
 	<style type="text/css" media="all">
 		@import url("../admin/css/admin.css");
 		@import url("../admin/css/jquery.wysiwyg.css");
@@ -31,12 +31,12 @@
 			<div id="header">
 				<div class="hdrl"></div>
 				<div class="hdrr"></div>
-				<h1><a href=".."><?php echo \Coxis\Data\Entities\Data::val('name') ?></a></h1>
+				<h1><a href=".."><?php echo \Asgard\Data\Entities\Data::val('name') ?></a></h1>
 				
 				<ul id="nav">
 					<li><a href="#"><?php echo __('Dashboard') ?></a></li>
 					<?php
-					\Coxis\Admin\Libs\AdminMenu::instance()->showMenu();
+					\Asgard\Admin\Libs\AdminMenu::instance()->showMenu();
 					?>
 				</ul>
 				<p class="user"><a href=".."><?php echo __('See website') ?></a> | <a href="logout"><?php echo __('Disconnect') ?></a></p>
@@ -45,7 +45,7 @@
 			<?php echo $content; ?>
 			
 			<div id="footer">
-				<p class="left"><?php echo \Coxis\Core\App::get('config')->get('admin', 'footer') ?></p>
+				<p class="left"><?php echo \Asgard\Core\App::get('config')->get('admin', 'footer') ?></p>
 			</div>
 		</div>			
 	</div>	
@@ -85,7 +85,7 @@
 		'onComplete' : function(event, ID, fileObj, response, data) {
 			var result = JSON.parse(response);
 			$('.imglist').append('<li>\
-							<img src="<?php echo \Coxis\Core\App::get('url')->to('imagecache/admin_thumb/') ?>'+result.url+'" alt=""/>\
+							<img src="<?php echo \Asgard\Core\App::get('url')->to('imagecache/admin_thumb/') ?>'+result.url+'" alt=""/>\
 							<ul>\
 								<li class="view"><a href="../'+result.url+'" rel="facebox"><?php echo __('See') ?></a></li>\
 								<li class="delete"><a href="'+result.deleteurl+'"><?php echo __('Delete') ?></a></li>\
@@ -103,6 +103,6 @@
 	};
 	// ]]>
 	</script>
-	<?php \Coxis\Core\App::get('html')->printAll() ?>
+	<?php \Asgard\Core\App::get('html')->printAll() ?>
 </body>
 </html>

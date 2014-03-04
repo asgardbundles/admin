@@ -26,8 +26,8 @@
 </style>
 
 <ul id="dash-menu">
-	<?php \Coxis\Core\App::get('flash')->showAll() ?>
-	<?php foreach(Coxis\Admin\Libs\AdminMenu::instance()->home as $link): ?>
+	<?php \Asgard\Core\App::get('flash')->showAll() ?>
+	<?php foreach(Asgard\Admin\Libs\AdminMenu::instance()->home as $link): ?>
 	<li>
 		<a href="<?php echo $link['link'] ?>"><img src="<?php echo $link['img'] ?>"></a>
 		<a class="title" href="<?php echo $link['link'] ?>"><?php echo $link['title'] ?></a>
