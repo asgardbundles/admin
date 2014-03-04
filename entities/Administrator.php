@@ -12,7 +12,7 @@ class Administrator extends \Coxis\Core\Entity {
 				'hidden'	=>	true,
 			),
 			'length'    =>    100,
-			'setHook'  =>    array('tools', 'hash'),
+			'setHook'  =>    array('Coxis\Utils\Tools', 'hash'),
 		),
 	);
 

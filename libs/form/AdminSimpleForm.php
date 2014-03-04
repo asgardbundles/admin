@@ -8,27 +8,27 @@ class AdminSimpleForm extends \Coxis\Form\Form {
 
 		$this->setRenderCallback('text', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::text($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::text($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('textarea', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::textarea($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::textarea($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('password', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
-			return HTMLWidget::password($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::password($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('select', function($field, $options) {
 			$options['attrs']['class'] = 'styled';
-			return HTMLWidget::select($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::select($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('date', function($field, $options) {
 			$options['attrs']['class'] = 'text date_picker text big';
-			return HTMLWidget::text($field->getName(), $field->getValue(), $options);
+			return \Coxis\Form\Widgets\HTMLWidget::text($field->getName(), $field->getValue(), $options);
 		});
 
 		$this->setRenderCallback('\Coxis\Form\Widgets\File', function($field, $options) {
@@ -98,8 +98,8 @@ class AdminSimpleForm extends \Coxis\Form\Form {
 		echo '<hr/>';
 		if($submits === null)
 			echo '<p>
-				'.HTMLWidget::submit('stay', __('Save'), array('attrs'=>array('class'=>'submit long')))->render().'
-				'.HTMLWidget::submit('send', __('Save & Leave'), array('attrs'=>array('class'=>'submit long')))->render().'
+				'.\Coxis\Form\Widgets\HTMLWidget::submit('stay', __('Save'), array('attrs'=>array('class'=>'submit long')))->render().'
+				'.\Coxis\Form\Widgets\HTMLWidget::submit('send', __('Save & Leave'), array('attrs'=>array('class'=>'submit long')))->render().'
 			</p>';
 		else
 			echo $submits;

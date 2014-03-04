@@ -98,8 +98,8 @@ class AdminEntityForm extends \Coxis\Form\EntityForm {
 		echo '<hr/>';
 		if($submits === null)
 			echo '<p>
-				'.HTMLWidget::submit('stay', __('Save'), array('attrs'=>array('class'=>'submit long')))->render().'
-				'.HTMLWidget::submit('send', __('Save & Leave'), array('attrs'=>array('class'=>'submit long')))->render().'
+				'.\Coxis\Form\Widgets\HTMLWidget::submit('stay', __('Save'), array('attrs'=>array('class'=>'submit long')))->render().'
+				'.\Coxis\Form\Widgets\HTMLWidget::submit('send', __('Save & Leave'), array('attrs'=>array('class'=>'submit long')))->render().'
 			</p>';
 		else
 			echo $submits;

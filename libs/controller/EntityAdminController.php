@@ -61,7 +61,7 @@ abstract class EntityAdminController extends AdminParentController {
 				'value'	=>	'delete',
 				'callback'	=>	function() use($_entity, $controller) {
 					$i = 0;
-					if(POST::size()>1) {
+					if(\Coxis\Core\App::get('post')->size()>1) {
 						foreach(POST::get('id') as $id)
 							$i += $_entity::destroyOne($id);
 					
@@ -71,7 +71,7 @@ abstract class EntityAdminController extends AdminParentController {
 			);
 		});
 		foreach($this->globalactions as $action) {
-			if(POST::get('action') == $action['value']) {
+			if(\Coxis\Core\App::get('post')->get('action') == $action['value']) {
 				$cb = $action['callback'];
 				$cb();
 			}
@@ -79,17 +79,17 @@ abstract class EntityAdminController extends AdminParentController {
 		
 		$conditions = array();
 		#Search
-		if(GET::get('search')) {
+		if(\Coxis\Core\App::get('get')->get('search')) {
 			$conditions['or'] = array();
 			foreach($_entity::propertyNames() as $property) {
 				if($property != 'id')
-					$conditions['or']["`$property` LIKE ?"] = '%'.GET::get('search').'%';
+					$conditions['or']["`$property` LIKE ?"] = '%'.\Coxis\Core\App::get('get')->get('search').'%';
 			}
 		}
 		#Filters
-		elseif(GET::get('filter')) {
+		elseif(\Coxis\Core\App::get('get')->get('filter')) {
 			$conditions['and'] = array();
-			foreach(GET::get('filter') as $key=>$value) {
+			foreach(\Coxis\Core\App::get('get')->get('filter') as $key=>$value) {
 				if($value)
 					$conditions['and']["`$key` LIKE ?"] = '%'.$value.'%';
 			}
@@ -104,13 +104,12 @@ abstract class EntityAdminController extends AdminParentController {
 
 		$definition->trigger('coxisadmin_index', array($this));
 
-		$this->paginator = null;
-
-		$this->$_plural = $this->orm->paginate(
-			GET::get('page', 1),
-			10,
-			$this->paginator
+		$this->orm->paginate(
+			\Coxis\Core\App::get('get')->get('page', 1),
+			10
 		);
+		$this->$_plural = $this->orm->get();
+		$this->paginator = $this->orm->getPaginator();
 	}
 	
 	/**
@@ -129,17 +128,20 @@ abstract class EntityAdminController extends AdminParentController {
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
-				\Flash::addSuccess($this->_messages['modified']);
-				if(\POST::has('send'))
-					return Server::has('HTTP_REFERER') && Server::get('HTTP_REFERER') !== \URL::full() ? \Response::back():\Response::redirect($this->url_for('index'));
+				\Coxis\Core\App::get('flash')->addSuccess($this->_messages['modified']);
+				if(\Coxis\Core\App::get('post')->has('send'))
+					return \Coxis\Core\App::get('server')->get('HTTP_REFERER') !== \Coxis\Core\App::get('url')->full()
+					       ?
+					       \Coxis\Core\App::get('response')->back()
+					       :\Coxis\Core\App::get('response')->redirect($this->url_for('index'));
 			} catch(\Coxis\Form\FormException $e) {
-				\Flash::addError($this->form->getGeneralErrors());
-				\Response::setCode(400);
+				\Coxis\Core\App::get('flash')->addError($this->form->getGeneralErrors());
+				\Coxis\Core\App::get('response')->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
-			\Flash::addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Response::setCode(400);
+			\Coxis\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
+			\Coxis\Core\App::get('response')->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -160,19 +162,21 @@ abstract class EntityAdminController extends AdminParentController {
 		if($this->form->isSent()) {
 			try {
 				$this->form->save();
-				\Flash::addSuccess($this->_messages['created']);
-				if(\POST::has('send'))
-					return Server::has('HTTP_REFERER') && Server::get('HTTP_REFERER') !== \URL::full() ? \Response::back():\Response::redirect($this->url_for('index'));
+				\Coxis\Core\App::get('flash')->addSuccess($this->_messages['created']);
+				if(\Coxis\Core\App::get('post')->has('send'))
+					return Server::get('HTTP_REFERER') !== \Coxis\Core\App::get('url')->full()
+					? \Coxis\Core\App::get('response')->back()
+					:\Coxis\Core\App::get('response')->redirect($this->url_for('index'));
 				else
-					return \Response::redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
+					return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
 			} catch(\Coxis\Form\FormException $e) {
-				\Flash::addError($this->form->getGeneralErrors());
-				\Response::setCode(400);
+				\Coxis\Core\App::get('flash')->addError($this->form->getGeneralErrors());
+				\Coxis\Core\App::get('response')->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
-			\Flash::addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Response::setCode(400);
+			\Coxis\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
+			\Coxis\Core\App::get('response')->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -185,10 +189,10 @@ abstract class EntityAdminController extends AdminParentController {
 		$_entity = static::$_entity;
 		
 		!$_entity::destroyOne($request['id']) ?
-			\Flash::addError($this->_messages['unexisting']) :
-			\Flash::addSuccess($this->_messages['deleted']);
+			\Coxis\Core\App::get('flash')->addError($this->_messages['unexisting']) :
+			\Coxis\Core\App::get('flash')->addSuccess($this->_messages['deleted']);
 			
-		return \Response::redirect($this->url_for('index'));
+		return \Coxis\Core\App::get('response')->redirect($this->url_for('index'));
 	}
 	
 	/**
@@ -203,8 +207,8 @@ abstract class EntityAdminController extends AdminParentController {
 			
 		$file = $request['file'];
 		$this->{$_singular}->$file->delete();
-		\Flash::addSuccess(__('File deleted with success.'));
-		return \Response::back();
+		\Coxis\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
+		return \Coxis\Core\App::get('response')->back();
 	}
 	
 	/**
@@ -218,12 +222,12 @@ abstract class EntityAdminController extends AdminParentController {
 		if(!$entity->hasProperty($request['file']))
 			$this->forward404();
 			
-		if(\File::has('Filedata')) {
-			$file = \File::get('Filedata');
+		if(\Coxis\Core\App::get('file')->has('Filedata')) {
+			$file = \Coxis\Core\App::get('file')->get('Filedata');
 			$files = array($request['file'] => array('name'=>$file['name'], 'path'=>$file['tmp_name']));
 		}
 		else
-			return \Response::setCode(500)->setContent(__('An error occured.'));
+			return \Coxis\Core\App::get('response')->setCode(500)->setContent(__('An error occured.'));
 
 		$file = $request['file'];
 		$entity->$file->add($files);
@@ -233,7 +237,7 @@ abstract class EntityAdminController extends AdminParentController {
 			'url' => array_pop($final_paths),
 			'deleteurl' => $this->url_for('deleteFile', array('id' => $entity->id, 'pos' => sizeof($final_paths)+1, 'file' => $request['file'])),
 		);
-		return \Response::setCode(200)->setContent(json_encode($response));
+		return \Coxis\Core\App::get('response')->setCode(200)->setContent(json_encode($response));
 	}
 	
 	/**
@@ -251,30 +255,30 @@ abstract class EntityAdminController extends AdminParentController {
 		$paths = $entity->$file->get();
 
 		if(!isset($paths[$request['pos']-1]))
-			return \Response::redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
+			return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
 		
 		try {
 			$entity->$file->delete($request['pos']-1);
 			$entity->save(null, true);
-			\Flash::addSuccess(__('File deleted with success.'));
+			\Coxis\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
 		} catch(\Exception $e) {
-			\Flash::addError(__('There was an error in the file'));
+			\Coxis\Core\App::get('flash')->addError(__('There was an error in the file'));
 		}
 		
 		try {
-			return \Response::redirect($this->url_for('edit', array('id' => $entity->id)), false);
+			return \Coxis\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false);
 		} catch(\Exception $e) {
-			return \Response::redirect($this->url_for('index'), false);
+			return \Coxis\Core\App::get('response')->redirect($this->url_for('index'), false);
 		}
 	}
 	
 	public static function addHook($hook) {
 		static::$_hooks[] = $hook;
 		
-		$hook['route'] = str_replace(':route', $hook['route'], \Resolver::getRouteFor(array(get_called_class(), 'hooks')));
+		$hook['route'] = str_replace(':route', $hook['route'], \Coxis\Core\Controller::getRouteFor(array(get_called_class(), 'hooks')));
 		$hook['controller'] = get_called_class();
 		$hook['action'] = 'hooks';
-		\Resolver::addRoute($hook);
+		\Coxis\Core\App::get('resolver')->addRoute($hook);
 	}
 	
 	/**
@@ -291,7 +295,7 @@ abstract class EntityAdminController extends AdminParentController {
 		$controller = get_called_class();
 
 		foreach(static::$_hooks as $hook) {
-			if($results = \Resolver::matchWith($hook['route'], $request['route'])) {
+			if($results = \Coxis\Core\App::get('resolver')->matchWith($hook['route'], $request['route'])) {
 				$newRequest = new \Coxis\Core\Request;
 				$newRequest->parentController = $controller;
 				$newRequest->params = array_merge($request->params, $results);

@@ -10,36 +10,36 @@ class LoginController extends \Coxis\Core\Controller {
 	@Route('admin/login')
 	*/
 	public function loginAction($request) {
-		if(\Session::get('admin_id'))
+		if(\Coxis\Core\App::get('session')->get('admin_id'))
 			return $this->response->redirect('admin');
 	
 		$administrator = null;
-		if(\POST::has('username'))
-			$administrator = \Coxis\Admin\Entities\Administrator::where(array('username' => \POST::get('username'), 'password' => sha1(\Config::get('salt').\POST::get('password'))))->first();
-		elseif(\Cookie::has('coxis_remember')) {
-			$remember = \Cookie::get('coxis_remember');
+		if(\Coxis\Core\App::get('post')->has('username'))
+			$administrator = \Coxis\Admin\Entities\Administrator::where(array('username' => \Coxis\Core\App::get('post')->get('username'), 'password' => sha1(\Coxis\Core\App::get('config')->get('salt').\Coxis\Core\App::get('post')->get('password'))))->first();
+		elseif(\Coxis\Core\App::get('cookie')->has('coxis_remember')) {
+			$remember = \Coxis\Core\App::get('cookie')->get('coxis_remember');
 			$administrator = \Coxis\Admin\Entities\Administrator::where(array('MD5(CONCAT(username, \'-\', password))' => $remember))->first();
 		}
 		
 		if($administrator) {
-			\Session::set('admin_id', $administrator->id);
-			if(\POST::get('remember')=='yes')
+			\Coxis\Core\App::get('session')->set('admin_id', $administrator->id);
+			if(\Coxis\Core\App::get('post')->get('remember')=='yes')
 				\Cookie::set('coxis_remember', md5($administrator->username.'-'.$administrator->password));
-			if(\SESSION::has('redirect_to'))
-				return $this->response->redirect(\SESSION::get('redirect_to'), false);
+			if(\Coxis\Core\App::get('session')->has('redirect_to'))
+				return $this->response->redirect(\Coxis\Core\App::get('session')->get('redirect_to'), false);
 			else
 				return $this->response->redirect('admin');
 		}
-		elseif(\POST::has('username'))
-			\Flash::addError(__('Invalid username or password.'));
+		elseif(\Coxis\Core\App::get('post')->has('username'))
+			\Coxis\Core\App::get('flash')->addError(__('Invalid username or password.'));
 	}
 	
 	/**
 	@Route('admin/logout')
 	*/
 	public function logoutAction($request) {
-		\Cookie::remove('coxis_remember');
-		\Session::remove('admin_id');
+		\Coxis\Core\App::get('cookie')->remove('coxis_remember');
+		\Coxis\Core\App::get('session')->remove('admin_id');
 		return $this->response->redirect('');
 	}
 }

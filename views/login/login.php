@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?php echo Config::get('website', 'name') ?> &#9679; Login</title>
-	<base href="<?php echo URL::to('admin/') ?>" />
+	<title><?php echo \Coxis\Core\App::get('config')->get('website', 'name') ?> &#9679; Login</title>
+	<base href="<?php echo \Coxis\Core\App::get('url')->to('admin/') ?>" />
     <style type="text/css" media="all">
-		@import url("<?php echo URL::to('admin/css/admin.css') ?>");
+		@import url("<?php echo \Coxis\Core\App::get('url')->to('admin/css/admin.css') ?>");
     </style>
-	<!--[if lt IE 8]><style type="text/css" media="all">@import url("<?php echo URL::to('css/ie.css') ?>");</style><![endif]-->
+	<!--[if lt IE 8]><style type="text/css" media="all">@import url("<?php echo \Coxis\Core\App::get('url')->to('css/ie.css') ?>");</style><![endif]-->
 </head>
 <body>
 	<div id="hld">
@@ -18,11 +18,11 @@
 					<div class="bheadr"></div>
 					<h2>Login</h2>
 					<ul>
-						<li><a href="<?php echo URL::to('') ?>"><?php echo __('back to website') ?></a></li>
+						<li><a href="<?php echo \Coxis\Core\App::get('url')->to('') ?>"><?php echo __('back to website') ?></a></li>
 					</ul>
 				</div>		<!-- .block_head ends -->
 				<div class="block_content">
-					<?php Flash::showAll() ?>
+					<?php \Coxis\Core\App::get('flash')->showAll() ?>
 					<form action="login" method="post">
 						<p>
 							<label><?php echo __('Username:') ?></label> <br />

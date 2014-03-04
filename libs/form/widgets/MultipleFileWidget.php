@@ -51,9 +51,9 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 					foreach($path as $one_path):
 					?>
 					<li>
-						<img src="<?php echo \URL::to('imagecache/admin_thumb/'.$one_path) ?>" alt=""/>
+						<img src="<?php echo \Coxis\Core\App::get('url')->to('imagecache/admin_thumb/'.$one_path) ?>" alt=""/>
 						<ul>
-							<li class="view"><a href="<?php echo \URL::to($one_path) ?>" rel="facebox">Voir</a></li>
+							<li class="view"><a href="<?php echo \Coxis\Core\App::get('url')->to($one_path) ?>" rel="facebox">Voir</a></li>
 							<li class="delete"><a href="<?php echo $this->field->form->controller->url_for('deleteFile', array('id' => $entity->id, 'pos' => $i, 'file' => $name), false) ?>">Suppr.</a></li>
 						</ul>
 					</li>
@@ -87,7 +87,7 @@ class MultipleFileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 				return $str;
 			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
-					<a href="../'.$path.'" rel="facebox"><img src="'.\URL::to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
+					<a href="../'.$path.'" rel="facebox"><img src="'.\Coxis\Core\App::get('url')->to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
 			}
 			else {

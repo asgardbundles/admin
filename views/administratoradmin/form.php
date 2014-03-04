@@ -14,7 +14,7 @@
 					<?php echo !$administrator->isNew() ? $administrator:__('New') ?>
 					</a></p>
 				
-					<?php Flash::showSuccess() ?>
+					<?php \Coxis\Core\App::get('flash')->showSuccess() ?>
 					<?php $form->showErrors() ?>
 					
 					<?php

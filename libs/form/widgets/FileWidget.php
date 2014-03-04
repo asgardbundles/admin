@@ -24,7 +24,7 @@ class FileWidget extends \Coxis\Form\Widgets\HTMLWidget {
 				return $str;
 			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
-					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\URL::to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
+					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\Coxis\Core\App::get('url')->to(ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
 			}
 			else {
