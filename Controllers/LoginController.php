@@ -24,7 +24,7 @@ class LoginController extends \Asgard\Core\Controller {
 		if($administrator) {
 			\Asgard\Core\App::get('session')->set('admin_id', $administrator->id);
 			if(\Asgard\Core\App::get('post')->get('remember')=='yes')
-				\Cookie::set('asgard_remember', md5($administrator->username.'-'.$administrator->password));
+				\Asgard\Core\App::get('cookie')->set('asgard_remember', md5($administrator->username.'-'.$administrator->password));
 			if(\Asgard\Core\App::get('session')->has('redirect_to'))
 				return $this->response->redirect(\Asgard\Core\App::get('session')->get('redirect_to'), false);
 			else

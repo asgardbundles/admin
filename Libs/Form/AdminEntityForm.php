@@ -2,11 +2,11 @@
 namespace Asgard\Admin\Libs\Form;
 
 class AdminEntityForm extends \Asgard\Form\EntityForm {
-	public $controller = null;
+	public $_controller = null;
 
 	function __construct($entity, $controller, $params=array()) {
 		parent::__construct($entity, $params);
-		$this->controller = $controller;
+		$this->_controller = $controller;
 
 		$this->setRenderCallback('text', function($field, $options) {
 			$options['attrs']['class'] = 'text big';
@@ -65,11 +65,11 @@ class AdminEntityForm extends \Asgard\Form\EntityForm {
 	}
 
 	public function showErrors() {
-		if(!$this->errors)
+		if(!$this->_errors)
 			return;
 		$error_found = false;
-		foreach($this->errors as $field_name=>$errors) {
-			if(!$this->has($field_name) || is_subclass_of($this->$field_name, 'Asgard\Form\Fields\HiddenField')) {
+		foreach($this->_errors as $field_name=>$errors) {
+			if(!$this->has($field_name) || is_subclass_of($this->_{$field_name}, 'Asgard\Form\Fields\HiddenField')) {
 				if(!$error_found) {
 					echo '<div class="message errormsg">';
 					$error_found = true;

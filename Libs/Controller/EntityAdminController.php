@@ -49,7 +49,7 @@ abstract class EntityAdminController extends AdminParentController {
 		$definition = $_entity::getDefinition();
 		$_plural = static::$_plural;
 		
-		$this->searchForm = new \Asgard\Form\Form(array('method'=>'get'));
+		$this->searchForm = new \Asgard\Form\Form(null, array('method'=>'get'));
 		$this->searchForm->search = new \Asgard\Form\Fields\TextField;
 	
 		//submitted
@@ -131,9 +131,9 @@ abstract class EntityAdminController extends AdminParentController {
 				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['modified']);
 				if(\Asgard\Core\App::get('post')->has('send'))
 					return \Asgard\Core\App::get('server')->get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
-					       ?
-					       \Asgard\Core\App::get('response')->back()
-					       :\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
+						?
+						\Asgard\Core\App::get('response')->back()
+						:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
 			} catch(\Asgard\Form\FormException $e) {
 				\Asgard\Core\App::get('flash')->addError($this->form->getGeneralErrors());
 				\Asgard\Core\App::get('response')->setCode(400);
@@ -164,9 +164,9 @@ abstract class EntityAdminController extends AdminParentController {
 				$this->form->save();
 				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['created']);
 				if(\Asgard\Core\App::get('post')->has('send'))
-					return Server::get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
-					? \Asgard\Core\App::get('response')->back()
-					:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
+					return \Asgard\Core\App::get('server')->get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
+						? \Asgard\Core\App::get('response')->back()
+						:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
 				else
 					return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
 			} catch(\Asgard\Form\FormException $e) {
