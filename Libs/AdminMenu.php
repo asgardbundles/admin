@@ -13,7 +13,7 @@ class AdminMenu {
 		return static::$instance;
 	}
 
-	function __construct() {
+	public function __construct() {
 		$this->menu = array(array(
 			'label'	=>	__('Content'),
 			'link'	=>	'#',

@@ -7,7 +7,7 @@ abstract class EntityAdminController extends AdminParentController {
 	protected static $_plural = null;
 	protected static $_hooks = array();
 	
-	function __construct() {
+	public function __construct() {
 		$this->__messages = array(
 			'modified'			=>	__('Element updated with success.'),
 			'created'				=>	__('Element created with success.'),

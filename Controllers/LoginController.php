@@ -15,7 +15,7 @@ class LoginController extends \Asgard\Core\Controller {
 	
 		$administrator = null;
 		if(\Asgard\Core\App::get('post')->has('username'))
-			$administrator = \Asgard\Admin\Entities\Administrator::where(array('username' => \Asgard\Core\App::get('post')->get('username'), 'password' => sha1(\Asgard\Core\App::get('config')->get('salt').\Asgard\Core\App::get('post')->get('password'))))->first();
+			$administrator = \Asgard\Admin\Entities\Administrator::where(array('username' => \Asgard\Core\App::get('post')->get('username'), 'password' => sha1(\Asgard\Core\App::get('config')->get('key').\Asgard\Core\App::get('post')->get('password'))))->first();
 		elseif(\Asgard\Core\App::get('cookie')->has('asgard_remember')) {
 			$remember = \Asgard\Core\App::get('cookie')->get('asgard_remember');
 			$administrator = \Asgard\Admin\Entities\Administrator::where(array('MD5(CONCAT(username, \'-\', password))' => $remember))->first();

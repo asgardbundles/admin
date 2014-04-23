@@ -1,15 +1,19 @@
 <?php
-if(!defined('_ENV_'))
-	define('_ENV_', 'test');
-require_once(_CORE_DIR_.'core.php');
-Asgard\Core\App::load();
+namespace Asgard\Admin\Tests;
 
-class AdminTest extends PHPUnit_Framework_TestCase {
-	public function setUp(){
-		DB::import('tests/asgard.sql');
+class AdminTest extends \PHPUnit_Framework_TestCase {
+	public static function setUpBeforeClass() {
+		if(!defined('_ENV_'))
+			define('_ENV_', 'test');
+		require_once(_CORE_DIR_.'core.php');
+		\Asgard\Core\App::instance(true)->config->set('bundles', array(
+			new \Asgard\Admin\Bundle,
+			new \Asgard\Validation\Bundle,
+		));
+		\Asgard\Core\App::loadDefaultApp();
+
+		\Asgard\Core\App::get('db')->import(__DIR__.'/admin.sql');
 	}
-
-	public function tearDown(){}
 
 // controllers/AdminController.php
 // controllers/AdministratorAdminController.php
@@ -25,7 +29,7 @@ class AdminTest extends PHPUnit_Framework_TestCase {
 // libs/form/SimpleAdminForm.php
 
 	public function test0() {
-		$browser = new Asgard\Utils\Browser;
+		$browser = new \Asgard\Utils\Browser;
 
 		$this->assertEquals($browser->get('admin')->getCode(), 401); #not allowed
 

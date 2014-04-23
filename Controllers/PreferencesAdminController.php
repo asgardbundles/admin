@@ -5,7 +5,7 @@ namespace Asgard\Admin\Controllers;
 @Prefix('admin/preferences')
 */
 class PreferencesAdminController extends \Asgard\Admin\Libs\Controller\AdminParentController {
-	function __construct() {
+	public function __construct() {
 		$this->_messages = array(
 			'modified'			=>	__('Preferences modified with success.'),
 		);

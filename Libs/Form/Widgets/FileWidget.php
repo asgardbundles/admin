@@ -16,7 +16,7 @@ class FileWidget extends \Asgard\Form\Widgets\HTMLWidget {
 		)+$attrs);
 		$entity = $this->field->form->getEntity();
 		$name = $this->field->name;		
-		$optional = !$entity->property($name)->required;
+		$optional = !$entity->property($name)->required();
 
 		if($entity->isOld() && $entity->$name && $entity->$name->exists()) {
 			$path = $entity->$name->get();

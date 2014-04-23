@@ -2,7 +2,7 @@
 namespace Asgard\Admin\Libs\Form;
 
 class AdminSimpleForm extends \Asgard\Form\Form {
-	function __construct($controller, $name=null, $params=array()) {
+	public function __construct($controller, $name=null, $params=array()) {
 		parent::__construct($name, $params);
 		$this->_controller = $controller;
 
@@ -49,7 +49,7 @@ class AdminSimpleForm extends \Asgard\Form\Form {
 				$label = $options['label'];
 
 			if($form instanceof \Asgard\Form\EntityForm) {
-				if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required
+				if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required()
 					|| get($form->getEntity()->getDefinition()->relations, array($field->name, 'required')))
 					$label .= '*';
 			}

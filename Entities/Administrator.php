@@ -16,12 +16,15 @@ class Administrator extends \Asgard\Core\Entity {
 		),
 	);
 
+	public static $behaviors = array(
+		'Asgard\Orm\OrmBehavior'
+	);
+
 	#General
 	public function __toString() {
 		return $this->username;
 	}
 
-	public static $behaviors = array();
 	public static $relations = array();
 		
 	public static $meta = array(

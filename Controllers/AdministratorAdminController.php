@@ -7,7 +7,7 @@ namespace Asgard\Admin\Controllers;
 class AdministratorAdminController extends \Asgard\Admin\Libs\Controller\EntityAdminController {
 	static $_entity = 'Asgard\Admin\Entities\Administrator';
 	
-	function __construct() {
+	public function __construct() {
 		$this->_messages = array(
 			'modified'			=>	__('Administrator modified with success.'),
 			'created'				=>	__('Administrator created with success.'),

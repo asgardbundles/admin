@@ -42,12 +42,12 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 			if(!isset($entity['admin']['messages']['deleted']))
 				$entity['admin']['messages']['deleted'] = ucfirst($bundle['entities'][$name]['meta']['label']).' deleted with success.';
 
-			\Asgard\Cli\AsgardController::processFile(dirname(__FILE__).'/../generator/_EntityAdminController.php', $dst.'controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', array('bundle'=>$bundle, 'entity'=>$entity));
-			\Asgard\Cli\AsgardController::processFile(dirname(__FILE__).'/../generator/views/index.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/index.php', array('bundle'=>$bundle, 'entity'=>$entity));
-			\Asgard\Cli\AsgardController::processFile(dirname(__FILE__).'/../generator/views/form.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/form.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/_EntityAdminController.php', $dst.'controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/views/index.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/index.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/views/form.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/form.php', array('bundle'=>$bundle, 'entity'=>$entity));
 
-			\Asgard\Cli\AsgardController::processFile(dirname(__FILE__).'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', array('bundle'=>$bundle));
-			\Asgard\Cli\AsgardController::processFile(dirname(__FILE__).'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', array('bundle'=>$bundle));
+			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', array('bundle'=>$bundle));
+			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', array('bundle'=>$bundle));
 		}
 	}
 

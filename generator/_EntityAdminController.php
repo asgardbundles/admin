@@ -8,7 +8,7 @@ class <?php echo ucfirst($entity['meta']['name']) ?>AdminController extends \Asg
 	static $_entity = '<?php echo $entity['meta']['entityClass'] ?>';
 	static $_entities = '<?php echo $entity['meta']['plural'] ?>';
 
-	function __construct() {
+	public function __construct() {
 		$this->_messages = array(
 		<?php foreach($entity['admin']['messages'] as $k=>$v): ?>
 			'<?php echo $k ?>'			=>	__('<?php echo $v ?>'),

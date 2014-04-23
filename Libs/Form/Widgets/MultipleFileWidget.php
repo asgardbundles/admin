@@ -16,7 +16,7 @@ class MultipleFileWidget extends \Asgard\Form\Widgets\HTMLWidget {
 		)+$attrs);
 		$entity = $this->field->form->getEntity();
 		$name = $this->field->name;		
-		$optional = !$entity->property($name)->required;
+		$optional = !$entity->property($name)->required();
 		$path = $entity->$name->get();
 
 		if($entity->isNew())

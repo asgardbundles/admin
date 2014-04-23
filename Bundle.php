@@ -2,6 +2,14 @@
 namespace Asgard\Admin;
 
 class Bundle extends \Asgard\Core\BundleLoader {
+	public function load($queue) {
+		$queue->addBundles(array(
+			new \Asgard\Orm\Bundle,
+		));
+
+		parent::load($queue);
+	}
+
 	public function run() {
 		\Asgard\Admin\Libs\AdminMenu::instance()->menu[8] = array('label' => 'Configuration', 'link' => '#', 'childs' => array(
 			array('label' => 'Preferences', 'link' => 'preferences'),

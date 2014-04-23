@@ -4,7 +4,7 @@ namespace Asgard\Admin\Libs\Form;
 class AdminEntityForm extends \Asgard\Form\EntityForm {
 	public $_controller = null;
 
-	function __construct($entity, $controller, $params=array()) {
+	public function __construct($entity, $controller, $params=array()) {
 		parent::__construct($entity, $params);
 		$this->_controller = $controller;
 
@@ -48,7 +48,7 @@ class AdminEntityForm extends \Asgard\Form\EntityForm {
 
 			$label = __($label);
 
-			if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required
+			if($form->getEntity()->hasProperty($field->name) && $form->getEntity()->property($field->name)->required()
 				|| \Asgard\Utils\Tools::array_get($form->getEntity()->getDefinition()->relations, array($field->name, 'required')))
 				$label .= '*';
 			$str = '<p>
