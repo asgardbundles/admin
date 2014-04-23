@@ -17,7 +17,7 @@ class Administrator extends \Asgard\Core\Entity {
 	);
 
 	public static $behaviors = array(
-		'Asgard\Orm\OrmBehavior'
+		'Asgard\Orm\ORMBehavior'
 	);
 
 	#General
