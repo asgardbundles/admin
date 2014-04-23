@@ -4,8 +4,5 @@
 	"authors": [{
 		"name": "Michel Hognerud",
 		"email": "michel@hognerud.net"
-	}],
-    "autoload": {
-        "psr-4": {"Asgard\\Admin\\": "."}
-    }
+	}]
 }
