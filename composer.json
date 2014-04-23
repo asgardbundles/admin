@@ -4,5 +4,8 @@
 	"authors": [{
 		"name": "Michel Hognerud",
 		"email": "michel@hognerud.net"
-	}]
+	}],
+	"require": {
+		"asgard/imagecache": "dev-master"
+	}
 }
