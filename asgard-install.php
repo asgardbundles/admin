@@ -8,5 +8,5 @@ require _CORE_DIR_.'core.php';
 \Asgard\Utils\FileManager::copy(__DIR__.'/web/admin', _DIR_.'web/admin');
 
 \Asgard\Utils\FileManager::copy(__DIR__.'/migrations/fixtures/admin.yml', _DIR_.'migrations/fixtures/admin.yml');
-\Asgard\Orm\ORMManager::addMigrationFile(__DIR__.'/migrations/Admin.php');
-\Asgard\Orm\ORMManager::migrate('Admin');
+\Asgard\Orm\MigrationsManager::addMigrationFile(__DIR__.'/migrations/Admin.php');
+\Asgard\Orm\MigrationsManager::migrate('Admin');
