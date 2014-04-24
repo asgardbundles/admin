@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 @Prefix('admin/administrators')
 */
 class AdministratorAdminController extends \App\Admin\Libs\Controller\EntityAdminController {
-	protected $_entity = 'App\Admin\Entities\Administrator';
+	static $_entity = 'App\Admin\Entities\Administrator';
 	
 	public function __construct() {
 		$this->_messages = array(
@@ -19,7 +19,7 @@ class AdministratorAdminController extends \App\Admin\Libs\Controller\EntityAdmi
 	}
 	
 	public function formConfigure($entity) {
-		$form = new AdminEntityForm($entity, $this);
+		$form = new \App\Admin\Libs\Form\AdminEntityForm($entity, $this);
 		$form->password->params['view']['value'] = '';
 		
 		return $form;

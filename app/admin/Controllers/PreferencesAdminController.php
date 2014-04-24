@@ -17,7 +17,7 @@ class PreferencesAdminController extends \App\Admin\Libs\Controller\AdminParentC
 		$form->values = array();
 		$vars = array('email', 'head_script');
 		foreach($vars as $valueName) {
-			$value = \Asgard\Value\Entities\Data::fetch($valueName);
+			$value = \Asgard\Data\Entities\Data::fetch($valueName);
 			$a = new \App\Admin\Libs\Form\AdminEntityForm($value, $this);
 			unset($a->key);
 			$form->values[$value->key] = $a;
