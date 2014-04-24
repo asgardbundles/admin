@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 @Prefix('admin/administrators')
 */
 class AdministratorAdminController extends \App\Admin\Libs\Controller\EntityAdminController {
-	static $_entity = 'App\Admin\Entities\Administrator';
+	protected $_entity = 'App\Admin\Entities\Administrator';
 	
 	public function __construct() {
 		$this->_messages = array(

@@ -19,7 +19,7 @@
 				</div>		<!-- .block_head ends -->
 				
 				<div class="block_content">
-					<?php \Asgard\Core\Asgard\Core\App::get('flash')->showAll() ?>
+					<?php \Asgard\Core\App::get('flash')->showAll() ?>
 				
 					<?php if(sizeof($administrators) == 0): ?>
 					<div style="text-align:center; font-weight:bold"><?php echo __('No element') ?></div>
@@ -41,7 +41,7 @@
 										<td><input type="checkbox" name="id[]" value="<?php echo $administrator->id ?>" /></td>
 										<td><a href="administrators/<?php echo $administrator->id ?>/edit"><?php echo $administrator ?></a></td>
 											<td class="actions">
-													<?php \Hook::trigger('asgard_administrator_actions', $administrator) ?>
+													<?php \Asgard\Core\App::get('hook')->trigger('asgard_administrator_actions', $administrator) ?>
 													<a class="delete" href="administrators/<?php echo $administrator->id ?>/delete"><?php echo __('Delete') ?></a>
 												</td>
 									</tr>

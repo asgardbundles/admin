@@ -2,7 +2,7 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2><a href="<% echo $this->url_for('index') %>"><% echo ucfirst(static::$_entities) %></a></h2>
+					<h2><a href="<% echo $this->url_for('index') %>"><% echo ucfirst($_entities) %></a></h2>
 					<ul>
 						<li><a href="<% echo $this->url_for('new') %>"><% echo __('Add') %></a></li>
 					</ul>
