@@ -4,6 +4,7 @@ namespace App\Admin;
 class Bundle extends \Asgard\Core\BundleLoader {
 	public function load($queue) {
 		$queue->addBundles(array(
+			new \App\Imagecache\Bundle,
 			new \Asgard\Orm\Bundle,
 		));
 

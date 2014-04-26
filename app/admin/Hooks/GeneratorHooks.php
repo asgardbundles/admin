@@ -1,5 +1,5 @@
 <?php
-namespace App\Admin;
+namespace App\Admin\Hooks;
 
 class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 	/**
@@ -42,12 +42,29 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 			if(!isset($entity['admin']['messages']['deleted']))
 				$entity['admin']['messages']['deleted'] = ucfirst($bundle['entities'][$name]['meta']['label']).' deleted with success.';
 
-			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/_EntityAdminController.php', $dst.'controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', array('bundle'=>$bundle, 'entity'=>$entity));
-			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/views/index.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/index.php', array('bundle'=>$bundle, 'entity'=>$entity));
-			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/views/form.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/form.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Core\Cli\AsgardController::processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Core\Cli\AsgardController::processFile(__DIR__.'/../generator/views/index.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/index.php', array('bundle'=>$bundle, 'entity'=>$entity));
+			\Asgard\Core\Cli\AsgardController::processFile(__DIR__.'/../generator/views/form.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/form.php', array('bundle'=>$bundle, 'entity'=>$entity));
 
-			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', array('bundle'=>$bundle));
-			\Asgard\Cli\AsgardController::processFile(__dir__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', array('bundle'=>$bundle));
+			\Asgard\Core\Cli\AsgardController::processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', array('bundle'=>$bundle));
+			\Asgard\Core\Cli\AsgardController::processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', array('bundle'=>$bundle));
+
+			if($bundle['tests']) {
+				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($entity['meta']['name']).'AdminController';
+
+				$indexRoute = $class::route_for('index');
+				$newRoute = $class::route_for('new');
+				$editRoute = $class::route_for('edit');
+				$deleteRoute = $class::route_for('delete');
+				$bundle['generatedTests'][$indexRoute] = '
+		$browser = $this->getBrowser();
+		$browser->setSession(\'admin_id\', 1);
+		$this->assertTrue($browser->get(\''.$indexRoute.'\')->isOK(), \'GET '.$indexRoute.'\');
+		$this->assertTrue($browser->get(\''.$newRoute.'\')->isOK(), \'GET '.$newRoute.'\');
+		\\'.$entityClass.'::create(array(\'id\'=>50, ));
+		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRoute).'\')->isOK(), \'GET '.$editRoute.'\');
+		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRoute).'\')->isOK(), \'GET '.$deleteRoute.'\');';
+			}
 		}
 	}
 

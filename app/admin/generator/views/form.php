@@ -6,7 +6,7 @@
 				</div>		<!-- .block_head ends -->
 				
 				<div class="block_content">
-					<p class="breadcrumb"><a href="<% echo $this->url_for('index') %>"><% echo ucfirst(static::$_entities) %></a> &raquo; 
+					<p class="breadcrumb"><a href="<% echo $this->url_for('index') %>"><% echo ucfirst($this->_entities) %></a> &raquo; 
 					<a href="<% echo !$<?php echo $entity['meta']['name'] ?>->isNew() ? $this->url_for('edit', array('id'=>$<?php echo $entity['meta']['name'] ?>->id)):$this->url_for('new') %>">
 					<% echo !$original->isNew() ? $original:__('New') %>
 					</a></p>

@@ -2,9 +2,9 @@
 namespace App\Admin\Libs\Controller;
 
 abstract class EntityAdminController extends AdminParentController {
-	protected static $_entity = null;
-	protected static $_singular = null;
-	protected static $_plural = null;
+	protected $_entity = null;
+	protected $_singular = null;
+	protected $_plural = null;
 	protected static $_hooks = array();
 	
 	public function __construct() {
@@ -15,14 +15,14 @@ abstract class EntityAdminController extends AdminParentController {
 			'deleted'				=>	__('Element deleted with success.'),
 		);
 
-		$_entity = static::$_entity;
+		$_entity = $this->_entity;
 		$definition = $_entity::getDefinition();
 		$definition->trigger('asgardadmin', get_called_class());
 
-		if(static::$_singular === null)
-			static::$_singular = strtolower(\Asgard\Utils\NamespaceUtils::basename(static::$_entity));
-		if(static::$_plural === null)
-			static::$_plural = static::$_singular.'s';
+		if($this->_singular === null)
+			$this->_singular = strtolower(\Asgard\Utils\NamespaceUtils::basename($this->_entity));
+		if($this->_plural === null)
+			$this->_plural = $this->_singular.'s';
 		if(isset($this->_messages))
 			$this->_messages = array_merge($this->__messages, $this->_messages);
 		else
@@ -30,7 +30,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	public static function getEntity() {
-		return static::$_entity;
+		return $this->_entity;
 	}
 	
 	public static function getIndexURL() {
@@ -45,9 +45,9 @@ abstract class EntityAdminController extends AdminParentController {
 	@Route('')
 	*/
 	public function indexAction($request) {
-		$_entity = static::$_entity;
+		$_entity = $this->_entity;
 		$definition = $_entity::getDefinition();
-		$_plural = static::$_plural;
+		$_plural = $this->_plural;
 		
 		$this->searchForm = new \Asgard\Form\Form(null, array('method'=>'get'));
 		$this->searchForm->search = new \Asgard\Form\Fields\TextField;
@@ -97,8 +97,8 @@ abstract class EntityAdminController extends AdminParentController {
 
 		$pagination = $_entity::where($conditions);
 		
-		if(isset(static::$_orderby))
-			$pagination->orderBy(static::$_orderby);
+		if(isset($this->_orderby))
+			$pagination->orderBy($this->_orderby);
 
 		$this->orm = $pagination;
 
@@ -116,8 +116,8 @@ abstract class EntityAdminController extends AdminParentController {
 	@Route(':id/edit')
 	*/
 	public function editAction($request) {
-		$_singular = static::$_singular;
-		$_entity = static::$_entity;
+		$_singular = $this->_singular;
+		$_entity = $this->_entity;
 		
 		if(!($this->{$_singular} = $_entity::load($request['id'])))
 			throw new \Asgard\Core\Exceptions\NotFoundException;
@@ -132,16 +132,16 @@ abstract class EntityAdminController extends AdminParentController {
 				if(\Asgard\Core\App::get('post')->has('send'))
 					return \Asgard\Core\App::get('server')->get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
 						?
-						\Asgard\Core\App::get('response')->back()
-						:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
+						$this->response->back()
+						:$this->response->redirect($this->url_for('index'));
 			} catch(\Asgard\Form\FormException $e) {
 				\Asgard\Core\App::get('flash')->addError($this->form->getGeneralErrors());
-				\Asgard\Core\App::get('response')->setCode(400);
+				$this->response->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
 			\Asgard\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Asgard\Core\App::get('response')->setCode(400);
+			$this->response->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -151,8 +151,8 @@ abstract class EntityAdminController extends AdminParentController {
 	@Route('new')
 	*/
 	public function newAction($request) {
-		$_singular = static::$_singular;
-		$_entity = static::$_entity;
+		$_singular = $this->_singular;
+		$_entity = $this->_entity;
 		
 		$this->{$_singular} = new $_entity;
 		$this->original = clone $this->{$_singular};
@@ -165,18 +165,18 @@ abstract class EntityAdminController extends AdminParentController {
 				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['created']);
 				if(\Asgard\Core\App::get('post')->has('send'))
 					return \Asgard\Core\App::get('server')->get('HTTP_REFERER') !== \Asgard\Core\App::get('url')->full()
-						? \Asgard\Core\App::get('response')->back()
-						:\Asgard\Core\App::get('response')->redirect($this->url_for('index'));
+						? $this->response->back()
+						:$this->response->redirect($this->url_for('index'));
 				else
-					return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
+					return $this->response->redirect($this->url_for('edit', array('id'=>$this->{$_singular}->id)));
 			} catch(\Asgard\Form\FormException $e) {
 				\Asgard\Core\App::get('flash')->addError($this->form->getGeneralErrors());
-				\Asgard\Core\App::get('response')->setCode(400);
+				$this->response->setCode(400);
 			}
 		}
 		elseif(!$this->form->uploadSuccess()) {
 			\Asgard\Core\App::get('flash')->addError(__('Data exceeds upload size limit. Maybe your file is too heavy.'));
-			\Asgard\Core\App::get('response')->setCode(400);
+			$this->response->setCode(400);
 		}
 		
 		$this->setRelativeView('form.php');
@@ -186,90 +186,13 @@ abstract class EntityAdminController extends AdminParentController {
 	@Route(':id/delete')
 	*/
 	public function deleteAction($request) {
-		$_entity = static::$_entity;
+		$_entity = $this->_entity;
 		
 		!$_entity::destroyOne($request['id']) ?
 			\Asgard\Core\App::get('flash')->addError($this->_messages['unexisting']) :
 			\Asgard\Core\App::get('flash')->addSuccess($this->_messages['deleted']);
 			
-		return \Asgard\Core\App::get('response')->redirect($this->url_for('index'));
-	}
-	
-	/**
-	@Route(':id/deletefile/:file')
-	*/
-	public function deleteSingleFileAction($request) {
-		$_entity = static::$_entity;
-		$_singular = static::$_singular;
-		
-		if(!($this->{$_singular} = $_entity::load($request['id'])))
-			$this->forward404();
-			
-		$file = $request['file'];
-		$this->{$_singular}->$file->delete();
-		\Asgard\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
-		return \Asgard\Core\App::get('response')->back();
-	}
-	
-	/**
-	@Route(':id/:file/add')
-	*/
-	public function addFileAction($request) {
-		Memory::set('layout', false);
-		$_entity = static::$_entity;;
-		if(!($entity = $_entity::load($request['id'])))
-			$this->forward404();
-		if(!$entity->hasProperty($request['file']))
-			$this->forward404();
-			
-		if(\Asgard\Core\App::get('file')->has('Filedata')) {
-			$file = \Asgard\Core\App::get('file')->get('Filedata');
-			$files = array($request['file'] => array('name'=>$file['name'], 'path'=>$file['tmp_name']));
-		}
-		else
-			return \Asgard\Core\App::get('response')->setCode(500)->setContent(__('An error occured.'));
-
-		$file = $request['file'];
-		$entity->$file->add($files);
-		$entity->save(array(), true);
-		$final_paths = $entity->$file->get();
-		$response = array(
-			'url' => array_pop($final_paths),
-			'deleteurl' => $this->url_for('deleteFile', array('id' => $entity->id, 'pos' => sizeof($final_paths)+1, 'file' => $request['file'])),
-		);
-		return \Asgard\Core\App::get('response')->setCode(200)->setContent(json_encode($response));
-	}
-	
-	/**
-	@Route(':id/:file/delete/:pos')
-	*/
-	public function deleteFileAction($request) {
-		$_entity = static::$_entity;
-		if(!($entity = $_entity::load($request['id'])))
-			$this->forward404();
-		if(!$entity->hasProperty($request['file']))
-			$this->forward404();
-		
-		$file = $request['file'];
-			
-		$paths = $entity->$file->get();
-
-		if(!isset($paths[$request['pos']-1]))
-			return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false)->setCode(404);
-		
-		try {
-			$entity->$file->delete($request['pos']-1);
-			$entity->save(null, true);
-			\Asgard\Core\App::get('flash')->addSuccess(__('File deleted with success.'));
-		} catch(\Exception $e) {
-			\Asgard\Core\App::get('flash')->addError(__('There was an error in the file'));
-		}
-		
-		try {
-			return \Asgard\Core\App::get('response')->redirect($this->url_for('edit', array('id' => $entity->id)), false);
-		} catch(\Exception $e) {
-			return \Asgard\Core\App::get('response')->redirect($this->url_for('index'), false);
-		}
+		return $this->response->redirect($this->url_for('index'));
 	}
 	
 	public static function addHook($hook) {
@@ -288,9 +211,10 @@ abstract class EntityAdminController extends AdminParentController {
 			regex = '.+'
 		}	
 	})
+	@Test(false)
 	*/
 	public function hooksAction($request) {
-		$_entity = static::$_entity;
+		$_entity = $this->_entity;
 
 		$controller = get_called_class();
 

@@ -5,8 +5,8 @@ namespace <?php echo ucfirst($bundle['namespace']) ?>\Controllers;
 @Prefix('admin/<?php echo $entity['meta']['plural'] ?>')
 */
 class <?php echo ucfirst($entity['meta']['name']) ?>AdminController extends \App\Admin\Libs\Controller\EntityAdminController {
-	static $_entity = '<?php echo $entity['meta']['entityClass'] ?>';
-	static $_entities = '<?php echo $entity['meta']['plural'] ?>';
+	protected $_entity = '<?php echo $entity['meta']['entityClass'] ?>';
+	protected $_entities = '<?php echo $entity['meta']['plural'] ?>';
 
 	public function __construct() {
 		$this->_messages = array(
