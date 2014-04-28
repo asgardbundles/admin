@@ -6,6 +6,7 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		$queue->addBundles(array(
 			new \App\Imagecache\Bundle,
 			new \Asgard\Orm\Bundle,
+			new \Asgard\Data\Bundle,
 		));
 
 		parent::load($queue);
