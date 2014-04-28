@@ -24,7 +24,7 @@ class FileWidget extends \Asgard\Form\Widgets\HTMLWidget {
 				return $str;
 			if($entity->property($name)->filetype == 'image') {
 				$str .= '<p>
-					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\Asgard\Core\App::get('url')->to(\Asgard\ImageCache\Libs\ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
+					<a target="_blank" href="../'.$path.'" rel="facebox"><img src="'.\Asgard\Core\App::get('url')->to(\App\Imagecache\Libs\ImageCache::src($path, 'admin_thumb')).'" alt=""/></a>
 				</p>';
 			}
 			else {

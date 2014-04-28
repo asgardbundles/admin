@@ -17,7 +17,7 @@ abstract class EntityAdminController extends AdminParentController {
 
 		$_entity = $this->_entity;
 		$definition = $_entity::getDefinition();
-		$definition->trigger('asgardadmin', get_called_class());
+		$definition->trigger('asgardadmin', $this);
 
 		if($this->_singular === null)
 			$this->_singular = strtolower(\Asgard\Utils\NamespaceUtils::basename($this->_entity));
@@ -29,7 +29,7 @@ abstract class EntityAdminController extends AdminParentController {
 			$this->_messages = $this->__messages;
 	}
 	
-	public static function getEntity() {
+	public function getEntity() {
 		return $this->_entity;
 	}
 	
