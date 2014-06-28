@@ -1,24 +1,24 @@
 <%
-namespace <?php echo ucfirst($bundle['namespace']) ?>\Controllers;
+namespace <?=ucfirst($bundle['namespace']) ?>\Controllers;
 
 /**
-@Prefix('admin/<?php echo $entity['meta']['plural'] ?>')
-*/
-class <?php echo ucfirst($entity['meta']['name']) ?>AdminController extends \App\Admin\Libs\Controller\EntityAdminController {
-	protected $_entity = '<?php echo $entity['meta']['entityClass'] ?>';
-	protected $_entities = '<?php echo $entity['meta']['plural'] ?>';
+ * @Prefix("admin/<?=$entity['meta']['plural'] ?>")
+ */
+class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\Controller\EntityAdminController {
+	protected $_entity = '<?=$entity['meta']['entityClass'] ?>';
+	protected $_entities = '<?=$entity['meta']['plural'] ?>';
 
 	public function __construct() {
-		$this->_messages = array(
+		$this->_messages = [
 		<?php foreach($entity['admin']['messages'] as $k=>$v): ?>
-			'<?php echo $k ?>'			=>	__('<?php echo $v ?>'),
+			'<?=$k ?>'			=>	__('<?=$v ?>'),
 		<?php endforeach ?>
-		);
+		];
 		parent::__construct();
 	}
 	
 	public function formConfigure($entity) {
-		$form = new \App\Admin\Libs\Form\AdminEntityForm($entity, $this);
+		$form = $this->app->make('adminEntityForm', [$entity, $this]);
 		
 		return $form;
 	}

@@ -1,3 +1,0 @@
-App\Admin\Entities\Administrator:
-    - username: admin
-      password: admin

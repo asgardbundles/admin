@@ -1,13 +1,17 @@
 <?php
-namespace App\Admin\Libs\Controller;
+namespace Admin\Libs\Controller;
 
-abstract class AdminParentController extends \Asgard\Core\Controller {
-	public function configure() {
-		$this->layout = array('\App\Admin\Controllers\AdminController', 'layout');
+abstract class AdminParentController extends \Asgard\Http\Controller {
+	public function before(\Asgard\Http\Request $request) {
+		$this->layout = [$this, 'layout'];
 		$this->htmlLayout = false;
-		if(!\Asgard\Core\App::get('session')->get('admin_id')) {
-			\Asgard\Core\App::get('session')->set('redirect_to', \Asgard\Core\App::get('url')->full());
-			return \Asgard\Core\App::get('response')->setCode(401)->redirect('admin/login', true);
+		if(!$this->app['adminAuth']->isConnected()) {
+			$request->session['redirect_to'] = $request->url->full();
+			return $this->response->setCode(401)->redirect('admin/login');
 		}
+	}
+
+	public function layout($content) {
+		return \Asgard\Http\View::renderFile(dirname(dirname(__DIR__)).'/html/admin/layout.php', ['content'=>$content, 'controller'=>$this]);
 	}
 }

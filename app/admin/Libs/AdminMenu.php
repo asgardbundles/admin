@@ -1,33 +1,37 @@
 <?php
-namespace App\Admin\Libs;
+namespace Admin\Libs;
 
 class AdminMenu {
-	protected static $instance;
-
-	public $menu = array();
-	public $home = array();
-
-	public static function instance() {
-		if(!static::$instance)
-			static::$instance = new static;
-		return static::$instance;
-	}
+	protected $menu = [];
+	protected $home = [];
 
 	public function __construct() {
-		$this->menu = array(array(
+		$this->menu = [[
 			'label'	=>	__('Content'),
 			'link'	=>	'#',
-			'childs'	=>	array()
-		));
+			'childs'	=>	[]
+		]];
+	}
+
+	public function add($link, $position) {
+		$position = explode('.', $position);
+		$last = array_pop($position);
+		$menu = &$this->menu;
+		foreach($position as $step)
+			$menu = &$menu[$step]['childs'];
+		if($last === '')
+			$menu[] = $link;
+		else
+			$menu[$last] = $link;
+		return $this;
 	}
 
 	public function showMenu($menu=null) {
 		if($menu === null)
 			$menu = $this->menu;
 		foreach($menu as $item) {
-			if(is_array($item))
 			?>
-			<li><a href="<?php echo $item['link'] ?>"><?php echo $item['label'] ?></a>
+			<li><a href="<?=$item['link'] ?>"><?=$item['label'] ?></a>
 			<?php
 			if(isset($item['childs']) && $item['childs']) {
 				echo '<ul>';
@@ -38,5 +42,14 @@ class AdminMenu {
 			</li>
 			<?php
 		}
+	}
+
+	public function addHome($link) {
+		$this->home[] = $link;
+		return $this;
+	}
+
+	public function getHome() {
+		return $this->home;
 	}
 }

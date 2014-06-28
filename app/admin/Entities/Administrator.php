@@ -1,39 +1,40 @@
 <?php
-namespace App\Admin\Entities;
+namespace Admin\Entities;
 
-class Administrator extends \Asgard\Core\Entity {
-	public static $properties = array(
-		'username'    => array(
-			'length'    =>    100,
-			'unique'	=>	true,
-		),
-		'password'    => array(
-			'form'	=>	array(
-				'hidden'	=>	true,
-			),
-			'length'    =>    100,
-			'setHook'  =>    array('Asgard\Utils\Tools', 'hash'),
-		),
-	);
+class Administrator extends \Asgard\Entity\Entity {
+	public static function definition(\Asgard\Entity\EntityDefinition $definition) {
+		$definition->properties = [
+			'username'    => [
+				'validation' => [
+					'unique'	=>	true,
+				],
+				'required' => true,
+			],
+			'email' => 'email',
+			'password'    => [
+				'setHook'  =>    ['Admin\Entities\Administrator', 'hash'],
+				'form'	=>	[
+					'hidden'	=>	true,
+				],
+			],
+		];
 
-	public static $behaviors = array(
-		'Asgard\Orm\ORMBehavior'
-	);
+		$definition->behaviors = [
+			new \Asgard\Orm\ORMBehavior
+		];
+		
+		$definition->hookBefore('destroy', function(\Asgard\Hook\HookChain $chain, \Asgard\Entity\Entity $entity) {
+			if(Administrator::count() < 2)
+				$chain->stop();
+		});
+	}
 
 	#General
 	public function __toString() {
 		return $this->username;
 	}
 
-	public static $relations = array();
-		
-	public static $meta = array(
-	);
-
-	public static function configure($definition) {
-		$definition->hookBefore('destroy', function($chain, $entity) {
-			if(Administrator::count() < 2)
-				$chain->stop();
-		});
+	public static function hash($pwd) {
+		return sha1(static::getapp()->get('config')->get('key').$pwd);
 	}
 }

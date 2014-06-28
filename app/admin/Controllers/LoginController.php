@@ -1,45 +1,100 @@
 <?php
-namespace App\Admin\Controllers;
+namespace Admin\Controllers;
 
-class LoginController extends \Asgard\Core\Controller {
-	public function configure() {
+class LoginController extends \Asgard\Http\Controller {
+	public function before(\Asgard\Http\Request $request) {
 		$this->layout = false;
+		$this->htmlLayout = false;
 	}
 	
 	/**
-	@Route('admin/login')
-	*/
-	public function loginAction($request) {
-		if(\Asgard\Core\App::get('session')->get('admin_id'))
+	 * @Route("admin/login")
+	 */
+	public function loginAction(\Asgard\Http\Request $request) {
+		$auth = $this->app['adminAuth'];
+		$username = $request->post['username'];
+		$password = $request->post['password'];
+
+		if($auth->isConnected())
 			return $this->response->redirect('admin');
-	
-		$administrator = null;
-		if(\Asgard\Core\App::get('post')->has('username'))
-			$administrator = \App\Admin\Entities\Administrator::where(array('username' => \Asgard\Core\App::get('post')->get('username'), 'password' => sha1(\Asgard\Core\App::get('config')->get('key').\Asgard\Core\App::get('post')->get('password'))))->first();
-		elseif(\Asgard\Core\App::get('cookie')->has('asgard_remember')) {
-			$remember = \Asgard\Core\App::get('cookie')->get('asgard_remember');
-			$administrator = \App\Admin\Entities\Administrator::where(array('MD5(CONCAT(username, \'-\', password))' => $remember))->first();
+
+		if($username !== null && $password !== null) {
+			if($administrator = $auth->attempt($username, $password)) {
+				if($request->post['remember'] == 'yes')
+					$auth->remember($username, $password);
+				if($request->session->has('redirect_to'))
+					return $this->response->redirect($request->session->get('redirect_to'), false);
+				else
+					return $this->response->redirect('admin');
+			}
+			elseif($request->post->has('username'))
+				$this->getFlash()->addError(__('Invalid username or password.'));
 		}
-		
-		if($administrator) {
-			\Asgard\Core\App::get('session')->set('admin_id', $administrator->id);
-			if(\Asgard\Core\App::get('post')->get('remember')=='yes')
-				\Asgard\Core\App::get('cookie')->set('asgard_remember', md5($administrator->username.'-'.$administrator->password));
-			if(\Asgard\Core\App::get('session')->has('redirect_to'))
-				return $this->response->redirect(\Asgard\Core\App::get('session')->get('redirect_to'), false);
-			else
-				return $this->response->redirect('admin');
-		}
-		elseif(\Asgard\Core\App::get('post')->has('username'))
-			\Asgard\Core\App::get('flash')->addError(__('Invalid username or password.'));
 	}
 	
 	/**
-	@Route('admin/logout')
-	*/
-	public function logoutAction($request) {
-		\Asgard\Core\App::get('cookie')->remove('asgard_remember');
-		\Asgard\Core\App::get('session')->remove('admin_id');
+	 * @Route("admin/logout")
+	 */
+	public function logoutAction(\Asgard\Http\Request $request) {
+		$this->app['adminAuth']->disconnect();
+
 		return $this->response->redirect('');
+	}
+	
+	/**
+	 * @Route("admin/forgotten")
+	 */
+	public function forgottenAction($request) {
+		$this->form = $this->app->make('form', ['forgotten', [], [], $this->request]);
+		$this->form['username'] = new \Asgard\Form\Fields\TextField(['required'=>true]);
+
+		if($request['code']) {
+			$hash = $request['code'];
+			$admin = \Admin\Entities\Administrator::where(['SHA1(CONCAT(username, \'-\', password))' => $hash])->first();
+			if(!$admin)
+				$this->getFlash()->addError('Invalid code.');
+			else {
+				$password = \Asgard\Common\Tools::randStr(10);
+				$admin->save(['password'=>$password]);
+				$data = $this->app['data'];
+				$this->app->make('email')->send(function($msg) use($password, $admin, $data) {
+					$msg->to($admin->email);
+					$msg->from($data['email']);
+					$msg->html(__('Your new password is: ').$password);
+				});
+				$this->getFlash()->addSuccess(__('An email with your new password was sent to your email address.'));
+			}
+		}
+		elseif($this->form->isSent()) {
+			if($this->form->isValid()) {
+				$user = $this->form['username']->getValue();
+				if($admin = \Admin\Entities\Administrator::loadBy('username', $user)) {
+					if($admin->email) {
+						$link = $this->url_for('confirm', ['code'=>sha1($admin->email.'-'.$admin->password)]);
+						$data = $this->app['data'];
+						$this->app->make('email')->send(function($msg) use($link, $admin, $data) {
+							$msg->to($admin->email);
+							$msg->from($data['email']);
+							$msg->html(__('Please click on the following link to get a new password: ').$link);
+						});
+						$this->getFlash()->addSuccess('An email was sent to your email address.');
+					}
+					else
+						$this->getFlash()->addError('This administrator does not have a valid email address. Please ask the main administrator.');
+				}
+				else
+					$this->getFlash()->addError('This username does not exist.');
+			}
+			else
+				$this->getFlash()->addError('Please fill in your useraname.');
+		}
+	}
+	
+	/**
+	 * @Route("admin/forgotten/:code")
+	 */
+	public function confirmAction($request) {
+		$this->setRelativeView('forgotten.php');
+		return $this->forgottenAction($request);
 	}
 }

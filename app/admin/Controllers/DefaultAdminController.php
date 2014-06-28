@@ -1,11 +1,11 @@
 <?php
-namespace App\Admin\Controllers;
+namespace Admin\Controllers;
 
-class DefaultAdminController extends \App\Admin\Libs\Controller\AdminParentController {
+class DefaultAdminController extends \Admin\Libs\Controller\AdminParentController {
 	/**
-	@Route('admin')
-	*/
-	public function indexAction($request) {
+	 * @Route("admin")
+	 */
+	public function indexAction(\Asgard\Http\Request $request) {
 	}
 
 	public function _404Action() {

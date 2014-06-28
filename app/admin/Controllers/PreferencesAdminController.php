@@ -1,47 +1,48 @@
 <?php
-namespace App\Admin\Controllers;
+namespace Admin\Controllers;
 
 /**
-@Prefix('admin/preferences')
-*/
-class PreferencesAdminController extends \App\Admin\Libs\Controller\AdminParentController {
+ * @Prefix("admin/preferences")
+ */
+class PreferencesAdminController extends \Admin\Libs\Controller\AdminParentController {
 	public function __construct() {
-		$this->_messages = array(
+		$this->_messages = [
 			'modified'			=>	__('Preferences modified with success.'),
-		);
+		];
 	}
 	
 	public function formConfigure() {
-		$form = new \App\Admin\Libs\Form\AdminSimpleForm($this, 'preferences');
+		$form = $this->app->make('adminSimpleForm', [$this, 'preferences']);
 		
-		$form->values = array();
-		$vars = array('email', 'head_script');
-		foreach($vars as $valueName) {
-			$value = \Asgard\Data\Entities\Data::fetch($valueName);
-			$a = new \App\Admin\Libs\Form\AdminEntityForm($value, $this);
-			unset($a->key);
-			$form->values[$value->key] = $a;
-		}
+		$data = $this->app['data'];
+		$form['email'] = new \Asgard\Form\Fields\TextField([
+			'default'    => $data->get('email'),
+			'validation' => ['email']
+		]);
+		$form['head_script'] = new \Asgard\Form\Fields\TextField(['default'=>$data->get('head_script')]);
+		$form->hook('save', function($chain, $form) use($data) {
+			$data->set('email', $form['email']->value());
+			$data->set('head_script', $form['head_script']->value());
+		});
 		
 		return $form;
 	}
 	
 	/**
-	@Route('')
-	*/
-	public function editAction($request) {
+	 * @Route("")
+	 */
+	public function editAction(\Asgard\Http\Request $request) {
 		$this->form = $this->formConfigure();
 	
-		if($this->form->isSent()) {
+		if($this->form->sent()) {
 			try {
 				$this->form->save();
-				\Asgard\Core\App::get('flash')->addSuccess($this->_messages['modified']);
-				if(\Asgard\Core\App::get('post')->has('send'))
-					return \Asgard\Core\App::get('response')->back();
+				$this->getFlash()->addSuccess($this->_messages['modified']);
+				if($request->post->has('send'))
+					return $this->back();
 			} catch(\Asgard\Form\FormException $e) {}
 		}
 		
-		$this->setRelativeView('form.php');
+		$this->view = 'form';
 	}
 }
-?>

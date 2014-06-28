@@ -1,38 +1,62 @@
 <?php
-namespace App\Admin;
+namespace Admin;
 
 class Bundle extends \Asgard\Core\BundleLoader {
-	public function load($queue) {
-		$queue->addBundles(array(
-			new \App\Imagecache\Bundle,
-			new \Asgard\Orm\Bundle,
-			new \Asgard\Data\Bundle,
-		));
-
-		parent::load($queue);
+	public function buildApp($app) {
+		$app->register('adminMenu', function() {
+			return new \Admin\Libs\AdminMenu();
+		});
+		$app->register('adminManager', function() {
+			return new \Admin\Libs\AdminManager();
+		});
+		$app->register('adminAuth', function($app) {
+			return new \Admin\Libs\AdminAuth($app);
+		});
+		$app->register('adminEntityFieldsSolver', function() {
+			$solver = new \Asgard\Form\EntityFieldsSolver;
+			$solver->addMultiple(function($property) {
+				if($property instanceof \Asgard\Entityimage\ImageProperty)
+					return new \Admin\Libs\Form\Fields\MultipleImagesField;
+				return new \Admin\Libs\Form\DynamicGroup;
+			});
+			return $solver;
+		});
+		$app->register('adminEntityForm', function($app, $entity, $controller, $params=[]) {
+			$widgetsManager = clone $app['widgetsManager'];
+			$entityFieldsSolver = new \Asgard\Form\EntityFieldsSolver([$app['entityFieldsSolver'], $app['adminEntityFieldsSolver']]);
+			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetsManager, $entityFieldsSolver);
+			$form->setTranslator($app['translator']);
+			$form->setApp($app);
+			return $form;
+		});
+		$app->register('adminSimpleForm', function($app, $controller, $name=null, $params=[]) {
+			$widgetsManager = clone $app['widgetsManager'];
+			$form = new \Admin\Libs\Form\AdminSimpleForm($controller, $name, $params, $widgetsManager);
+			$form->setTranslator($app['translator']);
+			$form->setApp($app);
+			return $form;
+		});
 	}
 
-	public function run() {
-		\App\Admin\Libs\AdminMenu::instance()->menu[8] = array('label' => 'Configuration', 'link' => '#', 'childs' => array(
-			array('label' => 'Preferences', 'link' => 'preferences'),
-			array('label' => __('Administrators'), 'link' => 'administrators'),
-		));
+	public function run($app) {
+		parent::run($app);
 
-		\App\Imagecache\Libs\ImageCache::addPreset('admin_thumb', array(
-			'resize'	=>	array(
-				'height'	=>	100,
-				'force'	=>	false
-			)
-		));
+		$app['hooks']->hook('Asgard.Http.Start', function($chain, $request) {
+			$chain->app['adminMenu']->add([
+				'label'  => __('Configuration'),
+				'link'   => '#',
+				'childs' => [
+					['label' => __('Preferences'), 'link' => $chain->app['resolver']->url_for(['Admin\Controllers\PreferencesAdminController', 'edit'])],
+					['label' => __('Administrators'), 'link' => $chain->app['resolver']->url_for(['Admin\Controllers\AdministratorAdminController', 'index'])],
+				]
+			], 10);
 
-		\Asgard\Core\App::get('hook')->hook('start', function() {
-			if(preg_match('/^admin/', \Asgard\Core\App::get('url')->get())) {
-				\Asgard\Core\App::get('hook')->hookBefore('exception_Asgard\Core\Exceptions\NotFoundException', function() {
-					return \Asgard\Core\Controller::run('\App\Admin\Controllers\DefaultAdminController', '_404', \Asgard\Core\App::get('request'))->setCode(404);
-				});
-			}
+			$chain->app['imagecache']->addPreset('admin_thumb', [
+				'resize'	=>	[
+					'height' =>	100,
+					'force'  =>	false
+				]
+			]);
 		});
-
-		parent::run();
 	}
 }

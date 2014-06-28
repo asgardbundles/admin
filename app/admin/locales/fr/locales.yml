@@ -1,82 +1,53 @@
-'Administrator updated with success.': Administrateur mis à jour avec succès.
-'Administrator created with success.': Administrateur créée avec succès.
-'%s administrators deleted.': %s administrateurs supprimés.
-'Administrator deleted with success.': Administrateur supprimé avec succès.
-'This administrator does not exist.': Cet administrateur n''existe pas.
-'Invalid username or password.': Utilisateur ou mot de passe invalide.
-'Your username/password were sent to you by email.': Votre identifiant/mot de passe vous a été envoyé par mail.
-'Content': Contenu
-'Element updated with success.': Elément mis à jour avec succès.
-'Element created with success.': Elément créée avec succès.
-'%s elements deleted.': %s éléments supprimés.
-'Element deleted with success.': Elément supprimé avec succès.
-'This element does not exist.': Cet élément n''existe pas.
-'File deleted with success.': Fichier supprimé avec succès.
-'An error occured.': Erreur lors de l''envoi.
-'There was an error in the file': Il y a eu une erreur avec le fichier
-'Controller hook does not exist!': Controller hook does not exist!
-'Upload: ': 'Télécharger : '
-'Maximum size 3Mb': Taille maximale 3Mb
-'Download': Télécharger
-'Delete': Supprimer
-'Save & Leave': Sauvegarder & Revenir
-'Save': Sauvegarder
-'Send': Envoyer
-'Del.': Supp.
-'Administration': Administration
-'Dashboard': Tableau de bord
-'See website': Voir le site
-'Disconnect': Déconnexion
-'See': Voir
-'files uploaded': fichiers uploadés 
-'errors': erreurs
-'Error: ': 'Erreur : '
-'Administrators': Administrateurs
-'Username': Utilisateur
-'Password': Mot de passe
-'Add': Ajouter
-'List': Liste
-'Actions': Actions
-'Filters': Filtres
-'back to website': retour au site
-'Username: ': 'Utilisateur : '
-'Password: ': 'Mot de passe : '
-'Password forgotten?': Mot de passe oublié ?
-'Remember me': Se souvenir de moi
-'Your username/password: :credentials': Votre identifiant/mot de passe : :credentials
-Promote: Monter
-Demote: Descendre
-
+Configuration:
+Preferences: Préférences
+Administrators: Administrateurs
 Administrator modified with success.: Administrateur modifié avec succès.
-Administrator created with success.: Administrateur créé avec succès.
+Administrator created with success.: Administrteur créé avec succès.
 %s administrators deleted.: %s administrateurs supprimés.
 Administrator deleted with succes.: Administrateur supprimé avec succès.
-Invalid username or password.: Utilisateur ou mot de passe invalide.
-"Your username/password: :credentials": "Votre nom d'utilisateur/mot de passe: :credentials"
-"Your username/password were sent to you by email.": "Votre nom d'utilisateur/mot de passe vous a été envoyé par email"
-Element updated with success.: Elément modifié avec succès.
-Element created with success.: Elément créé avec succès.
-%s elements deleted.: %s éléments supprimés avec succès.
-Element deleted with success.: Elément supprimé avec succès.
-Data exceeds upload size limit. Maybe your file is too heavy.: Les données du formulaire dépasse la limite. Peut-être que votre fichier est trop volumineux.
-File deleted with success.: Fichier supprimé avec succès.
+This administrator does not exist.: "Cet administrateur n'existe pas."
 An error occured.: Une erreur est survenue.
-There was an error in the file: Il y a eu une erreur avec le fichier
+File deleted with success.: Fichier supprimé avec succès.
+Invalid username or password.: Utilisateur ou mot de passe invalide.
+An email with your new password was sent to your email address.: Un email avec votre nouveau mot de passe a été envoyé à votre adresse email.
+"Your new password is: ": "Votre nouveau mot de passe est : "
+"Please click on the following link to get a new password: ": "Veuillez cliquer sur le lien suivant pour obtenir un nouveau mot de passe : "
+An email was sent to your email address.: Un email a été envoyé à votre adresse email.
+Preferences modified with success.: Préférences modifiées avec succès.
 New: Nouveau
-
-Title: Titre
-Published: Publier
-Content: Contenu
-Meta title: Meta titre
-Meta description: Meta description
-Meta keywords: Meta mots clés
-Created at: Créé le
-Apply: Appliquer
+Add: Ajouter
 No element: Aucun élément
-
-Preferences modified with success.: Preferences modifiées avec succès.
-The field "name" is required.: Le champ "nom" est requis.
-Name: Nom
-Address: Adresse
-Phone: Téléphone
-Preferences: Préférences
+Created at: Créé le
+Title: Titre
+Delete: Supprimer
+Actions: Ations
+Apply: Appliquer
+Content: Contenu
+Element updated with success.: Elément supprimé avec succès.
+Element created with success.: Elément créé avec succès.
+%s elements deleted.: %s éléments supprimés.
+Element deleted with success.: Elément supprimé avec succès.
+There was at least one error.: "Il y a eu au moins une erreur."
+Data exceeds upload size limit. Maybe your file is too heavy.: "Les données excèdent la taille limite d'envoi. Peut-être que votre fichier est trop volumineux."
+Save: Sauvegarder
+Save & Leave: Sauvegarder & Quitter
+Download: Télécharger
+Upload: Upload
+Maximum size 3Mb: Taille maximum 3Mb
+See: Voir
+Del.: Supp.
+Administration: Administration
+Are you sure?: Etes vous sûr ?
+Dashboard: Tableau de bord
+See website: Voir le site
+Disconnect: Déconnexion
+Username: Utilisateur
+Password: Mot de passe
+Oops, the page could not be found.: "Oups, la page n'a pu être trouvée."
+back to website: "retour au site"
+"Username: ": "Utilisateur : "
+"Password: ": "Mot de passe : "
+Password forgotten?: Mot de passe oublié
+Remember me: Se souvenir de moi
+Email: Email
+Script: Script
