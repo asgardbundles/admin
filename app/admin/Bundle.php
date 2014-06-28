@@ -14,11 +14,6 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		});
 		$app->register('adminEntityFieldsSolver', function() {
 			$solver = new \Asgard\Form\EntityFieldsSolver;
-			$solver->addMultiple(function($property) {
-				if($property instanceof \Asgard\Entityimage\ImageProperty)
-					return new \Admin\Libs\Form\Fields\MultipleImagesField;
-				return new \Admin\Libs\Form\DynamicGroup;
-			});
 			return $solver;
 		});
 		$app->register('adminEntityForm', function($app, $entity, $controller, $params=[]) {
