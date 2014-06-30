@@ -12,6 +12,6 @@ abstract class AdminParentController extends \Asgard\Http\Controller {
 	}
 
 	public function layout($content) {
-		return \Asgard\Http\View::renderFile(dirname(dirname(__DIR__)).'/html/admin/layout.php', ['content'=>$content, 'controller'=>$this]);
+		return \Asgard\Templating\PHPTemplate::renderFile(dirname(dirname(__DIR__)).'/html/admin/layout.php', ['content'=>$content, 'controller'=>$this]);
 	}
 }

@@ -1,3 +1,7 @@
 {
-	"name": "asgard/admin"
+	"name": "asgard/admin",
+	"suggest": {
+		"asgard/imagecache": "git@github.com:asgardphp/imagecache.git",
+		"asgard/data": "git@github.com:asgardphp/data.git"
+	}
 }
