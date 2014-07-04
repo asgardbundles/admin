@@ -1,7 +1,7 @@
 <?php
 namespace Admin\Libs\Form;
 
-class AdminEntityForm extends \Asgard\Form\EntityForm {
+class AdminEntityForm extends \Asgard\Entityform\EntityForm {
 	use AdminFormTrait;
 
 	public function __construct(\Asgard\Entity\Entity $entity, \Asgard\Http\Controller $controller, array $params=[], $widgetsManager=null, $entityFieldsSolver=null) {

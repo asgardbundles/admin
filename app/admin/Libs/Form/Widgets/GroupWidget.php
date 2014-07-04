@@ -28,16 +28,16 @@ class GroupWidget extends \Asgard\Form\Widget {
 		$res = "
 		<script>
 		function add".$id."() {
-			var newElement = $('<p class=\"element\">".$this->group->renderTemplate("'+$('.element').length+'")." <input onclick=\"javascript:$(this).parent().remove()\" type=\"button\" value=\"".__('Remove')."\" class=\"submit short\"></p>');
+			var newElement = $('<div class=\"element\" style=\"margin-bottom:10px\">".$this->group->renderTemplate("'+$('.element').length+'")." <input onclick=\"javascript:$(this).parent().remove()\" type=\"button\" value=\"".__('Remove')."\" class=\"submit short\"></div>');
 			$('#".$id."').append(newElement);
 		}
 		</script>
 		<div id=\"".$id."\">
 		";
 		foreach($this->group as $one) {
-			$res .= '<p class="element">';
+			$res .= '<div class="element" style="margin-bottom:10px">';
 			$res .= $one->def(['label'=>false]).' <input onclick="javascript:$(this).parent().remove()" type="button" value="'.__('Remove').'" class="submit short">';
-			$res .= '</p>';
+			$res .= '</div>';
 		}
 		$res .= '</div>';
 		$res .= '<input onclick="javascript:add'.$id.'()" type="button" value="'.__('Add').'" class="submit short">';

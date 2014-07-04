@@ -14,7 +14,7 @@ header('Content-Type: application/javascript');
 function multiple_upload(el, url) {
 	var elID = '#'+el;
   $('#'+el+'-filesupload').uploadify({
-	'swf'  : '../admin/uploadify/uploadify.swf',
+	'swf'  : '../bundles/admin/uploadify/uploadify.swf',
 	'uploader'    : url,
 	'auto'      : true,
 	'multi'           : true,

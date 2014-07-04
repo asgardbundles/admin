@@ -1,6 +1,6 @@
 <?php
 function __($key, $params=array()) {
-	return \Asgard\Container\Container::singleton()->get('translator')->trans($key, $params);
+	return \Asgard\Container\Container::singleton()['translator']->trans($key, $params);
 }
 
 function d() {

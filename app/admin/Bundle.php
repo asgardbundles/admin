@@ -13,12 +13,12 @@ class Bundle extends \Asgard\Core\BundleLoader {
 			return new \Admin\Libs\AdminAuth($app);
 		});
 		$app->register('adminEntityFieldsSolver', function() {
-			$solver = new \Asgard\Form\EntityFieldsSolver;
+			$solver = new \Asgard\Entityform\EntityFieldsSolver;
 			return $solver;
 		});
 		$app->register('adminEntityForm', function($app, $entity, $controller, $params=[]) {
 			$widgetsManager = clone $app['widgetsManager'];
-			$entityFieldsSolver = new \Asgard\Form\EntityFieldsSolver([$app['entityFieldsSolver'], $app['adminEntityFieldsSolver']]);
+			$entityFieldsSolver = new \Asgard\Entityform\EntityFieldsSolver([$app['entityFieldsSolver'], $app['adminEntityFieldsSolver']]);
 			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetsManager, $entityFieldsSolver);
 			$form->setTranslator($app['translator']);
 			$form->setApp($app);
