@@ -7,13 +7,7 @@
 	}],
 	"require": {
         "asgard/asgard": "dev-master",
-        "asgard/auth": "dev-master"
-	},
-	"require-dev": {
-		"asgard/imagecache": "dev-master",
-		"asgard/data": "dev-master"
-	},
-	"suggest": {
+        "asgard/auth": "dev-master",
 		"asgard/imagecache": "dev-master",
 		"asgard/data": "dev-master"
 	}
