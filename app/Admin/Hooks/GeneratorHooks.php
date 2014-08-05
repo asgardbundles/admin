@@ -7,7 +7,7 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 	 */
 	public static function bundleBuild(\Asgard\Hook\HookChain $chain, &$bundle, $dst, $generator) {
 		foreach($bundle['entities'] as $name=>$entity) {
-			if(!isset($entity['admin']))
+			if(!array_key_exists('admin', $entity))
 				continue;
 			if(!is_array($entity['admin']))
 				$entity['admin'] = [];

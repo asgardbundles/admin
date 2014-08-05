@@ -57,7 +57,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	/**
-	@Route(":id/edit/:locale")
+	 * @Route(":id/edit/:locale")
 	*/
 	public function editLocaleAction(\Asgard\Http\Request $request) {
 		$this->view = 'form';
@@ -65,7 +65,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	/**
-	@Route("")
+	 * @Route("")
 	*/
 	public function indexAction(\Asgard\Http\Request $request) {
 		$_entity = $this->_entity;
@@ -124,7 +124,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	/**
-	@Route(":id/edit")
+	 * @Route(":id/edit")
 	*/
 	public function editAction(\Asgard\Http\Request $request) {
 		$_singular = $this->_singular;
@@ -165,7 +165,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	/**
-	@Route("new")
+	 * @Route("new")
 	*/
 	public function newAction(\Asgard\Http\Request $request) {
 		$_singular = $this->_singular;
@@ -200,7 +200,7 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	/**
-	@Route(":id/delete")
+	 * @Route(":id/delete")
 	*/
 	public function deleteAction(\Asgard\Http\Request $request) {
 		$_entity = $this->_entity;
