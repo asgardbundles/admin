@@ -6,7 +6,7 @@ namespace <?=ucfirst($bundle['namespace']) ?>\Controllers;
  */
 class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\Controller\EntityAdminController {
 	protected $_entity = '<?=$entity['meta']['entityClass'] ?>';
-	protected $_entities = '<?=$entity['meta']['plural'] ?>';
+	protected $_plural = '<?=$entity['meta']['plural'] ?>';
 
 	public function __construct() {
 		$this->_messages = [
