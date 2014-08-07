@@ -40,14 +40,14 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 
 	protected function getLocalesLinks($entity) {
-		if(!$entity->isI18N() || !$this->app['config']['locales'])
+		if(!$entity->isI18N() || !$this->container['config']['locales'])
 			return;
 		$links = [];
 		if($this->request['locale'])
 			$current = $this->request['locale'];
 		else
-			$current = $this->app['config']['locale'];
-		foreach($this->app['config']['locales'] as $locale) {
+			$current = $this->container['config']['locale'];
+		foreach($this->container['config']['locales'] as $locale) {
 			if($locale === $current)
 				$links[] = '<a href="'.$this->url_for('editLocale', ['id'=>$this->request['id'], 'locale'=>$locale]).'"><b>'.strtoupper($locale).'</b></a>';
 			else
@@ -75,7 +75,7 @@ abstract class EntityAdminController extends AdminParentController {
 		#submitted
 		$controller = $this;
 		$this->globalactions = [];
-		$this->app['hooks']->trigger('asgardadmin_globalactions', [$controller, &$this->globalactions], function($chain, $controller, &$actions) {
+		$this->container['hooks']->trigger('asgardadmin_globalactions', [$controller, &$this->globalactions], function($chain, $controller, &$actions) {
 			$_entity = $controller->getEntity();
 			$actions['delete'] = [
 				'text'	=>	__('Delete'),
@@ -94,7 +94,7 @@ abstract class EntityAdminController extends AdminParentController {
 			$this->globalactions[$this->request->post->get('action')]['callback']($_entity, $this);
 		
 		#Search
-		$this->searchForm = $this->app->make('form', ['search', ['method'=>'get'], $request]);
+		$this->searchForm = $this->container->make('form', ['search', ['method'=>'get'], $request]);
 		$this->searchForm['search'] = new \Asgard\Form\Fields\TextField;
 
 		$conditions = [];

@@ -13,34 +13,28 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 				$entity['admin'] = [];
 
 			$entityClass = $entity['meta']['entityClass'];
-			if(!isset($entity['admin']['form']))
-				$entity['admin']['form'] = array_keys($entityClass::properties());
-
 			if(!isset($entity['admin']['form'])) {
-				if(array_values($entity['admin']['form']) === $entity['admin']['form']) {
-					$old = $entity['admin']['form'];
-					$entity['admin']['form'] = [];
-					foreach($old as $k=>$v)
-						$entity['admin']['form'][$v] = ['render'=>'def', 'params'=>[]];
-				}
-				foreach($entity['admin']['form'] as $property=>$params) {
-					if(!$entityClass::hasProperty($property) || $entityClass::property($property)->editable === false) {
-						unset($entity['admin']['form'][$property]);
-						continue;
-					}
-					if(!isset($params['render']))
-						$entity['admin']['form'][$property]['render'] = 'def';
-					if(!isset($params['params']))
-						$entity['admin']['form'][$property]['params'] = [];
+				foreach($entityClass::properties() as $propname=>$prop) {
+					if($prop->editable !== false)
+						$entity['admin']['form'][$propname] = ['render'=>'def', 'params'=>[]];
 				}
 			}
-			else {
-				$entity['admin']['form'] = [];
-				foreach($entityClass::properties() as $propName=>$property) {
-					if($property->editable === false)
-						continue;
-					$entity['admin']['form'][$propName] = ['render'=>'def', 'params'=>[]];
+
+			if(!isset($entity['admin']['relations']))
+				$entity['admin']['relations'] = [];
+			foreach($entity['admin']['relations'] as $relation)
+				$entity['admin']['form'][] = $relation;
+			foreach($entity['admin']['form'] as $property=>$params) {
+				if(is_int($property)) {
+					unset($entity['admin']['form'][$property]);
+					$property = $params;
+					$params = [];
+					$entity['admin']['form'][$property] = $params;
 				}
+				if(!isset($params['render']))
+					$entity['admin']['form'][$property]['render'] = 'def';
+				if(!isset($params['params']))
+					$entity['admin']['form'][$property]['params'] = [];
 			}
 
 			if(!isset($entity['admin']['messages']['modified']))
@@ -53,8 +47,8 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 				$entity['admin']['messages']['deleted'] = ucfirst($bundle['entities'][$name]['meta']['label']).' deleted with success.';
 
 			$generator->processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'Controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
-			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
-			$generator->processFile(__DIR__.'/../generator/html/form.php', $dst.'views/'.$bundle['entities'][$name]['meta']['name'].'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($bundle['entities'][$name]['meta']['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$generator->processFile(__DIR__.'/../generator/html/form.php', $dst.'html/'.strtolower($bundle['entities'][$name]['meta']['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 
 			$generator->processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', ['bundle'=>$bundle]);
 			$generator->processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
@@ -84,14 +78,14 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 	public static function bundle(\Asgard\Hook\HookChain $chain, $bundle) {
 		foreach($bundle['entities'] as $name=>$entity) {
 			echo "
-		\$app['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
-				\$chain->app['adminMenu']->add([
+		\$container['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
+				\$chain->container['adminMenu']->add([
 				'label' => __('".ucfirst($entity['meta']['label_plural'])."'),
-				'link' => \$chain->app['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name'])."AdminController', 'index']),
+				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name'])."AdminController', 'index']),
 			], '0.');
-			\$chain->app['adminMenu']->addHome([
-				'img' => \$chain->app['request']->url->to('".$bundle['name']."/".$entity['meta']['plural'].".svg'),
-				'link' => \$chain->app['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name']),"AdminController', 'index']),
+			\$chain->container['adminMenu']->addHome([
+				'img' => \$chain->container['request']->url->to('".$bundle['name']."/".$entity['meta']['plural'].".svg'),
+				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name']),"AdminController', 'index']),
 				'title' => __('".ucfirst($entity['meta']['label_plural'])."'),
 				'description' => __('')
 			]);

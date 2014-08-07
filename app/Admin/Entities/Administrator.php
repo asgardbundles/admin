@@ -35,6 +35,6 @@ class Administrator extends \Asgard\Entity\Entity {
 	}
 
 	public static function hash($pwd) {
-		return sha1(static::getapp()->get('config')->get('key').$pwd);
+		return sha1(static::getContainer()->get('config')->get('key').$pwd);
 	}
 }

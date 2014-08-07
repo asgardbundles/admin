@@ -2,10 +2,10 @@
 namespace Admin\Libs;
 
 class AdminAuth implements \Asgard\Auth\IAuth {
-	protected $app;
+	protected $container;
 
-	public function __construct($app) {
-		$this->app = $app;
+	public function __construct($container) {
+		$this->container = $container;
 	}
 
 	public function isConnected() {
@@ -55,6 +55,6 @@ class AdminAuth implements \Asgard\Auth\IAuth {
 	}
 
 	protected function getRequest() {
-		return $this->app['request'];
+		return $this->container['request'];
 	}
 }

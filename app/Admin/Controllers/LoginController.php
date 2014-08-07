@@ -11,7 +11,7 @@ class LoginController extends \Asgard\Http\Controller {
 	 * @Route("admin/login")
 	 */
 	public function loginAction(\Asgard\Http\Request $request) {
-		$auth = $this->app['adminAuth'];
+		$auth = $this->container['adminAuth'];
 		$username = $request->post['username'];
 		$password = $request->post['password'];
 
@@ -36,7 +36,7 @@ class LoginController extends \Asgard\Http\Controller {
 	 * @Route("admin/logout")
 	 */
 	public function logoutAction(\Asgard\Http\Request $request) {
-		$this->app['adminAuth']->disconnect();
+		$this->container['adminAuth']->disconnect();
 
 		return $this->response->redirect('');
 	}
@@ -45,7 +45,7 @@ class LoginController extends \Asgard\Http\Controller {
 	 * @Route("admin/forgotten")
 	 */
 	public function forgottenAction($request) {
-		$this->form = $this->app->make('form', ['forgotten', [], [], $this->request]);
+		$this->form = $this->container->make('form', ['forgotten', [], $this->request]);
 		$this->form['username'] = new \Asgard\Form\Fields\TextField(['required'=>true]);
 
 		if($request['code']) {
@@ -56,8 +56,8 @@ class LoginController extends \Asgard\Http\Controller {
 			else {
 				$password = \Asgard\Common\Tools::randStr(10);
 				$admin->save(['password'=>$password]);
-				$data = $this->app['data'];
-				$this->app->make('email')->send(function($msg) use($password, $admin, $data) {
+				$data = $this->container['data'];
+				$this->container->make('email')->send(function($msg) use($password, $admin, $data) {
 					$msg->to($admin->email);
 					$msg->from($data['email']);
 					$msg->html(__('Your new password is: ').$password);
@@ -65,14 +65,14 @@ class LoginController extends \Asgard\Http\Controller {
 				$this->getFlash()->addSuccess(__('An email with your new password was sent to your email address.'));
 			}
 		}
-		elseif($this->form->isSent()) {
+		elseif($this->form->sent()) {
 			if($this->form->isValid()) {
 				$user = $this->form['username']->getValue();
 				if($admin = \Admin\Entities\Administrator::loadBy('username', $user)) {
 					if($admin->email) {
 						$link = $this->url_for('confirm', ['code'=>sha1($admin->email.'-'.$admin->password)]);
-						$data = $this->app['data'];
-						$this->app->make('email')->send(function($msg) use($link, $admin, $data) {
+						$data = $this->container['data'];
+						$this->container->make('email')->send(function($msg) use($link, $admin, $data) {
 							$msg->to($admin->email);
 							$msg->from($data['email']);
 							$msg->html(__('Please click on the following link to get a new password: ').$link);

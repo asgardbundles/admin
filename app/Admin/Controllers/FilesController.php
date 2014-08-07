@@ -8,7 +8,7 @@ class FilesController extends \Admin\Libs\Controller\AdminParentController {
 	public function before(\Asgard\Http\Request $request) {
 		$this->layout = false;
 		$entityAlias = $request['entityAlias'];
-		$entityClass = $this->app['adminManager']->getClass($entityAlias);
+		$entityClass = $this->container['adminManager']->getClass($entityAlias);
 		if(!($this->entity = $entityClass::load($request['id'])))
 			$this->forward404();
 		if(!$this->entity->hasProperty($request['file']))

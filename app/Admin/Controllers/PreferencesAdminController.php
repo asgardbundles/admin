@@ -12,9 +12,9 @@ class PreferencesAdminController extends \Admin\Libs\Controller\AdminParentContr
 	}
 	
 	public function formConfigure() {
-		$form = $this->app->make('adminSimpleForm', [$this, 'preferences']);
+		$form = $this->container->make('adminSimpleForm', [$this, 'preferences']);
 		
-		$data = $this->app['data'];
+		$data = $this->container['data'];
 		$form['email'] = new \Asgard\Form\Fields\TextField([
 			'default'    => $data->get('email'),
 			'validation' => ['email']

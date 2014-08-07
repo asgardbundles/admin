@@ -19,7 +19,7 @@ class AdministratorAdminController extends \Admin\Libs\Controller\EntityAdminCon
 	}
 	
 	public function formConfigure($entity) {
-		$form = $this->app->make('adminEntityForm', [$entity, $this]);
+		$form = $this->container->make('adminEntityForm', [$entity, $this]);
 		$form->password->params['view']['value'] = '';
 		
 		return $form;

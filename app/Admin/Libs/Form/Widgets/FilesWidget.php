@@ -14,7 +14,7 @@ class FilesWidget extends \Asgard\Form\Widget {
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
 		]+$attrs);
-		$app = $this->field->getDad()->getApp();
+		$container = $this->field->getDad()->getcontainer();
 		$entity = $this->field->getDad()->getEntity();
 		$name = $this->field->name;		
 		$optional = !$entity->property($name)->required();
@@ -22,13 +22,13 @@ class FilesWidget extends \Asgard\Form\Widget {
 		if($entity->isNew())
 			return null;
 		$uid = \Asgard\Common\Tools::randstr(10);
-		$app['html']->codeJS("
+		$container['html']->codeJS("
 			$(function(){
-				multiple_upload('$uid', '".$app['resolver']->url_for(['Admin\Controllers\FilesController', 'add'], ['entityAlias' => $app['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name])."');
+				multiple_upload('$uid', '".$container['resolver']->url_for(['Admin\Controllers\FilesController', 'add'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name])."');
 			});");
-		$app['html']->includeJS('bundles/admin/uploadify/jquery.uploadify.min.js');
-		$app['html']->includeJS('bundles/admin/js/uploadify.php');
-		$app['html']->includeCSS('bundles/admin/uploadify/uploadify.css');
+		$container['html']->includeJS('bundles/admin/uploadify/jquery.uploadify.min.js');
+		$container['html']->includeJS('bundles/admin/js/uploadify.php');
+		$container['html']->includeCSS('bundles/admin/uploadify/uploadify.css');
 		ob_start();
 		?>
 		<div class="block">
@@ -55,7 +55,7 @@ class FilesWidget extends \Asgard\Form\Widget {
 						$url = $file->url();
 					?>
 					<li>
-						<a href="<?=$url ?>"><?=__('Download') ?></a> | <a href="<?=$app['resolver']->url_for(['Admin\Controllers\FilesController', 'deleteOne'], ['entityAlias' => $app['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete') ?></a>
+						<a href="<?=$url ?>"><?=__('Download') ?></a> | <a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'deleteOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete') ?></a>
 					</li>
 					<?php
 					$i++;

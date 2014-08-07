@@ -27,7 +27,7 @@
 
 <ul id="dash-menu">
 	<?php $this->getFlash()->showAll() ?>
-	<?php foreach($this->app['adminMenu']->getHome() as $link): ?>
+	<?php foreach($this->container['adminMenu']->getHome() as $link): ?>
 	<li>
 		<a href="<?=$link['link'] ?>"><img src="<?=$link['img'] ?>"></a>
 		<a class="title" href="<?=$link['link'] ?>"><?=$link['title'] ?></a>

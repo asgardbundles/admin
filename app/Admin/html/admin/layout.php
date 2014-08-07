@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=7" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?=$controller->getApp()['data']['name'] ?> &#9679; <?=__('Administration') ?></title>
+	<title><?=$controller->getContainer()['data']['name'] ?> &#9679; <?=__('Administration') ?></title>
 	<base href="<?=$controller->request->url->to('admin/') ?>" />
 	<style type="text/css" media="all">
 		@import url("../bundles/admin/css/admin.css");
@@ -31,12 +31,12 @@
 			<div id="header">
 				<div class="hdrl"></div>
 				<div class="hdrr"></div>
-				<h1><a href=".."><?=$controller->getApp()['data']['name'] ?></a></h1>
+				<h1><a href=".."><?=$controller->getContainer()['data']['name'] ?></a></h1>
 				
 				<ul id="nav">
 					<li><a href="#"><?=__('Dashboard') ?></a></li>
 					<?php
-					$controller->getApp()['adminMenu']->showMenu();
+					$controller->getContainer()['adminMenu']->showMenu();
 					?>
 				</ul>
 				<p class="user"><a href=".."><?=__('See website') ?></a> | <a href="logout"><?=__('Disconnect') ?></a></p>
@@ -45,7 +45,7 @@
 			<?=$content; ?>
 			
 			<div id="footer">
-				<p class="left"><?=$controller->getApp()['config']['admin.footer'] ?></p>
+				<p class="left"><?=$controller->getContainer()['config']['admin.footer'] ?></p>
 			</div>
 		</div>			
 	</div>	
@@ -64,6 +64,6 @@
 	<script type="text/javascript" src="../bundles/admin/js/jquery.pngfix.js"></script>
 	<script type="text/javascript" src="../bundles/admin/js/custom.js"></script>
 	
-	<?php $controller->getApp()['html']->printAll() ?>
+	<?php $controller->getContainer()['html']->printAll() ?>
 </body>
 </html>

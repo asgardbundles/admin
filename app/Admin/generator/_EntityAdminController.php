@@ -18,7 +18,8 @@ class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\
 	}
 	
 	public function formConfigure($entity) {
-		$form = $this->app->make('adminEntityForm', [$entity, $this]);
+		$form = $this->container->make('adminEntityForm', [$entity, $this]);<?php foreach($entity['admin']['relations'] as $relation): ?>
+		$form->addRelation('<?php echo $relation ?>');<?php endforeach ?>
 		
 		return $form;
 	}

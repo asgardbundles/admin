@@ -41,7 +41,7 @@
 										<td><input type="checkbox" name="id[]" value="<?=$administrator->id ?>" /></td>
 										<td><a href="administrators/<?=$administrator->id ?>/edit"><?=$administrator ?></a></td>
 											<td class="actions">
-													<?php $this->app['hooks']->trigger('asgard_administrator_actions', [$administrator]) ?>
+													<?php $this->container['hooks']->trigger('asgard_administrator_actions', [$administrator]) ?>
 													<a class="delete" href="administrators/<?=$administrator->id ?>/delete"><?=__('Delete') ?></a>
 												</td>
 									</tr>
