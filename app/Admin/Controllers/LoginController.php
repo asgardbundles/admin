@@ -27,8 +27,10 @@ class LoginController extends \Asgard\Http\Controller {
 				else
 					return $this->response->redirect('admin');
 			}
-			elseif($request->post->has('username'))
-				$this->getFlash()->addError(__('Invalid username or password.'));
+			elseif($request->post->has('username')) {
+				$this->response->setCode(400);
+				$error = __(__('Invalid username or password.'));
+			}
 		}
 	}
 	
@@ -48,11 +50,12 @@ class LoginController extends \Asgard\Http\Controller {
 		$this->form = $this->container->make('form', ['forgotten', [], $this->request]);
 		$this->form['username'] = new \Asgard\Form\Fields\TextField(['required'=>true]);
 
+		$error = null;
 		if($request['code']) {
 			$hash = $request['code'];
 			$admin = \Admin\Entities\Administrator::where(['SHA1(CONCAT(username, \'-\', password))' => $hash])->first();
 			if(!$admin)
-				$this->getFlash()->addError('Invalid code.');
+				$error = __('Invalid code.');
 			else {
 				$password = \Asgard\Common\Tools::randStr(10);
 				$admin->save(['password'=>$password]);
@@ -67,7 +70,7 @@ class LoginController extends \Asgard\Http\Controller {
 		}
 		elseif($this->form->sent()) {
 			if($this->form->isValid()) {
-				$user = $this->form['username']->getValue();
+				$user = $this->form['username']->value();
 				if($admin = \Admin\Entities\Administrator::loadBy('username', $user)) {
 					if($admin->email) {
 						$link = $this->url_for('confirm', ['code'=>sha1($admin->email.'-'.$admin->password)]);
@@ -80,13 +83,17 @@ class LoginController extends \Asgard\Http\Controller {
 						$this->getFlash()->addSuccess('An email was sent to your email address.');
 					}
 					else
-						$this->getFlash()->addError('This administrator does not have a valid email address. Please ask the main administrator.');
+						$error = __('This administrator does not have a valid email address. Please ask the main administrator.');
 				}
 				else
-					$this->getFlash()->addError('This username does not exist.');
+					$error = __('This username does not exist.');
 			}
 			else
-				$this->getFlash()->addError('Please fill in your useraname.');
+				$error = __('Please fill in your username.');
+		}
+		if($error) {
+			$this->response->setCode(400);
+			$this->getFlash()->addError($error);
 		}
 	}
 	
