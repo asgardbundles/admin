@@ -62,7 +62,7 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 				$deleteRoute = $class::routeFor('delete')->getRoute();
 				$bundle['generatedTests'][$indexRoute] = '
 		$browser = $this->getBrowser();
-		$browser->setSession(\'admin_id\', 1);
+		$browser->getSession()->set(\'admin_id\', 1);
 		$this->assertTrue($browser->get(\''.$indexRoute.'\')->isOK(), \'GET '.$indexRoute.'\');
 		$this->assertTrue($browser->get(\''.$newRoute.'\')->isOK(), \'GET '.$newRoute.'\');
 		\\'.$entityClass.'::create([\'id\'=>50, ]);

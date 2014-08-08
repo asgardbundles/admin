@@ -136,7 +136,7 @@ abstract class EntityAdminController extends AdminParentController {
 		$this->form = $this->formConfigure($this->{$_singular});
 		if($request['locale']) {
 			$this->{$_singular}->setLocale($request['locale']);
-			$this->form->setParam('action', $this->url_for('editLocale', ['id'=>$request['id'], 'locale'=>$request['locale']]));
+			$this->form->setOption('action', $this->url_for('editLocale', ['id'=>$request['id'], 'locale'=>$request['locale']]));
 		}
 		
 		$this->original = clone $this->{$_singular};
