@@ -2,7 +2,7 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2><a href="<%=$this->url_for('index')%>"><%=ucfirst($this->_plural)%></a></h2>
+					<h2><a href="<%=$this->url_for('index')%>"><%=__(ucfirst($this->_plural))%></a></h2>
 					<ul>
 						<li><a href="<%=$this->url_for('new')%>"><%=__('Add')%></a></li>
 					</ul>
@@ -11,7 +11,7 @@
 					echo $searchForm['search']->def([
 						'attrs'	=>	[
 							'class'	=>	'text',
-							'placeholder'	=>	'Search',
+							'placeholder'	=>	__('Search'),
 						]
 					]);
 					echo $searchForm->close();

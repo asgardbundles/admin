@@ -84,7 +84,7 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name'])."AdminController', 'index']),
 			], '0.');
 			\$chain->container['adminMenu']->addHome([
-				'img' => \$chain->container['request']->url->to('".$bundle['name']."/".$entity['meta']['plural'].".svg'),
+				'img' => \$chain->container['request']->url->to('bundles/".$bundle['name']."/".$entity['meta']['plural'].".svg'),
 				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name']),"AdminController', 'index']),
 				'title' => __('".ucfirst($entity['meta']['label_plural'])."'),
 				'description' => __('')

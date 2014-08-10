@@ -23,7 +23,7 @@ trait AdminFormTrait {
 			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\PasswordWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetsManager->setWidget('select', function(\Asgard\Form\Field $field, array $options) {
-			$options['attrs']['class'] = 'text big';
+			$options['attrs']['class'] = 'styled';
 			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\SelectWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetsManager->setWidget('date', function(\Asgard\Form\Field $field, array $options) {
