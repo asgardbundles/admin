@@ -29,7 +29,7 @@ class LoginController extends \Asgard\Http\Controller {
 			}
 			elseif($request->post->has('username')) {
 				$this->response->setCode(400);
-				$error = __(__('Invalid username or password.'));
+				$error = __('Invalid username or password.');
 			}
 		}
 	}
@@ -80,7 +80,7 @@ class LoginController extends \Asgard\Http\Controller {
 							$msg->from($data['email']);
 							$msg->html(__('Please click on the following link to get a new password: ').$link);
 						});
-						$this->getFlash()->addSuccess('An email was sent to your email address.');
+						$this->getFlash()->addSuccess(__('An email was sent to your email address.'));
 					}
 					else
 						$error = __('This administrator does not have a valid email address. Please ask the main administrator.');

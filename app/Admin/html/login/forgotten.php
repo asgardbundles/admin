@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?=$this->container['config']['website.name'] ?> &#9679; Forgotten</title>
+	<title><?=$this->container['config']['website.name'] ?> &#9679; <?=__('Password forgotten')?></title>
 	<base href="<?=$this->request->url->to('admin/') ?>" />
     <style type="text/css" media="all">
 		@import url("<?=$this->request->url->to('bundles/admin/css/admin.css') ?>");
@@ -16,7 +16,7 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2>Forgotten</h2>
+					<h2><?=__('Password forgotten')?></h2>
 					<ul>
 						<li><a href="<?=$this->request->url->to('') ?>"><?=__('back to website') ?></a></li>
 					</ul>
@@ -25,11 +25,11 @@
 					<?php $this->getFlash()->showAll() ?>
 					<form action="forgotten" method="post">
 						<p>
-							<label><?=__('Username:') ?></label> <br />
+							<label><?=__('Username: ') ?></label> <br />
 							<?=$form['username']->def(['attrs'=>['class'=>'text']]) ?>
 						</p>
 						<p>
-							<input type="submit" class="submit" value="Submit" />
+							<input type="submit" class="submit" value="<?=__('Submit')?>" />
 						</p>
 					</form>
 				</div>		<!-- .block_content ends -->

@@ -28,33 +28,41 @@ class FilesController extends \Admin\Libs\Controller\AdminParentController {
 
 		try {
 			$postFile = $request->file['Filedata'];
-			$postFile = \Asgard\Form\HttpFile::createFromArray($postFile);
 
 			$fileName = $request['file'];
-
-			if($entity->property($fileName) instanceof \Asgard\Entity\Properties\ImageProperty)
-				$type = 'image';
-			else
-				$type = 'file';
-
+			$property = $entity->property($fileName);
 
 			$postFile = $entity->get($fileName)->add($postFile);
 			$entity->save();
 
-			$url = $postFile->url();
-
-			$response = [
-				'type' => $type,
-				'url' => $url,
-				'deleteurl' => $this->url_for('deleteOne', ['entityAlias' => $request['entityAlias'], 'id' => $entity->id, 'pos' => $entity->get($fileName)->size(), 'file' => $request['file']]),
-			];
-			if($entity->property($fileName) instanceof \Asgard\Entity\Properties\ImageProperty)
-				$response['thumb_url'] = $request->url->to('imagecache/admin_thumb/'.$postFile->relativeToWebDir());
+			$deleteurl = $this->url_for('deleteOne', ['entityAlias' => $request['entityAlias'], 'id' => $entity->id, 'pos' => $entity->get($fileName)->size(), 'file' => $request['file']]);
+			$downloadurl = $this->url_for('downloadOne', ['entityAlias' => $request['entityAlias'], 'id' => $entity->id, 'pos' => $entity->get($fileName)->size(), 'file' => $request['file']]);
+			$response = '<li><a href="'.$downloadurl.'">'.__('Download').'</a> | <a href="'.$deleteurl.'">'.__('Delete').'</a></li>';
 		} catch(\Asgard\Orm\EntityException $e) {
 			return $this->response->setCode(400)->setContent(__('An error occured.'));
 		}
 
-		return $this->response->setCode(200)->setContent(json_encode($response));
+		return $this->response->setCode(200)->setContent($response);
+	}
+
+	/**
+	 * @Route("download")
+	 */
+	public function downloadAction($request) {
+		$entity = $this->entity;
+		$file = $request['file'];
+		$path = $entity->$file->src();
+		if(!file_exists($path))
+			return $this->response->setCode(404);
+
+	    $this->response->setHeader('Content-Description', 'File Transfer');
+	    $this->response->setHeader('Content-Type', 'application/octet-stream');
+	    $this->response->setHeader('Content-Disposition', 'attachment; filename='.basename($path));
+	    $this->response->setHeader('Expires', '0');
+	    $this->response->setHeader('Cache-Control', 'must-revalidate');
+	    $this->response->setHeader('Pragma', 'public');
+	    $this->response->setHeader('Content-Length', '' . filesize($path));
+	    readfile($path);
 	}
 
 	/**
@@ -68,6 +76,32 @@ class FilesController extends \Admin\Libs\Controller\AdminParentController {
 		$this->getFlash()->addSuccess(__('File deleted with success.'));
 
 		return $this->back();
+	}
+
+	/**
+	 * @Route("download/:pos")
+	 */
+	public function downloadOneAction($request) {
+		$entity = $this->entity;
+		$fileName = $request['file'];
+
+		$files = $entity->get($fileName);
+		if(!isset($files[$request['pos']-1]))
+			return $this->response->setCode(404);
+
+		$file = $files[$request['pos']-1];
+		$path = $file->src();
+		if(!file_exists($path))
+			return $this->response->setCode(404);
+
+	    $this->response->setHeader('Content-Description', 'File Transfer');
+	    $this->response->setHeader('Content-Type', 'application/octet-stream');
+	    $this->response->setHeader('Content-Disposition', 'attachment; filename='.basename($path));
+	    $this->response->setHeader('Expires', '0');
+	    $this->response->setHeader('Cache-Control', 'must-revalidate');
+	    $this->response->setHeader('Pragma', 'public');
+	    $this->response->setHeader('Content-Length', '' . filesize($path));
+	    readfile($path);
 	}
 
 	/**

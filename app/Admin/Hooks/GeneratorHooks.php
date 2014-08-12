@@ -91,6 +91,7 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 			]);
 		});
 
+		\$container['adminManager']->setAlias('".$entity['meta']['plural']."', '".$bundle['namespace']."\Entities\\".ucfirst($entity['meta']['name'])."');
 ";
 		}
 	}

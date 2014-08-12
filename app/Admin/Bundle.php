@@ -14,6 +14,13 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		});
 		$container->register('adminEntityFieldsSolver', function() {
 			$solver = new \Asgard\Entityform\EntityFieldsSolver;
+			$solver->addMultiple(function($property) {
+				return new \Admin\Libs\Form\DynamicGroup;
+			});
+			$solver->addMultiple(function($property) {
+				if($property instanceof \Asgard\Entity\Properties\FileProperty)
+					return new \Admin\Libs\Form\Fields\MultipleFilesField;
+			});
 			return $solver;
 		});
 		$container->register('adminEntityForm', function($container, $entity, $controller, $params=[]) {

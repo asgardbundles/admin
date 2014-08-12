@@ -16,7 +16,7 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2>Login</h2>
+					<h2><?=__('Login')?></h2>
 					<ul>
 						<li><a href="<?=$this->request->url->to('') ?>"><?=__('back to website') ?></a></li>
 					</ul>
@@ -25,11 +25,11 @@
 					<?php $this->getFlash()->showAll() ?>
 					<form action="login" method="post">
 						<p>
-							<label><?=__('Username:') ?></label> <br />
+							<label><?=__('Username: ') ?></label> <br />
 							<input type="text" class="text" name="username"/>
 						</p>
 						<p>
-							<label><?=__('Password:') ?></label> <br />
+							<label><?=__('Password: ') ?></label> <br />
 							<input type="password" class="text" name="password"/> (<a href="forgotten"><?=__('Password forgotten?') ?></a>)
 						</p>
 						<p>

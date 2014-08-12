@@ -14,8 +14,8 @@ class FilesWidget extends \Asgard\Form\Widget {
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
 		]+$attrs);
-		$container = $this->field->getDad()->getcontainer();
-		$entity = $this->field->getDad()->getEntity();
+		$container = $this->field->getParent()->getcontainer();
+		$entity = $this->field->getParent()->getEntity();
 		$name = $this->field->name;		
 		$optional = !$entity->property($name)->required();
 
@@ -52,10 +52,10 @@ class FilesWidget extends \Asgard\Form\Widget {
 					<?php
 					$i=1;
 					foreach($entity->$name as $file):
-						$url = $file->url();
 					?>
 					<li>
-						<a href="<?=$url ?>"><?=__('Download') ?></a> | <a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'deleteOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete') ?></a>
+						<a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'downloadOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Download')?></a>
+						 | <a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'deleteOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete')?></a>
 					</li>
 					<?php
 					$i++;
@@ -66,7 +66,7 @@ class FilesWidget extends \Asgard\Form\Widget {
 				</ul>
 				
 				<p id="<?=$uid ?>">
-					<label><?=__('Upload:') ?></label><br />
+					<label><?=__('Upload: ') ?></label><br />
 					<input type="file" id="<?=$uid ?>-filesupload" class="filesupload" /><br/>
 					<span class="uploadmsg"><?=__('Maximum size 3Mb') ?></span>
 					<div id="<?=$uid ?>-custom-queue"></div>
