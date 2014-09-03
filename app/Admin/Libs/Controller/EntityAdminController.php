@@ -69,7 +69,7 @@ abstract class EntityAdminController extends AdminParentController {
 	*/
 	public function indexAction(\Asgard\Http\Request $request) {
 		$_entity = $this->_entity;
-		$definition = $_entity::getDefinition();
+		$definition = $_entity::getStaticDefinition();
 		$_plural = $this->_plural;
 	
 		#submitted

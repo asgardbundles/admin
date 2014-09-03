@@ -77,6 +77,8 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 	 */
 	public static function bundle(\Asgard\Hook\HookChain $chain, $bundle) {
 		foreach($bundle['entities'] as $name=>$entity) {
+			if(!array_key_exists('admin', $entity))
+				continue;
 			echo "
 		\$container['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
 				\$chain->container['adminMenu']->add([

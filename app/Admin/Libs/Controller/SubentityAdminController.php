@@ -17,7 +17,7 @@ abstract class SubentityAdminController extends EntityAdminController {
 	*/
 	public function indexAction(\Asgard\Http\Request $request) {
 		$_entity = $this->_entity;
-		$definition = $_entity::getDefinition();
+		$definition = $_entity::getStaticDefinition();
 		$_plural = $this->_plural;
 		
 		$this->searchForm = new \Asgard\Form\Form(null, ['method'=>'get']);
