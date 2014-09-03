@@ -22,12 +22,12 @@ $kernel->addBundles(array(
 	new \Asgard\Imagecache\Bundle,
 	new \Admin\Bundle
 ));
-$app = $kernel->getContainer();
-$app['cache'] = new \Asgard\Cache\NullCache();
+$container = $kernel->getContainer();
+$container['cache'] = new \Asgard\Cache\NullCache();
 $kernel->load();
 
 #DB
-$app['config']->set('database', array(
+$container['config']->set('database', array(
 	'host' => 'localhost',
 	'user' => 'root',
 	'password' => '',
@@ -35,10 +35,13 @@ $app['config']->set('database', array(
 ));
 
 #Translator
-$app['translator'] = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector());
+$container['translator'] = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector());
+
+#set the EntitiesManager static instance for activerecord-like entities (e.g. new Article or Article::find())
+\Asgard\Entity\EntitiesManager::setInstance($container['entitiesManager']);
 
 #Database
-$app['schema']->dropAll();
-$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/Migrations', $app);
+$container['schema']->dropAll();
+$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/Migrations', $container);
 $mm->migrateFile(__DIR__.'/Migrations/Admin.php');
 $mm->migrateFile('vendor/asgard/data/Migrations/Data.php');
