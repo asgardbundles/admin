@@ -6,9 +6,9 @@
 		"email": "michel@hognerud.net"
 	}],
 	"require": {
-        "asgard/asgard": "dev-master",
-        "asgard/auth": "dev-master",
-		"asgard/imagecache": "dev-master",
-		"asgard/data": "dev-master"
+        "asgard/asgard": "v0.*",
+        "asgard/auth": "v0.*",
+		"asgard/imagecache": "v0.*",
+		"asgard/data": "v0.*"
 	}
 }
