@@ -4,8 +4,13 @@ namespace Admin\Libs\Form;
 class AdminEntityForm extends \Asgard\Entityform\EntityForm {
 	use AdminFormTrait;
 
-	public function __construct(\Asgard\Entity\Entity $entity, \Asgard\Http\Controller $controller, array $params=[], $widgetsManager=null, $entityFieldsSolver=null) {
-		parent::__construct($entity, $params, $controller->request, $entityFieldsSolver);
+	public function __construct(\Asgard\Entity\Entity $entity,
+		\Asgard\Http\Controller $controller,
+		array $params=[],
+		$widgetsManager=null,
+		$entityFieldsSolver=null,
+		\Asgard\Orm\DataMapper $dataMapper=null) {
+		parent::__construct($entity, $params, $controller->request, $entityFieldsSolver, $dataMapper);
 		$this->construct($controller, $widgetsManager);
 	}
 

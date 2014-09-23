@@ -32,7 +32,7 @@ trait AdminFormTrait {
 		});
 	}
 	
-	protected function doRender($render_callback, $field, &$options) {
+	protected function doRender($render_callback, $field, array &$options) {
 		$widget = parent::doRender($render_callback, $field, $options);
 
 		if($field instanceof \Asgard\Form\Fields\HiddenField)

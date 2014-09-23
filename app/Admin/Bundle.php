@@ -2,7 +2,7 @@
 namespace Admin;
 
 class Bundle extends \Asgard\Core\BundleLoader {
-	public function buildContainer($container) {
+	public function buildContainer(\Asgard\Container\Container $container) {
 		$container->register('adminMenu', function() {
 			return new \Admin\Libs\AdminMenu();
 		});
@@ -14,10 +14,10 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		});
 		$container->register('adminEntityFieldsSolver', function() {
 			$solver = new \Asgard\Entityform\EntityFieldsSolver;
-			$solver->addMultiple(function($property) {
+			$solver->addMany(function($property) {
 				return new \Admin\Libs\Form\DynamicGroup;
 			});
-			$solver->addMultiple(function($property) {
+			$solver->addMany(function($property) {
 				if($property instanceof \Asgard\Entity\Properties\FileProperty)
 					return new \Admin\Libs\Form\Fields\MultipleFilesField;
 			});
@@ -26,7 +26,7 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		$container->register('adminEntityForm', function($container, $entity, $controller, $params=[]) {
 			$widgetsManager = clone $container['widgetsManager'];
 			$entityFieldsSolver = new \Asgard\Entityform\EntityFieldsSolver([$container['entityFieldsSolver'], $container['adminEntityFieldsSolver']]);
-			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetsManager, $entityFieldsSolver);
+			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetsManager, $entityFieldsSolver, $container['dataMapper']);
 			$form->setTranslator($container['translator']);
 			$form->setContainer($container);
 			return $form;
@@ -40,7 +40,7 @@ class Bundle extends \Asgard\Core\BundleLoader {
 		});
 	}
 
-	public function run($container) {
+	public function run(\Asgard\Container\Container $container) {
 		parent::run($container);
 
 		$container['hooks']->hook('Asgard.Http.Start', function($chain, $request) {
