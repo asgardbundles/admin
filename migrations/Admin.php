@@ -2,20 +2,22 @@
 class Admin extends \Asgard\Migration\DBMigration {
 	public function up() {
 		$table = $this->container['config']['database.prefix'].'administrator';
-		$this->container['schema']->create($table, function($table) {	
-			$table->add('id', 'int(11)')
-				->autoincrement()
-				->primary();	
-			$table->add('created_at', 'datetime')
-				->nullable();	
-			$table->add('updated_at', 'datetime')
-				->nullable();	
-			$table->add('username', 'varchar(255)')
-				->nullable();	
-			$table->add('email', 'varchar(250)')
-				->nullable();	
-			$table->add('password', 'varchar(255)')
-				->nullable();
+		$this->container['schema']->create($table, function($table) {
+			$table->addColumn('id', 'integer', [
+				'integer' => 11,
+				'autoincrement' => true,
+			]);
+			$table->addColumn('created_at', 'datetime');
+			$table->addColumn('created_at', 'datetime');
+			$table->addColumn('username', 'string', [
+				'length' => 255
+			]);
+			$table->addColumn('email', 'string', [
+				'length' => 255
+			]);
+			$table->addColumn('password', 'string', [
+				'length' => 255
+			]);
 		});
 
 		\Admin\Entities\Administrator::create(array('username'=>'admin', 'password'=>'admin'));
