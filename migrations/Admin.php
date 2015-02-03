@@ -8,7 +8,7 @@ class Admin extends \Asgard\Migration\DBMigration {
 				'autoincrement' => true,
 			]);
 			$table->addColumn('created_at', 'datetime');
-			$table->addColumn('created_at', 'datetime');
+			$table->addColumn('updated_at', 'datetime');
 			$table->addColumn('username', 'string', [
 				'length' => 255
 			]);
