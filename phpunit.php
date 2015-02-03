@@ -27,12 +27,10 @@ $container['cache'] = new \Asgard\Cache\NullCache();
 $kernel->load();
 
 #DB
-$container['config']->set('database', array(
-	'host' => 'localhost',
-	'user' => 'root',
-	'password' => '',
-	'database' => 'asgard'
-));
+$container['config']->set('database', [
+	'driver' => 'sqlite',
+	'database' => ':memory:',
+]);
 
 #Translator
 $container['translator'] = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector());

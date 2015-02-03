@@ -2,18 +2,18 @@
 namespace Admin;
 
 class Bundle extends \Asgard\Core\BundleLoader {
-	public function buildContainer(\Asgard\Container\Container $container) {
+	public function buildContainer(\Asgard\Container\ContainerInterface $container) {
 		$container->register('adminMenu', function() {
-			return new \Admin\Libs\AdminMenu();
+			return new \Admin\Libs\AdminMenu;
 		});
 		$container->register('adminManager', function() {
-			return new \Admin\Libs\AdminManager();
+			return new \Admin\Libs\AdminManager;
 		});
 		$container->register('adminAuth', function($container) {
 			return new \Admin\Libs\AdminAuth($container);
 		});
-		$container->register('adminEntityFieldsSolver', function() {
-			$solver = new \Asgard\Entityform\EntityFieldsSolver;
+		$container->register('adminEntityFieldSolver', function() {
+			$solver = new \Asgard\Entityform\EntityFieldSolver;
 			$solver->addMany(function($property) {
 				return new \Admin\Libs\Form\DynamicGroup;
 			});
@@ -24,36 +24,34 @@ class Bundle extends \Asgard\Core\BundleLoader {
 			return $solver;
 		});
 		$container->register('adminEntityForm', function($container, $entity, $controller, $params=[]) {
-			$widgetsManager = clone $container['widgetsManager'];
-			$entityFieldsSolver = new \Asgard\Entityform\EntityFieldsSolver([$container['entityFieldsSolver'], $container['adminEntityFieldsSolver']]);
-			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetsManager, $entityFieldsSolver, $container['dataMapper']);
+			$widgetManager = clone $container['widgetManager'];
+			$EntityFieldSolver = new \Asgard\Entityform\EntityFieldSolver([$container['EntityFieldSolver'], $container['adminEntityFieldSolver']]);
+			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetManager, $EntityFieldSolver, $container['dataMapper']);
 			$form->setTranslator($container['translator']);
-			$form->setContainer($container);
 			return $form;
 		});
 		$container->register('adminSimpleForm', function($container, $controller, $name=null, $params=[]) {
-			$widgetsManager = clone $container['widgetsManager'];
-			$form = new \Admin\Libs\Form\AdminSimpleForm($controller, $name, $params, $widgetsManager);
+			$widgetManager = clone $container['widgetManager'];
+			$form = new \Admin\Libs\Form\AdminSimpleForm($controller, $name, $params, $widgetManager);
 			$form->setTranslator($container['translator']);
-			$form->setContainer($container);
 			return $form;
 		});
 	}
 
-	public function run(\Asgard\Container\Container $container) {
+	public function run(\Asgard\Container\ContainerInterface $container) {
 		parent::run($container);
 
 		$container['hooks']->hook('Asgard.Http.Start', function($chain, $request) {
-			$chain->container['adminMenu']->add([
+			$chain->getContainer()['adminMenu']->add([
 				'label'  => __('Configuration'),
 				'link'   => '#',
 				'childs' => [
-					['label' => __('Preferences'), 'link' => $chain->container['resolver']->url_for(['Admin\Controllers\PreferencesAdminController', 'edit'])],
-					['label' => __('Administrators'), 'link' => $chain->container['resolver']->url_for(['Admin\Controllers\AdministratorAdminController', 'index'])],
+					['label' => __('Preferences'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controllers\PreferencesAdminController', 'edit'])],
+					['label' => __('Administrators'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controllers\AdministratorAdminController', 'index'])],
 				]
 			], 10);
 
-			$chain->container['imagecache']->addPreset('admin_thumb', [
+			$chain->getContainer()['imagecache']->addPreset('admin_thumb', [
 				'resize'	=>	[
 					'height' =>	100,
 					'force'  =>	false

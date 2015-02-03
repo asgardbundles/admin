@@ -14,9 +14,9 @@ class FileWidget extends \Asgard\Form\Widget {
 			'name'	=>	$this->name,
 			'id'	=>	isset($options['id']) ? $options['id']:null,
 		]+$attrs);
-		$container = $this->field->getParent()->getContainer();
+		$container = \Asgard\Container\Container::singleton();
 		$entity = $this->field->getParent()->getEntity();
-		$name = $this->field->name;		
+		$name = $this->field->getName();
 		$optional = !$entity->property($name)->required();
 
 		if($entity->isOld() && $entity->$name && $entity->$name->exists()) {
@@ -24,11 +24,11 @@ class FileWidget extends \Asgard\Form\Widget {
 			if(!$file->src())
 				return $str;
 			$str .= '<p>
-			<a href="'.$container['resolver']->url_for(['Admin\Controllers\FilesController', 'download'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Download').'</a>
+			<a href="'.$container['resolver']->url(['Admin\Controllers\FilesController', 'download'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Download').'</a>
 			</p>';
 			
 			if($optional)
-				$str .= '<a href="'.$container['resolver']->url_for(['Admin\Controllers\FilesController', 'delete'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Delete').'</a><br/><br/>';
+				$str .= '<a href="'.$container['resolver']->url(['Admin\Controllers\FilesController', 'delete'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Delete').'</a><br/><br/>';
 		}
 
 		return $str;

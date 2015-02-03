@@ -2,9 +2,9 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2><a href="<%=$this->url_for('index')%>"><%=__(ucfirst($this->_plural))%></a></h2>
+					<h2><a href="<%=$this->url('index')%>"><%=__(ucfirst($this->_plural))%></a></h2>
 					<ul>
-						<li><a href="<%=$this->url_for('new')%>"><%=__('Add')%></a></li>
+						<li><a href="<%=$this->url('new')%>"><%=__('Add')%></a></li>
 					</ul>
 					<%
 					echo $searchForm->open();
@@ -49,10 +49,10 @@
 											<tr>
 												<td><input type="checkbox" name="id[]" value="<%=$<?=$entity['meta']['name'] ?>->id%>" /></td>
 												<td><%=$<?=$entity['meta']['name'] ?>->created_at%></td>
-												<td><a href="<%=$this->url_for('edit', ['id'=>$<?=$entity['meta']['name'] ?>->id])%>"><%=$<?=$entity['meta']['name'] ?>%></a></td>
+												<td><a href="<%=$this->url('edit', ['id'=>$<?=$entity['meta']['name'] ?>->id])%>"><%=$<?=$entity['meta']['name'] ?>%></a></td>
 												<td class="actions">
 													<% $this->container['hooks']->trigger('asgard_actions', [$<?=$entity['meta']['name'] ?>])%>
-													<a class="delete" href="<%=$this->url_for('delete', ['id'=>$<?=$entity['meta']['name'] ?>->id])%>"><%=__('Delete')%></a>
+													<a class="delete" href="<%=$this->url('delete', ['id'=>$<?=$entity['meta']['name'] ?>->id])%>"><%=__('Delete')%></a>
 												</td>
 											</tr>
 										<% }%>

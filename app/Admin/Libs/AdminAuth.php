@@ -55,6 +55,6 @@ class AdminAuth implements \Asgard\Auth\IAuth {
 	}
 
 	protected function getRequest() {
-		return $this->container['request'];
+		return $this->container['httpKernel']->getRequest();
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 class AdminTest extends \Asgard\Http\Test {
 	public function test() {
-		$browser = $this->getBrowser();
+		$browser = $this->createBrowser();
 
 		$this->assertEquals(401, $browser->get('admin')->getCode(), 'GET admin'); #not allowed
 
@@ -19,7 +19,7 @@ class AdminTest extends \Asgard\Http\Test {
 		$this->assertEquals(401, $browser->get('admin')->getCode(), 'GET admin'); #not allowed
 
 		#Administrators
-		$browser = $this->getBrowser();
+		$browser = $this->createBrowser();
 		$browser->getSession()->set('admin_id', 1);
 		$this->assertTrue($browser->get('admin/administrators')->isOK(), 'GET admin/administrators');
 		$this->assertTrue($browser->get('admin/administrators/1/edit')->isOK(), 'GET admin/administrators/:id/edit');

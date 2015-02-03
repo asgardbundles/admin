@@ -20,7 +20,7 @@ class PreferencesAdminController extends \Admin\Libs\Controller\AdminParentContr
 			'validation' => ['email']
 		]);
 		$form['head_script'] = new \Asgard\Form\Fields\TextField(['default'=>$data->get('head_script')]);
-		$form->hook('save', function($chain, $form) use($data) {
+		$form->setSaveCallback(function($chain, $form) use($data) {
 			$data->set('email', $form['email']->value());
 			$data->set('head_script', $form['head_script']->value());
 		});

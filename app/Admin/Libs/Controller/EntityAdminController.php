@@ -32,11 +32,11 @@ abstract class EntityAdminController extends AdminParentController {
 	}
 	
 	public static function getIndexURL() {
-		return static::url_for('index');
+		return static::url('index');
 	}
 	
 	public static function getEditURL($id) {
-		return static::url_for('edit', ['id'=>$id]);
+		return static::url('edit', ['id'=>$id]);
 	}
 
 	protected function getLocalesLinks($entity) {
@@ -49,9 +49,9 @@ abstract class EntityAdminController extends AdminParentController {
 			$current = $this->container['config']['locale'];
 		foreach($this->container['config']['locales'] as $locale) {
 			if($locale === $current)
-				$links[] = '<a href="'.$this->url_for('editLocale', ['id'=>$this->request['id'], 'locale'=>$locale]).'"><b>'.strtoupper($locale).'</b></a>';
+				$links[] = '<a href="'.$this->url('editLocale', ['id'=>$this->request['id'], 'locale'=>$locale]).'"><b>'.strtoupper($locale).'</b></a>';
 			else
-				$links[] = '<a href="'.$this->url_for('editLocale', ['id'=>$this->request['id'], 'locale'=>$locale]).'">'.strtoupper($locale).'</a>';
+				$links[] = '<a href="'.$this->url('editLocale', ['id'=>$this->request['id'], 'locale'=>$locale]).'">'.strtoupper($locale).'</a>';
 		}
 		return implode(' | ', $links);
 	}
@@ -131,12 +131,12 @@ abstract class EntityAdminController extends AdminParentController {
 		$_entity = $this->_entity;
 		
 		if(!($this->{$_singular} = $_entity::load($request['id'])))
-			throw new \Asgard\Core\Exceptions\NotFoundException;
+			$this->notFound();
 
 		$this->form = $this->formConfigure($this->{$_singular});
 		if($request['locale']) {
 			$this->{$_singular}->setLocale($request['locale']);
-			$this->form->setOption('action', $this->url_for('editLocale', ['id'=>$request['id'], 'locale'=>$request['locale']]));
+			$this->form->setOption('action', $this->url('editLocale', ['id'=>$request['id'], 'locale'=>$request['locale']]));
 		}
 		
 		$this->original = clone $this->{$_singular};
@@ -149,7 +149,7 @@ abstract class EntityAdminController extends AdminParentController {
 					return $request->server['HTTP_REFERER'] !== $request->url->full()
 						?
 						$this->response->back()
-						:$this->response->redirect($this->url_for('index'));
+						:$this->response->redirect($this->url('index'));
 			} catch(\Asgard\Form\FormException $e) {
 				$this->getFlash()->addError(__('There was at least one error.'));
 				$this->getFlash()->addError($this->form->getGeneralErrors());
@@ -183,9 +183,9 @@ abstract class EntityAdminController extends AdminParentController {
 				if($request->post->has('send'))
 					return $request->server->get('HTTP_REFERER') !== $request->url->full()
 						? $this->response->back()
-						:$this->response->redirect($this->url_for('index'));
+						:$this->response->redirect($this->url('index'));
 				else
-					return $this->response->redirect($this->url_for('edit', ['id'=>$this->{$_singular}->id]));
+					return $this->response->redirect($this->url('edit', ['id'=>$this->{$_singular}->id]));
 			} catch(\Asgard\Form\FormException $e) {
 				$this->getFlash()->addError($this->form->getGeneralErrors());
 				$this->response->setCode(400);
@@ -209,6 +209,6 @@ abstract class EntityAdminController extends AdminParentController {
 			$this->getFlash()->addError($this->_messages['unexisting']) :
 			$this->getFlash()->addSuccess($this->_messages['deleted']);
 			
-		return $this->response->redirect($this->url_for('index'));
+		return $this->response->redirect($this->url('index'));
 	}
 }

@@ -2,7 +2,7 @@
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-					<h2><a href="<?=$this->url_for('index') ?>"><?=__('Administrators') ?></a></h2>
+					<h2><a href="<?=$this->url('index') ?>"><?=__('Administrators') ?></a></h2>
 					<ul>
 						<li><a href="administrators/new"><?=__('Add') ?></a></li>
 					</ul>

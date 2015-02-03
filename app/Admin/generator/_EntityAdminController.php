@@ -10,7 +10,7 @@ class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\
 
 	public function __construct() {
 		$this->_messages = [
-		<?php foreach($entity['admin']['messages'] as $k=>$v): ?>
+		<?php foreach($entity['messages'] as $k=>$v): ?>
 			'<?=$k ?>'			=>	__('<?=$v ?>'),
 		<?php endforeach ?>
 		];
@@ -18,7 +18,7 @@ class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\
 	}
 	
 	public function formConfigure($entity) {
-		$form = $this->container->make('adminEntityForm', [$entity, $this]);<?php foreach($entity['admin']['relations'] as $relation): ?>
+		$form = $this->container->make('adminEntityForm', [$entity, $this]);<?php foreach($entity['relations'] as $relation): ?>
 		$form->addRelation('<?php echo $relation ?>');<?php endforeach ?>
 		
 		return $form;

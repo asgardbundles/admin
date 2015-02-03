@@ -2,19 +2,19 @@
 namespace Admin\Entities;
 
 class Administrator extends \Asgard\Entity\Entity {
-	public static function definition(\Asgard\Entity\EntityDefinition $definition) {
+	public static function definition(\Asgard\Entity\Definition $definition) {
 		$definition->properties = [
-			'username'    => [
+			'username' => [
 				'validation' => [
-					'unique'	=>	true,
+					'unique' => true,
 				],
 				'required' => true,
 			],
 			'email' => 'email',
-			'password'    => [
-				'setHook'  =>    ['Admin\Entities\Administrator', 'hash'],
-				'form'	=>	[
-					'hidden'	=>	true,
+			'password' => [
+				'setHook' => ['Admin\Entities\Administrator', 'hash'],
+				'form' => [
+					'hidden' => true,
 				],
 			],
 		];
@@ -23,7 +23,7 @@ class Administrator extends \Asgard\Entity\Entity {
 			new \Asgard\Orm\ORMBehavior
 		];
 		
-		$definition->hookBefore('destroy', function(\Asgard\Hook\HookChain $chain, \Asgard\Entity\Entity $entity) {
+		$definition->hookBefore('destroy', function(\Asgard\Hook\Chain $chain, \Asgard\Entity\Entity $entity) {
 			if(Administrator::count() < 2)
 				$chain->stop();
 		});

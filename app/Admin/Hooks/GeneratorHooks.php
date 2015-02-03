@@ -1,60 +1,60 @@
 <?php
 namespace Admin\Hooks;
 
-class GeneratorHooks extends \Asgard\Hook\HooksContainer {
+class GeneratorHooks extends \Asgard\Hook\HookContainer {
 	/**
-	 * @Hook("Asgard.Core.Generate.bundleBuild")
+	 * @Hook("Asgard.Core.Generate.postBundleBuild")
 	 */
-	public static function bundleBuild(\Asgard\Hook\HookChain $chain, &$bundle, $dst, $generator) {
-		foreach($bundle['entities'] as $name=>$entity) {
-			if(!array_key_exists('admin', $entity))
-				continue;
-			if(!is_array($entity['admin']))
-				$entity['admin'] = [];
+	public static function bundleBuild(\Asgard\Hook\Chain $chain, &$bundle, $dst, $generator) {
+		if(!isset($bundle['admin']['entities']))
+			return;
 
-			$entityClass = $entity['meta']['entityClass'];
-			if(!isset($entity['admin']['form'])) {
+		foreach($bundle['admin']['entities'] as $name=>$entity) {
+			$meta = $entity['meta'] = static::getMeta($bundle, $name);
+
+			$entityClass = $meta['entityClass'];
+			if(!isset($entity['form'])) {
 				foreach($entityClass::properties() as $propname=>$prop) {
 					if($prop->editable !== false)
-						$entity['admin']['form'][$propname] = ['render'=>'def', 'params'=>[]];
+						$entity['form'][$propname] = ['render'=>'def', 'params'=>[]];
 				}
 			}
 
-			if(!isset($entity['admin']['relations']))
-				$entity['admin']['relations'] = [];
-			foreach($entity['admin']['relations'] as $relation)
-				$entity['admin']['form'][] = $relation;
-			foreach($entity['admin']['form'] as $property=>$params) {
+			if(!isset($entity['relations']))
+				$entity['relations'] = [];
+			foreach($entity['relations'] as $relation)
+				$entity['form'][] = $relation;
+			foreach($entity['form'] as $property=>$params) {
 				if(is_int($property)) {
-					unset($entity['admin']['form'][$property]);
+					unset($entity['form'][$property]);
 					$property = $params;
 					$params = [];
-					$entity['admin']['form'][$property] = $params;
+					$entity['form'][$property] = $params;
 				}
 				if(!isset($params['render']))
-					$entity['admin']['form'][$property]['render'] = 'def';
+					$entity['form'][$property]['render'] = 'def';
 				if(!isset($params['params']))
-					$entity['admin']['form'][$property]['params'] = [];
+					$entity['form'][$property]['params'] = [];
 			}
 
-			if(!isset($entity['admin']['messages']['modified']))
-				$entity['admin']['messages']['modified'] = ucfirst($bundle['entities'][$name]['meta']['label']).' modified with success.';
-			if(!isset($entity['admin']['messages']['created']))
-				$entity['admin']['messages']['created'] = ucfirst($bundle['entities'][$name]['meta']['label']).' created with success.';
-			if(!isset($entity['admin']['messages']['many_deleted']))
-				$entity['admin']['messages']['many_deleted'] = ucfirst($bundle['entities'][$name]['meta']['label_plural']).' deleted with success.';
-			if(!isset($entity['admin']['messages']['deleted']))
-				$entity['admin']['messages']['deleted'] = ucfirst($bundle['entities'][$name]['meta']['label']).' deleted with success.';
+			if(!isset($entity['messages']['modified']))
+				$entity['messages']['modified'] = ucfirst($meta['label']).' modified with success.';
+			if(!isset($entity['messages']['created']))
+				$entity['messages']['created'] = ucfirst($meta['label']).' created with success.';
+			if(!isset($entity['messages']['many_deleted']))
+				$entity['messages']['many_deleted'] = ucfirst($meta['label_plural']).' deleted with success.';
+			if(!isset($entity['messages']['deleted']))
+				$entity['messages']['deleted'] = ucfirst($meta['label']).' deleted with success.';
 
-			$generator->processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'Controllers/'.ucfirst($bundle['entities'][$name]['meta']['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
-			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($bundle['entities'][$name]['meta']['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
-			$generator->processFile(__DIR__.'/../generator/html/form.php', $dst.'html/'.strtolower($bundle['entities'][$name]['meta']['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$generator->processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'Controllers/'.ucfirst($meta['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$generator->processFile(__DIR__.'/../generator/html/form.php', $dst.'html/'.strtolower($meta['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 
-			$generator->processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/ckeditor_config.js', ['bundle'=>$bundle]);
-			$generator->processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$bundle['entities'][$name]['meta']['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
+			$generator->processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$meta['name'].'/ckeditor_config.js', ['bundle'=>$bundle]);
+			$generator->processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$meta['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
 
 			if($bundle['tests']) {
-				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($entity['meta']['name']).'AdminController';
+				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
 
 				$indexRoute = $class::routeFor('index')->getRoute();
 				$newRoute = $class::routeFor('new')->getRoute();
@@ -75,26 +75,70 @@ class GeneratorHooks extends \Asgard\Hook\HooksContainer {
 	/**
 	 * @Hook("Asgard.Core.Generate.bundlephp")
 	 */
-	public static function bundle(\Asgard\Hook\HookChain $chain, $bundle) {
-		foreach($bundle['entities'] as $name=>$entity) {
-			if(!array_key_exists('admin', $entity))
-				continue;
+	public static function bundle(\Asgard\Hook\Chain $chain, $bundle) {
+		if(!isset($bundle['admin']['entities']))
+			return;
+
+		foreach($bundle['admin']['entities'] as $name=>$entity) {
+			$bundleName = $bundle['name'];
+			$namespace = $bundle['namespace'];
+			$meta = static::getMeta($bundle, $name);
+			$labelPlural = ucfirst($meta['label_plural']);
+			$entityName = ucfirst($meta['name']);
+			$entityPlural = $meta['plural'];
+
 			echo "
 		\$container['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
-				\$chain->container['adminMenu']->add([
-				'label' => __('".ucfirst($entity['meta']['label_plural'])."'),
-				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name'])."AdminController', 'index']),
+				\$chain->getContainer()['adminMenu']->add([
+				'label' => __('".$labelPlural."'),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName."AdminController', 'index']),
 			], '0.');
-			\$chain->container['adminMenu']->addHome([
-				'img' => \$chain->container['request']->url->to('bundles/".$bundle['name']."/".$entity['meta']['plural'].".svg'),
-				'link' => \$chain->container['resolver']->url_for(['".$bundle['namespace']."\Controllers\\".ucfirst($entity['meta']['name']),"AdminController', 'index']),
-				'title' => __('".ucfirst($entity['meta']['label_plural'])."'),
+			\$chain->getContainer()['adminMenu']->addHome([
+				'img' => \$chain->getContainer()['httpKernel']->getRequest()->url->to('bundles/".$bundleName."/".$entityPlural.".svg'),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName,"AdminController', 'index']),
+				'title' => __('".$labelPlural."'),
 				'description' => __('')
 			]);
 		});
 
-		\$container['adminManager']->setAlias('".$entity['meta']['plural']."', '".$bundle['namespace']."\Entities\\".ucfirst($entity['meta']['name'])."');
+		\$container['adminManager']->setAlias('".$meta['plural']."', '".$namespace."\Entities\\".$entityName."');
 ";
 		}
+	}
+
+	protected static function getMeta($bundle, $name) {
+		if(isset($meta))
+			return $meta;
+
+		if(!isset($bundle['admin']['entities'][$name]['meta']))
+			$bundle['admin']['entities'][$name]['meta'] = [];
+		if(isset($bundle['admin']['entities'][$name]['meta']['name']))
+			$bundle['admin']['entities'][$name]['meta']['name'] = strtolower($bundle['admin']['entities'][$name]['meta']['name']);
+		else
+			$bundle['admin']['entities'][$name]['meta']['name'] = strtolower($name);
+
+		if(!isset($bundle['admin']['entities'][$name]['meta']['entityClass']))
+			$bundle['admin']['entities'][$name]['meta']['entityClass'] = $bundle['namespace'].'\Entities\\'.ucfirst($name);
+
+		if(isset($bundle['admin']['entities'][$name]['meta']['plural']))
+			$bundle['admin']['entities'][$name]['meta']['plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['plural']);
+		else
+			$bundle['admin']['entities'][$name]['meta']['plural'] = $bundle['admin']['entities'][$name]['meta']['name'].'s';
+		if(isset($bundle['admin']['entities'][$name]['meta']['label']))
+			$bundle['admin']['entities'][$name]['meta']['label'] = strtolower($bundle['admin']['entities'][$name]['meta']['label']);
+		else
+			$bundle['admin']['entities'][$name]['meta']['label'] = $bundle['admin']['entities'][$name]['meta']['name'];
+		if(isset($bundle['admin']['entities'][$name]['meta']['label_plural']))
+			$bundle['admin']['entities'][$name]['meta']['label_plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['label_plural']);
+		elseif(isset($bundle['admin']['entities'][$name]['meta']['plural']))
+			$bundle['admin']['entities'][$name]['meta']['label_plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['plural']);
+		else
+			$bundle['admin']['entities'][$name]['meta']['label_plural'] = $bundle['admin']['entities'][$name]['meta']['label'].'s';
+		if(!isset($bundle['admin']['entities'][$name]['meta']['name_field'])) {
+			$properties = array_keys($bundle['entities'][$name]['properties']);
+			$bundle['admin']['entities'][$name]['meta']['name_field'] = $properties[0];
+		}
+
+		return $bundle['admin']['entities'][$name]['meta'];
 	}
 }
