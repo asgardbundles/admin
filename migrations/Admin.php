@@ -18,6 +18,8 @@ class Admin extends \Asgard\Migration\DBMigration {
 			$table->addColumn('password', 'string', [
 				'length' => 255
 			]);
+
+			$table->setPrimaryKey(['id']);
 		});
 
 		\Admin\Entities\Administrator::create(array('username'=>'admin', 'password'=>'admin'));

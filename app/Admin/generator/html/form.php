@@ -14,7 +14,7 @@
 					
 					<%
 					echo $form->open();
-<?php foreach($entity['form'] as $field=>$params): ?>
+<?php foreach($entity['form'] as $field=>$params): ?><?php if(!isset($params['type']) || $params['type']!=='type'): ?>
 					echo $form['<?=$field ?>']-><?=$params['render'] ?>(<?php if($params['params']): ?>[<?php
 									 foreach($params['params'] as $k=>$v): ?>
 										'<?=$k ?>'	=>	<?=static::outputPHP($v) ?>, <?php endforeach ?>]<?php endif ?>);

@@ -15,7 +15,7 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			$entityClass = $meta['entityClass'];
 			if(!isset($entity['form'])) {
 				foreach($entityClass::properties() as $propname=>$prop) {
-					if($prop->editable !== false)
+					if($prop->get('editable') !== false)
 						$entity['form'][$propname] = ['render'=>'def', 'params'=>[]];
 				}
 			}
@@ -56,12 +56,12 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			if($bundle['tests']) {
 				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
 
-				$indexRoute = $class::routeFor('index')->getRoute();
-				$newRoute = $class::routeFor('new')->getRoute();
-				$editRoute = $class::routeFor('edit')->getRoute();
-				$deleteRoute = $class::routeFor('delete')->getRoute();
-				$bundle['generatedTests'][$indexRoute] = '
-		$browser = $this->getBrowser();
+				$indexRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'index'])->getRoute();
+				$newRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'new'])->getRoute();
+				$editRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'edit'])->getRoute();
+				$deleteRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'delete'])->getRoute();
+				$bundle['generatedTests'][] = '
+		$browser = $this->createBrowser();
 		$browser->getSession()->set(\'admin_id\', 1);
 		$this->assertTrue($browser->get(\''.$indexRoute.'\')->isOK(), \'GET '.$indexRoute.'\');
 		$this->assertTrue($browser->get(\''.$newRoute.'\')->isOK(), \'GET '.$newRoute.'\');
@@ -107,38 +107,40 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 	}
 
 	protected static function getMeta($bundle, $name) {
-		if(isset($meta))
-			return $meta;
+		if(isset($bundle['entities'][$name]['meta']))
+			$meta = $bundle['entities'][$name]['meta'];
+		elseif(isset($bundle['admin']['entities'][$name]['meta']))
+			$meta = $bundle['admin']['entities'][$name]['meta'];
+		else
+			$meta = [];
 
-		if(!isset($bundle['admin']['entities'][$name]['meta']))
-			$bundle['admin']['entities'][$name]['meta'] = [];
-		if(isset($bundle['admin']['entities'][$name]['meta']['name']))
-			$bundle['admin']['entities'][$name]['meta']['name'] = strtolower($bundle['admin']['entities'][$name]['meta']['name']);
+		if(isset($meta['name']))
+			$meta['name'] = strtolower($meta['name']);
 		else
-			$bundle['admin']['entities'][$name]['meta']['name'] = strtolower($name);
+			$meta['name'] = strtolower($name);
 
-		if(!isset($bundle['admin']['entities'][$name]['meta']['entityClass']))
-			$bundle['admin']['entities'][$name]['meta']['entityClass'] = $bundle['namespace'].'\Entities\\'.ucfirst($name);
+		if(!isset($meta['entityClass']))
+			$meta['entityClass'] = $bundle['namespace'].'\Entities\\'.ucfirst($name);
 
-		if(isset($bundle['admin']['entities'][$name]['meta']['plural']))
-			$bundle['admin']['entities'][$name]['meta']['plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['plural']);
+		if(isset($meta['plural']))
+			$meta['plural'] = strtolower($meta['plural']);
 		else
-			$bundle['admin']['entities'][$name]['meta']['plural'] = $bundle['admin']['entities'][$name]['meta']['name'].'s';
-		if(isset($bundle['admin']['entities'][$name]['meta']['label']))
-			$bundle['admin']['entities'][$name]['meta']['label'] = strtolower($bundle['admin']['entities'][$name]['meta']['label']);
+			$meta['plural'] = $meta['name'].'s';
+		if(isset($meta['label']))
+			$meta['label'] = strtolower($meta['label']);
 		else
-			$bundle['admin']['entities'][$name]['meta']['label'] = $bundle['admin']['entities'][$name]['meta']['name'];
-		if(isset($bundle['admin']['entities'][$name]['meta']['label_plural']))
-			$bundle['admin']['entities'][$name]['meta']['label_plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['label_plural']);
-		elseif(isset($bundle['admin']['entities'][$name]['meta']['plural']))
-			$bundle['admin']['entities'][$name]['meta']['label_plural'] = strtolower($bundle['admin']['entities'][$name]['meta']['plural']);
+			$meta['label'] = $meta['name'];
+		if(isset($meta['label_plural']))
+			$meta['label_plural'] = strtolower($meta['label_plural']);
+		elseif(isset($meta['plural']))
+			$meta['label_plural'] = strtolower($meta['plural']);
 		else
-			$bundle['admin']['entities'][$name]['meta']['label_plural'] = $bundle['admin']['entities'][$name]['meta']['label'].'s';
-		if(!isset($bundle['admin']['entities'][$name]['meta']['name_field'])) {
+			$meta['label_plural'] = $meta['label'].'s';
+		if(!isset($meta['name_field'])) {
 			$properties = array_keys($bundle['entities'][$name]['properties']);
-			$bundle['admin']['entities'][$name]['meta']['name_field'] = $properties[0];
+			$meta['name_field'] = $properties[0];
 		}
 
-		return $bundle['admin']['entities'][$name]['meta'];
+		return $meta;
 	}
 }
