@@ -15,7 +15,7 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			$entityClass = $meta['entityClass'];
 			if(!isset($entity['form'])) {
 				foreach($entityClass::properties() as $propname=>$prop) {
-					if($prop->get('editable') !== false)
+					if($prop->get('editable') !== false && $prop->get('type') !== 'entity')
 						$entity['form'][$propname] = ['render'=>'def', 'params'=>[]];
 				}
 			}
@@ -55,6 +55,8 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 
 			if($bundle['tests']) {
 				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
+				$routes = $chain->getContainer()['controllersAnnotationReader']->fetchRoutes($class);
+				$chain->getContainer()['resolver']->addRoutes($routes);
 
 				$indexRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'index'])->getRoute();
 				$newRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'new'])->getRoute();
