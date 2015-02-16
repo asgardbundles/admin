@@ -23,7 +23,7 @@ class Administrator extends \Asgard\Entity\Entity {
 			new \Asgard\Orm\ORMBehavior
 		];
 		
-		$definition->hookBefore('destroy', function(\Asgard\Hook\Chain $chain, \Asgard\Entity\Entity $entity) {
+		$definition->preHook('destroy', function(\Asgard\Hook\Chain $chain, \Asgard\Entity\Entity $entity) {
 			if(Administrator::count() < 2)
 				$chain->stop();
 		});
