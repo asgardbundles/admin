@@ -9,6 +9,8 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 		if(!isset($bundle['admin']['entities']))
 			return;
 
+		$root = $chain->getContainer()['kernel']['root'].'/';
+
 		foreach($bundle['admin']['entities'] as $name=>$entity) {
 			$meta = $entity['meta'] = static::getMeta($bundle, $name);
 
@@ -50,8 +52,10 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$generator->processFile(__DIR__.'/../generator/html/form.php', $dst.'html/'.strtolower($meta['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 
-			$generator->processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $dst.'web/'.$meta['name'].'/ckeditor_config.js', ['bundle'=>$bundle]);
-			$generator->processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $dst.'web/'.$meta['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
+			if(isset($meta['wysiwyg']) && $meta['wysiwyg']) {
+				$generator->processFile(__DIR__.'/../generator/web/ckeditor_config.js.php', $root.'web/'.$meta['name'].'/ckeditor_config.js', ['bundle'=>$bundle]);
+				$generator->processFile(__DIR__.'/../generator/web/day_wysiwyg.css.php', $root.'web/'.$meta['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
+			}
 
 			if($bundle['tests']) {
 				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
