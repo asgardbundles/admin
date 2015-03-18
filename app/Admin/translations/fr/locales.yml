@@ -58,3 +58,7 @@ This username does not exist.: Cet utilisateur n'existe pas.
 Please fill in your username.: Veuillez donner le nom d'utilisateur.
 This administrator does not have a valid email address. Please ask the main administrator.: Cet administrateur n'a pas d'adresse email valide. Veuillez demander à l'administrateur principal du site.
 Invalid code.: Code invalide.
+admin.generator.modified: :label modifié avec succès.
+admin.generator.created:: :label créé avec succès.
+admin.generator.deleted: :label supprimé avec succès.
+admin.generator.deletedPlural: :label supprimés avec succès.

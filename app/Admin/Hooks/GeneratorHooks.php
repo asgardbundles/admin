@@ -40,13 +40,13 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			}
 
 			if(!isset($entity['messages']['modified']))
-				$entity['messages']['modified'] = ucfirst($meta['label']).' modified with success.';
+				$entity['messages']['modified'] = $chain->getContainer()['translator']->trans(':label modified with success.', [':label'=>ucfirst($meta['label'])]);
 			if(!isset($entity['messages']['created']))
-				$entity['messages']['created'] = ucfirst($meta['label']).' created with success.';
+				$entity['messages']['created'] = $chain->getContainer()['translator']->trans(':label created with success.', [':label'=>ucfirst($meta['label'])]);
 			if(!isset($entity['messages']['many_deleted']))
-				$entity['messages']['many_deleted'] = ucfirst($meta['label_plural']).' deleted with success.';
+				$entity['messages']['many_deleted'] = $chain->getContainer()['translator']->trans(':label deleted with success.', [':label'=>ucfirst($meta['label_plural'])]);
 			if(!isset($entity['messages']['deleted']))
-				$entity['messages']['deleted'] = ucfirst($meta['label']).' deleted with success.';
+				$entity['messages']['deleted'] = $chain->getContainer()['translator']->trans(':label deleted with success.', [':label'=>ucfirst($meta['label'])]);
 
 			$generator->processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'Controllers/'.ucfirst($meta['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
@@ -67,13 +67,15 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 				$editRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'edit'])->getRoute();
 				$deleteRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'delete'])->getRoute();
 				$bundle['generatedTests'][] = '
+	public function testAdmin'.ucfirst($name).'() {
 		$browser = $this->createBrowser();
 		$browser->getSession()->set(\'admin_id\', 1);
 		$this->assertTrue($browser->get(\''.$indexRoute.'\')->isOK(), \'GET '.$indexRoute.'\');
 		$this->assertTrue($browser->get(\''.$newRoute.'\')->isOK(), \'GET '.$newRoute.'\');
 		\\'.$entityClass.'::create([\'id\'=>50, ]);
 		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRoute).'\')->isOK(), \'GET '.$editRoute.'\');
-		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRoute).'\')->isOK(), \'GET '.$deleteRoute.'\');';
+		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRoute).'\')->isOK(), \'GET '.$deleteRoute.'\');
+	}';
 			}
 		}
 	}
