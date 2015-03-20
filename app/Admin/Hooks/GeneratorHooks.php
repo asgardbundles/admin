@@ -40,13 +40,13 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			}
 
 			if(!isset($entity['messages']['modified']))
-				$entity['messages']['modified'] = $chain->getContainer()['translator']->trans(':label modified with success.', [':label'=>ucfirst($meta['label'])]);
+				$entity['messages']['modified'] = $chain->getContainer()['translator']->trans('admin.generator.modified', [':label'=>ucfirst($meta['label'])]);
 			if(!isset($entity['messages']['created']))
-				$entity['messages']['created'] = $chain->getContainer()['translator']->trans(':label created with success.', [':label'=>ucfirst($meta['label'])]);
+				$entity['messages']['created'] = $chain->getContainer()['translator']->trans('admin.generator.created', [':label'=>ucfirst($meta['label'])]);
 			if(!isset($entity['messages']['many_deleted']))
-				$entity['messages']['many_deleted'] = $chain->getContainer()['translator']->trans(':label deleted with success.', [':label'=>ucfirst($meta['label_plural'])]);
+				$entity['messages']['many_deleted'] = $chain->getContainer()['translator']->trans('admin.generator.deleted', [':label'=>ucfirst($meta['label_plural'])]);
 			if(!isset($entity['messages']['deleted']))
-				$entity['messages']['deleted'] = $chain->getContainer()['translator']->trans(':label deleted with success.', [':label'=>ucfirst($meta['label'])]);
+				$entity['messages']['deleted'] = $chain->getContainer()['translator']->trans('admin.generator.deletedPlural', [':label'=>ucfirst($meta['label'])]);
 
 			$generator->processFile(__DIR__.'/../generator/_EntityAdminController.php', $dst.'Controllers/'.ucfirst($meta['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$generator->processFile(__DIR__.'/../generator/html/index.php', $dst.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
@@ -62,20 +62,32 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 				$routes = $chain->getContainer()['controllersAnnotationReader']->fetchRoutes($class);
 				$chain->getContainer()['resolver']->addRoutes($routes);
 
-				$indexRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'index'])->getRoute();
-				$newRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'new'])->getRoute();
-				$editRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'edit'])->getRoute();
-				$deleteRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'delete'])->getRoute();
-				$bundle['generatedTests'][] = '
+				$indexRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'index']);
+				$indexRouteStr = $indexRoute->getRoute();
+				$newRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'new']);
+				$newRouteStr = $newRoute->getRoute();
+				$editRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'edit']);
+				$editRouteStr = $editRoute->getRoute();
+				$deleteRoute = $chain->getContainer()['resolver']->getRouteFor([$class, 'delete']);
+				$deleteRouteStr = $deleteRoute->getRoute();
+				$bundle['generatedTests'][] = [
+					'test' => '
 	public function testAdmin'.ucfirst($name).'() {
 		$browser = $this->createBrowser();
 		$browser->getSession()->set(\'admin_id\', 1);
-		$this->assertTrue($browser->get(\''.$indexRoute.'\')->isOK(), \'GET '.$indexRoute.'\');
-		$this->assertTrue($browser->get(\''.$newRoute.'\')->isOK(), \'GET '.$newRoute.'\');
+		$this->assertTrue($browser->get(\''.$indexRouteStr.'\')->isOK(), \'GET '.$indexRouteStr.'\');
+		$this->assertTrue($browser->get(\''.$newRouteStr.'\')->isOK(), \'GET '.$newRouteStr.'\');
 		\\'.$entityClass.'::create([\'id\'=>50, ]);
-		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRoute).'\')->isOK(), \'GET '.$editRoute.'\');
-		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRoute).'\')->isOK(), \'GET '.$deleteRoute.'\');
-	}';
+		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRouteStr).'\')->isOK(), \'GET '.$editRouteStr.'\');
+		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRouteStr).'\')->isOK(), \'GET '.$deleteRouteStr.'\');
+	}',
+					'routes' => [
+						$route,
+						$route,
+						$route,
+						$route,
+					]
+				];
 			}
 		}
 	}

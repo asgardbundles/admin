@@ -1,4 +1,4 @@
 admin.generator.modified: :label modified with success.
-admin.generator.created:: :label created with success.
+admin.generator.created: :label created with success.
 admin.generator.deleted: :label deleted with success.
 admin.generator.deletedPlural: :label deleted with success.

@@ -1,0 +1,16 @@
+Admin\Controllers\AdministratorAdminController:index
+Admin\Controllers\AdministratorAdminController:edit
+Admin\Controllers\AdministratorAdminController:editLocale
+Admin\Controllers\AdministratorAdminController:new
+Admin\Controllers\AdministratorAdminController:delete
+Admin\Controllers\DefaultAdminController:index
+Admin\Controllers\PreferencesAdminController:edit
+Admin\Controllers\LoginController:login
+Admin\Controllers\LoginController:logout
+Admin\Controllers\LoginController:forgotten
+Admin\Controllers\LoginController:confirm
+Admin\Controllers\FilesController:add
+Admin\Controllers\FilesController:download
+Admin\Controllers\FilesController:delete
+Admin\Controllers\FilesController:downloadOne
+Admin\Controllers\FilesController:deleteOne
