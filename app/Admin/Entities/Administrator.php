@@ -12,7 +12,9 @@ class Administrator extends \Asgard\Entity\Entity {
 			],
 			'email' => 'email',
 			'password' => [
-				'setHook' => ['Admin\Entities\Administrator', 'hash'],
+				'hooks' => [
+					'set' => ['Admin\Entities\Administrator', 'hash'],
+				],
 				'form' => [
 					'hidden' => true,
 				],
