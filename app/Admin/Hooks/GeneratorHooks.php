@@ -156,10 +156,6 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 			$meta['label_plural'] = strtolower($meta['plural']);
 		else
 			$meta['label_plural'] = $meta['label'].'s';
-		if(!isset($meta['name_field'])) {
-			$properties = array_keys($bundle['entities'][$name]['properties']);
-			$meta['name_field'] = $properties[0];
-		}
 
 		return $meta;
 	}
