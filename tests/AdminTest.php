@@ -6,8 +6,7 @@ class AdminTest extends \Asgard\Http\Test {
 		$this->assertEquals(401, $browser->get('admin')->getCode(), 'GET admin'); #not allowed
 
 		$browser->get('admin/login'); #login
-		$formParser = new \Asgard\Http\Browser\FormParser();
-		$formParser->parse($browser->getLast()->getContent(), '//*[@id="hld"]/div/div/div[2]/form');
+		$formParser = \Asgard\Http\Browser\FormParser::parse($browser->getLast()->getContent(), '//*[@id="hld"]/div/div/div[2]/form');
 		$formParser->get('username')->setValue('admin');
 		$formParser->get('password')->setValue('admin');
 		$this->assertTrue($browser->post('admin/login', $formParser->values())->isOK(), 'GET admin/login'); #login

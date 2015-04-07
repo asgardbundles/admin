@@ -22,8 +22,8 @@ class LoginController extends \Asgard\Http\Controller {
 			if($administrator = $auth->attempt($username, $password)) {
 				if($request->post['remember'] == 'yes')
 					$auth->remember($username, $password);
-				if($request->session->has('redirect_to'))
-					return $this->response->redirect($request->session->get('redirect_to'), false);
+				if($this->container['session']->has('redirect_to'))
+					return $this->response->redirect($this->container['session']->get('redirect_to'), false);
 				else
 					return $this->response->redirect('admin');
 			}

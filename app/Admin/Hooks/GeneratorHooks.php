@@ -82,10 +82,10 @@ class GeneratorHooks extends \Asgard\Hook\HookContainer {
 		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRouteStr).'\')->isOK(), \'GET '.$deleteRouteStr.'\');
 	}',
 					'routes' => [
-						$route,
-						$route,
-						$route,
-						$route,
+						$indexRoute,
+						$newRoute,
+						$editRoute,
+						$deleteRoute,
 					]
 				];
 			}
