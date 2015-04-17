@@ -41,6 +41,9 @@ class Bundle extends \Asgard\Core\BundleLoader {
 	public function run(\Asgard\Container\ContainerInterface $container) {
 		parent::run($container);
 
+		if($container->has('console'))
+			$container['generator']->addGenerator(new AdminGenerator($container['resolver'], $container['translator'], $container['testBuilder']));
+
 		$container['hooks']->hook('Asgard.Http.Start', function($chain, $request) {
 			$chain->getContainer()['adminMenu']->add([
 				'label'  => __('Configuration'),
