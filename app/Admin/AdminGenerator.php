@@ -4,11 +4,13 @@ namespace Admin;
 class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 	protected $resolver;
 	protected $translator;
+	protected $controllersAnnotationReader;
 	protected $testBuilder;
 
-	public function __construct(\Asgard\Http\ResolverInterface $resolver, \Symfony\Component\Translation\TranslatorInterface $translator, \Asgard\Tester\TestBuilderInterface $testBuilder) {
+	public function __construct(\Asgard\Http\ResolverInterface $resolver, \Symfony\Component\Translation\TranslatorInterface $translator, \Asgard\Http\AnnotationReader $controllersAnnotationReader, \Asgard\Tester\TestBuilderInterface $testBuilder) {
 		$this->resolver = $resolver;
 		$this->translator = $translator;
+		$this->controllersAnnotationReader = $controllersAnnotationReader;
 		$this->testBuilder = $testBuilder;
 	}
 
@@ -68,9 +70,9 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 				$this->engine->processFile(__DIR__.'/generator/web/day_wysiwyg.css.php', $root.'web/'.$meta['name'].'/day_wysiwyg.css', ['bundle'=>$bundle]);
 			}
 
-			if(isset($bundle['test']) && $bundle['test']) {
+			if(isset($bundle['tests']) && $bundle['tests']) {
 				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
-				$routes = $chain->getContainer()['controllersAnnotationReader']->fetchRoutes($class);
+				$routes = $this->controllersAnnotationReader->fetchRoutes($class);
 				$this->resolver->addRoutes($routes);
 
 				$indexRoute = $this->resolver->getRouteFor([$class, 'index']);
@@ -104,48 +106,6 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 
 		$this->testBuilder->buildTests($tests, $bundle['name']);
 	}
-
-// 	public function postGenerate(array $bundle, $root, $bundlePath) {
-// 		if(!isset($bundle['admin']['entities']))
-// 			return;
-
-// 		if(!isset($bundle['tests']) || $bundle['tests'] === false)
-// 			return;
-
-// 		$tests = [];
-// 		foreach($bundle['admin']['entities'] as $entityName=>$entity) {
-// 			$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
-// 			$routes = $chain->getContainer()['controllersAnnotationReader']->fetchRoutes($class);
-// 			$this->resolver->addRoutes($routes);
-
-// 			$indexRoute = $this->resolver->getRouteFor([$class, 'index']);
-// 			$indexRouteStr = $indexRoute->getRoute();
-// 			$newRoute = $this->resolver->getRouteFor([$class, 'new']);
-// 			$newRouteStr = $newRoute->getRoute();
-// 			$editRoute = $this->resolver->getRouteFor([$class, 'edit']);
-// 			$editRouteStr = $editRoute->getRoute();
-// 			$deleteRoute = $this->resolver->getRouteFor([$class, 'delete']);
-// 			$deleteRouteStr = $deleteRoute->getRoute();
-// 			$tests[] = [
-// 				'test' => '
-// public function testAdmin'.ucfirst($entityName).'() {
-// 	$browser = $this->createBrowser();
-// 	$browser->getSession()->set(\'admin_id\', 1);
-// 	$this->assertTrue($browser->get(\''.$indexRouteStr.'\')->isOK(), \'GET '.$indexRouteStr.'\');
-// 	$this->assertTrue($browser->get(\''.$newRouteStr.'\')->isOK(), \'GET '.$newRouteStr.'\');
-// 	\\'.$entityClass.'::create([\'id\'=>50, ]);
-// 	$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRouteStr).'\')->isOK(), \'GET '.$editRouteStr.'\');
-// 	$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRouteStr).'\')->isOK(), \'GET '.$deleteRouteStr.'\');
-// }',
-// 				'routes' => [
-// 					$indexRoute,
-// 					$newRoute,
-// 					$editRoute,
-// 					$deleteRoute,
-// 				]
-// 			];
-// 		}
-// 	}
 
 	protected static function getMeta($bundle, $name) {
 		if(isset($bundle['entities'][$name]['meta']))
