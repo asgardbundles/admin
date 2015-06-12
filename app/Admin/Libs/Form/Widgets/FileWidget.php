@@ -17,7 +17,7 @@ class FileWidget extends \Asgard\Form\Widget {
 		$container = \Asgard\Container\Container::singleton();
 		$entity = $this->field->getParent()->getEntity();
 		$name = $this->field->getName();
-		$optional = !$entity->property($name)->required();
+		$optional = !$entity->getDefinition()->property($name)->required();
 
 		if($entity->isOld() && $entity->$name && $entity->$name->exists()) {
 			$file = $entity->$name;

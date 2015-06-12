@@ -3,8 +3,8 @@ namespace Admin\Controllers;
 
 class LoginController extends \Asgard\Http\Controller {
 	public function before(\Asgard\Http\Request $request) {
-		$this->layout = false;
-		$this->htmlLayout = false;
+		$this->set('layout', false);
+		$this->set('htmlLayout', false);
 	}
 	
 	/**
