@@ -17,6 +17,6 @@ class AdminEntityForm extends \Asgard\Entityform\EntityForm {
 	protected function isRequired($name, $options) {
 		if(isset($options['validation']['required']) && $options['validation']['required'])
 			return true;
-		return $this->getEntity()->hasProperty($name) && $this->getEntity()->property($name)->required();
+		return $this->getEntity()->getDefinition()->hasProperty($name) && $this->getEntity()->getDefinition()->property($name)->required();
 	}
 }
