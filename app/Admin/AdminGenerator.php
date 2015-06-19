@@ -140,4 +140,34 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 
 		return $meta;
 	}
+
+	public function fragmentBundle($bundle, $params=[]) {
+		foreach($bundle['entities'] as $name=>$entity) {
+			if(!array_key_exists($name, $bundle['admin']['entities']))
+				continue;
+
+			$bundleName = $bundle['name'];
+			$namespace = $bundle['namespace'];
+			$meta = static::getMeta($bundle, $name);
+			$labelPlural = ucfirst($meta['label_plural']);
+			$entityName = ucfirst($meta['name']);
+			$entityPlural = $meta['plural'];
+
+			echo "
+		\$container['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
+				\$chain->getContainer()['adminMenu']->add([
+				'label' => __('".$labelPlural."'),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName."AdminController', 'index']),
+			], '0.');
+			\$chain->getContainer()['adminMenu']->addHome([
+				'img' => \$chain->getContainer()['httpKernel']->getRequest()->url->to('bundles/".$bundleName."/".$entityPlural.".svg'),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName,"AdminController', 'index']),
+				'title' => __('".$labelPlural."'),
+				'description' => __('')
+			]);
+		});
+		\$container['adminManager']->setAlias('".$meta['plural']."', '".$namespace."\Entities\\".$entityName."');
+";
+		}
+	}
 }
