@@ -27,6 +27,7 @@ class Bundle extends \Asgard\Core\BundleLoader {
 			$widgetManager = clone $container['widgetManager'];
 			$EntityFieldSolver = new \Asgard\Entityform\EntityFieldSolver([$container['EntityFieldSolver'], $container['adminEntityFieldSolver']]);
 			$form = new \Admin\Libs\Form\AdminEntityForm($entity, $controller, $params, $widgetManager, $EntityFieldSolver, $container['dataMapper']);
+			$form->setValidatorFactory($container['validator_factory']);
 			$form->setTranslator($container['translator']);
 			return $form;
 		});

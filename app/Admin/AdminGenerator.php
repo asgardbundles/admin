@@ -92,7 +92,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 		$this->assertTrue($browser->get(\''.$newRouteStr.'\')->isOK(), \'GET '.$newRouteStr.'\');
 		\\'.$entityClass.'::create([\'id\'=>50, ]);
 		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $editRouteStr).'\')->isOK(), \'GET '.$editRouteStr.'\');
-		$this->assertTrue($browser->get(\''.str_replace(':id', 50, $deleteRouteStr).'\')->isOK(), \'GET '.$deleteRouteStr.'\');
+		$this->assertEquals(302, $browser->get(\''.str_replace(':id', 50, $deleteRouteStr).'\')->getCode(), \'GET '.$deleteRouteStr.'\');
 	}',
 					'routes' => [
 						$indexRoute,
