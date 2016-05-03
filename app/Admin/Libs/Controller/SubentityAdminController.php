@@ -8,7 +8,7 @@ abstract class SubentityAdminController extends EntityAdminController {
 		$parentClass = $this->parentEntity;
 		$this->parent = $parentClass::load($this->request['parent_id']);
 		if(!$this->parent)
-			throw new \Asgard\Core\Exceptions\NotFoundException;
+			throw new \Asgard\Core\Exception\NotFoundException;
 		parent::before($request);
 	}
 	
@@ -21,7 +21,7 @@ abstract class SubentityAdminController extends EntityAdminController {
 		$_plural = $this->_plural;
 		
 		$this->searchForm = new \Asgard\Form\Form(null, ['method'=>'get']);
-		$this->searchForm->search = new \Asgard\Form\Fields\TextField;
+		$this->searchForm->search = new \Asgard\Form\Field\TextField;
 	
 		//submitted
 		$controller = $this;

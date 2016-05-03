@@ -95,7 +95,7 @@ abstract class EntityAdminController extends AdminParentController {
 		
 		#Search
 		$this->searchForm = $this->container->make('form', ['search', ['method'=>'get'], $request]);
-		$this->searchForm['search'] = new \Asgard\Form\Fields\TextField;
+		$this->searchForm['search'] = new \Asgard\Form\Field\TextField;
 
 		$conditions = [];
 		if($this->searchForm->sent() && $term=$this->searchForm['search']->value()) {

@@ -15,11 +15,11 @@ class PreferencesAdminController extends \Admin\Libs\Controller\AdminParentContr
 		$form = $this->container->make('adminSimpleForm', [$this, 'preferences']);
 		
 		$data = $this->container['data'];
-		$form['email'] = new \Asgard\Form\Fields\TextField([
+		$form['email'] = new \Asgard\Form\Field\TextField([
 			'default'    => $data->get('email'),
 			'validation' => ['email']
 		]);
-		$form['head_script'] = new \Asgard\Form\Fields\TextField(['default'=>$data->get('head_script')]);
+		$form['head_script'] = new \Asgard\Form\Field\TextField(['default'=>$data->get('head_script')]);
 		$form->setSaveCallback(function($chain, $form) use($data) {
 			$data->set('email', $form['email']->value());
 			$data->set('head_script', $form['head_script']->value());

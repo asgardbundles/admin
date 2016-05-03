@@ -15,6 +15,9 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 	}
 
 	public function preGenerate(array &$bundle) {
+		if(!isset($bundle['admin']['entities']))
+			return;
+
 		foreach($bundle['admin']['entities'] as $entityName=>&$entity)
 			$entity['meta'] = $this->getMeta($bundle, $entityName);
 	}
@@ -143,7 +146,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 
 	public function fragmentBundle($bundle, $params=[]) {
 		foreach($bundle['entities'] as $name=>$entity) {
-			if(!array_key_exists($name, $bundle['admin']['entities']))
+			if(!isset($bundle['admin']['entities']) || !array_key_exists($name, $bundle['admin']['entities']))
 				continue;
 
 			$bundleName = $bundle['name'];

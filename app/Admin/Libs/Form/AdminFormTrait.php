@@ -8,27 +8,27 @@ trait AdminFormTrait {
 		$this->controller = $controller;
 
 		$this->widgetManager = $widgetManager;
-		$this->widgetManager->addNamespace('Admin\Libs\Form\Widgets');
+		$this->widgetManager->addNamespace('Admin\Libs\Form\Widget');
 
 		$this->widgetManager->setWidget('text', function(\Asgard\Form\Field $field, array $options) {
 			$options['attrs']['class'] = 'text big';
-			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\TextWidget', $field->name(), $field->value(), $options);
+			return $field->getTopForm()->getWidget('Asgard\Form\Widget\TextWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetManager->setWidget('textarea', function(\Asgard\Form\Field $field, array $options) {
 			$options['attrs']['class'] = 'text big';
-			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\TextareaWidget', $field->name(), $field->value(), $options);
+			return $field->getTopForm()->getWidget('Asgard\Form\Widget\TextareaWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetManager->setWidget('password', function(\Asgard\Form\Field $field, array $options) {
 			$options['attrs']['class'] = 'text big';
-			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\PasswordWidget', $field->name(), $field->value(), $options);
+			return $field->getTopForm()->getWidget('Asgard\Form\Widget\PasswordWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetManager->setWidget('select', function(\Asgard\Form\Field $field, array $options) {
 			$options['attrs']['class'] = 'styled';
-			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\SelectWidget', $field->name(), $field->value(), $options);
+			return $field->getTopForm()->getWidget('Asgard\Form\Widget\SelectWidget', $field->name(), $field->value(), $options);
 		});
 		$this->widgetManager->setWidget('date', function(\Asgard\Form\Field $field, array $options) {
 			$options['attrs']['class'] = 'text big';
-			return $field->getTopForm()->getWidget('Asgard\Form\Widgets\DateWidget', $field->name(), $field->value(), $options);
+			return $field->getTopForm()->getWidget('Asgard\Form\Widget\DateWidget', $field->name(), $field->value(), $options);
 		});
 	}
 	
@@ -100,8 +100,8 @@ trait AdminFormTrait {
 		$r = '<hr/>';
 		if($submits === null)
 			$r .= '<p>
-				'.$this->getWidget('Asgard\Form\Widgets\SubmitWidget', 'stay', __('Save'), ['attrs' => ['class' => 'submit long']])->render().'
-				'.$this->getWidget('Asgard\Form\Widgets\SubmitWidget', 'send', __('Save & Leave'), ['attrs' => ['class' => 'submit long']])->render().'
+				'.$this->getWidget('Asgard\Form\Widget\SubmitWidget', 'stay', __('Save'), ['attrs' => ['class' => 'submit long']])->render().'
+				'.$this->getWidget('Asgard\Form\Widget\SubmitWidget', 'send', __('Save & Leave'), ['attrs' => ['class' => 'submit long']])->render().'
 			</p>';
 		else
 			$r .= $submits;

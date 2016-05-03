@@ -48,7 +48,7 @@ class LoginController extends \Asgard\Http\Controller {
 	 */
 	public function forgottenAction($request) {
 		$this->form = $this->container->make('form', ['forgotten', [], $this->request]);
-		$this->form['username'] = new \Asgard\Form\Fields\TextField(['required'=>true]);
+		$this->form['username'] = new \Asgard\Form\Field\TextField(['required'=>true]);
 
 		$error = null;
 		if($request['code']) {
