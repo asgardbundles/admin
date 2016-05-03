@@ -1,7 +1,7 @@
 <?php
-namespace Admin\Controllers;
+namespace Admin\Controller;
 
-class LoginController extends \Asgard\Http\Controller {
+class Login extends \Asgard\Http\Controller {
 	public function before(\Asgard\Http\Request $request) {
 		$this->set('layout', false);
 		$this->set('htmlLayout', false);
@@ -53,7 +53,7 @@ class LoginController extends \Asgard\Http\Controller {
 		$error = null;
 		if($request['code']) {
 			$hash = $request['code'];
-			$admin = \Admin\Entities\Administrator::where(['SHA1(CONCAT(username, \'-\', password))' => $hash])->first();
+			$admin = \Admin\Entity\Administrator::where(['SHA1(CONCAT(username, \'-\', password))' => $hash])->first();
 			if(!$admin)
 				$error = __('Invalid code.');
 			else {
@@ -71,7 +71,7 @@ class LoginController extends \Asgard\Http\Controller {
 		elseif($this->form->sent()) {
 			if($this->form->isValid()) {
 				$user = $this->form['username']->value();
-				if($admin = \Admin\Entities\Administrator::loadBy('username', $user)) {
+				if($admin = \Admin\Entity\Administrator::loadBy('username', $user)) {
 					if($admin->email) {
 						$link = $this->url_for('confirm', ['code'=>sha1($admin->email.'-'.$admin->password)]);
 						$data = $this->container['data'];

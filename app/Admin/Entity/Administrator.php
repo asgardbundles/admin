@@ -1,5 +1,5 @@
 <?php
-namespace Admin\Entities;
+namespace Admin\Entity;
 
 class Administrator extends \Asgard\Entity\Entity {
 	public static function definition(\Asgard\Entity\Definition $definition) {
@@ -13,7 +13,7 @@ class Administrator extends \Asgard\Entity\Entity {
 			'email' => 'email',
 			'password' => [
 				'hooks' => [
-					'set' => ['Admin\Entities\Administrator', 'hash'],
+					'set' => ['Admin\Entity\Administrator', 'hash'],
 				],
 				'form' => [
 					'hidden' => true,

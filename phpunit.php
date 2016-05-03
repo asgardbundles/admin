@@ -36,7 +36,7 @@ $container['config']->set('database', [
 $container['translator'] = new \Symfony\Component\Translation\Translator('en', new \Symfony\Component\Translation\MessageSelector());
 
 #set the EntitiesManager static instance for activerecord-like entities (e.g. new Article or Article::find())
-\Asgard\Entity\EntitiesManager::setInstance($container['entitiesManager']);
+\Asgard\Entity\EntityManager::setInstance($container['entitiesManager']);
 
 #Database
 $container['schema']->dropAll();

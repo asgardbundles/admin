@@ -64,7 +64,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 			if(!isset($entity['messages']['deleted']))
 				$entity['messages']['deleted'] = $this->translator->trans('admin.generator.deletedPlural', [':label'=>ucfirst($meta['label'])]);
 
-			$this->engine->processFile(__DIR__.'/generator/_EntityAdminController.php', $bundlePath.'Controllers/'.ucfirst($meta['name']).'AdminController.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$this->engine->processFile(__DIR__.'/generator/_EntityAdminController.php', $bundlePath.'Controllers/'.ucfirst($meta['name']).'Admin.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$this->engine->processFile(__DIR__.'/generator/html/index.php', $bundlePath.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$this->engine->processFile(__DIR__.'/generator/html/form.php', $bundlePath.'html/'.strtolower($meta['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 
@@ -74,7 +74,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 			}
 
 			if(isset($bundle['tests']) && $bundle['tests']) {
-				$class = '\\'.ucfirst($bundle['namespace']).'\\Controllers\\'.ucfirst($meta['name']).'AdminController';
+				$class = '\\'.ucfirst($bundle['namespace']).'\\Controller\\'.ucfirst($meta['name']).'Admin';
 				$routes = $this->controllersAnnotationReader->fetchRoutes($class);
 				$this->resolver->addRoutes($routes);
 
@@ -124,7 +124,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 			$meta['name'] = strtolower($name);
 
 		if(!isset($meta['entityClass']))
-			$meta['entityClass'] = $bundle['namespace'].'\Entities\\'.ucfirst($name);
+			$meta['entityClass'] = $bundle['namespace'].'\Entity\\'.ucfirst($name);
 
 		if(isset($meta['plural']))
 			$meta['plural'] = strtolower($meta['plural']);
@@ -160,16 +160,16 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 		\$container['hooks']->hook('Asgard.Http.Start', function(\$chain, \$request) {
 				\$chain->getContainer()['adminMenu']->add([
 				'label' => __('".$labelPlural."'),
-				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName."AdminController', 'index']),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controller\\".$entityName."Admin', 'index']),
 			], '0.');
 			\$chain->getContainer()['adminMenu']->addHome([
 				'img' => \$chain->getContainer()['httpKernel']->getRequest()->url->to('bundles/".$bundleName."/".$entityPlural.".svg'),
-				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controllers\\".$entityName,"AdminController', 'index']),
+				'link' => \$chain->getContainer()['resolver']->url(['".$namespace."\Controller\\".$entityName,"Admin', 'index']),
 				'title' => __('".$labelPlural."'),
 				'description' => __('')
 			]);
 		});
-		\$container['adminManager']->setAlias('".$meta['plural']."', '".$namespace."\Entities\\".$entityName."');
+		\$container['adminManager']->setAlias('".$meta['plural']."', '".$namespace."\Entity\\".$entityName."');
 ";
 		}
 	}

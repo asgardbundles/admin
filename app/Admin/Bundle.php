@@ -50,8 +50,8 @@ class Bundle extends \Asgard\Core\BundleLoader {
 				'label'  => __('Configuration'),
 				'link'   => '#',
 				'childs' => [
-					['label' => __('Preferences'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controllers\PreferencesAdminController', 'edit'])],
-					['label' => __('Administrators'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controllers\AdministratorAdminController', 'index'])],
+					['label' => __('Preferences'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controller\PreferencesAdmin', 'edit'])],
+					['label' => __('Administrators'), 'link' => $chain->getContainer()['resolver']->url(['Admin\Controller\AdministratorAdmin', 'index'])],
 				]
 			], 10);
 

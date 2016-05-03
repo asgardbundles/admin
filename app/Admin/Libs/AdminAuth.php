@@ -22,7 +22,7 @@ class AdminAuth implements \Asgard\Auth\IAuth {
 	}
 
 	public function attempt($user, $password) {
-		$administrator = \Admin\Entities\Administrator::where(['username' => $user, 'password' => \Admin\Entities\Administrator::hash($password)])->first();
+		$administrator = \Admin\Entity\Administrator::where(['username' => $user, 'password' => \Admin\Entity\Administrator::hash($password)])->first();
 		if(!$administrator)
 			$administrator = $this->attemptRemember($user, $password);
 		
@@ -35,11 +35,11 @@ class AdminAuth implements \Asgard\Auth\IAuth {
 
 	public function attemptRemember() {
 		$remember = $this->container['cookies']['asgard_remember'];
-		return \Admin\Entities\Administrator::where(['MD5(CONCAT(username, \'-\', password))' => $remember])->first();
+		return \Admin\Entity\Administrator::where(['MD5(CONCAT(username, \'-\', password))' => $remember])->first();
 	}
 
 	public function remember($user, $password) {
-		$this->container['cookies']['asgard_remember'] = md5($user.'-'.\Admin\Entities\Administrator::hash($password));
+		$this->container['cookies']['asgard_remember'] = md5($user.'-'.\Admin\Entity\Administrator::hash($password));
 	}
 
 	public function connect($id) {
@@ -51,7 +51,7 @@ class AdminAuth implements \Asgard\Auth\IAuth {
 	}
 	
 	public function user() {
-		return \Admin\Entities\Administrator::load($this->container['session']['admin_id']);
+		return \Admin\Entity\Administrator::load($this->container['session']['admin_id']);
 	}
 
 	protected function getRequest() {

@@ -1,10 +1,10 @@
 <?php
-namespace Admin\Controllers;
+namespace Admin\Controller;
 
 /**
  * @Prefix("admin/preferences")
  */
-class PreferencesAdminController extends \Admin\Libs\Controller\AdminParentController {
+class PreferencesAdmin extends \Admin\Libs\Controller\AdminParentController {
 	public function __construct() {
 		$this->_messages = [
 			'modified'			=>	__('Preferences modified with success.'),

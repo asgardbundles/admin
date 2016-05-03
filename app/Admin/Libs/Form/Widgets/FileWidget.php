@@ -24,11 +24,11 @@ class FileWidget extends \Asgard\Form\Widget {
 			if(!$file->src())
 				return $str;
 			$str .= '<p>
-			<a href="'.$container['resolver']->url(['Admin\Controllers\FilesController', 'download'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Download').'</a>
+			<a href="'.$container['resolver']->url(['Admin\Controller\Files', 'download'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Download').'</a>
 			</p>';
 			
 			if($optional)
-				$str .= '<a href="'.$container['resolver']->url(['Admin\Controllers\FilesController', 'delete'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Delete').'</a><br/><br/>';
+				$str .= '<a href="'.$container['resolver']->url(['Admin\Controller\Files', 'delete'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name]).'">'. __('Delete').'</a><br/><br/>';
 		}
 
 		return $str;

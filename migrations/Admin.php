@@ -22,7 +22,7 @@ class Admin extends \Asgard\Migration\DBMigration {
 			$table->setPrimaryKey(['id']);
 		});
 
-		\Admin\Entities\Administrator::create(array('username'=>'admin', 'password'=>'admin'));
+		\Admin\Entity\Administrator::create(array('username'=>'admin', 'password'=>'admin'));
 	}
 	
 	public function down() {

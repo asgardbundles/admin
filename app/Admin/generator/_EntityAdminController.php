@@ -1,10 +1,10 @@
 <%
-namespace <?=ucfirst($bundle['namespace']) ?>\Controllers;
+namespace <?=ucfirst($bundle['namespace']) ?>\Controller;
 
 /**
  * @Prefix("admin/<?=$entity['meta']['plural'] ?>")
  */
-class <?=ucfirst($entity['meta']['name']) ?>AdminController extends \Admin\Libs\Controller\EntityAdminController {
+class <?=ucfirst($entity['meta']['name']) ?>Admin extends \Admin\Libs\Controller\EntityAdminController {
 	protected $_entity = '<?=$entity['meta']['entityClass'] ?>';
 	protected $_plural = '<?=$entity['meta']['plural'] ?>';
 

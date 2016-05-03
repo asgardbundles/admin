@@ -24,7 +24,7 @@ class AdminTest extends \Asgard\Http\Test {
 		$this->assertTrue($browser->get('admin/administrators/1/edit')->isOK(), 'GET admin/administrators/:id/edit');
 		$this->assertTrue($browser->get('admin/administrators/new')->isOK(), 'GET admin/administrators/new');
 
-		\Admin\Entities\Administrator::create(['id'=>2, 'username'=>'bob', 'password'=>'bob']);
+		\Admin\Entity\Administrator::create(['id'=>2, 'username'=>'bob', 'password'=>'bob']);
 		$this->assertEquals(302, $browser->get('admin/administrators/2/delete')->getCode(), 'GET admin/administrators/:id/delete');
 	}
 }

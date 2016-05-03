@@ -1,7 +1,7 @@
 <?php
-namespace Admin\Controllers;
+namespace Admin\Controller;
 
-class DefaultAdminController extends \Admin\Libs\Controller\AdminParentController {
+class DefaultAdmin extends \Admin\Libs\Controller\AdminParentController {
 	/**
 	 * @Route("admin")
 	 */

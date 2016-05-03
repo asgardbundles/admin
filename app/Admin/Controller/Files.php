@@ -1,10 +1,10 @@
 <?php
-namespace Admin\Controllers;
+namespace Admin\Controller;
 
 /**
  * @Prefix("admin/files/:entityAlias/:id/:file")
  */
-class FilesController extends \Admin\Libs\Controller\AdminParentController {
+class Files extends \Admin\Libs\Controller\AdminParentController {
 	public function before(\Asgard\Http\Request $request) {
 		$this->layout = false;
 		$entityAlias = $request['entityAlias'];

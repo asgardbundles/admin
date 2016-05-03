@@ -1,5 +1,5 @@
 <?php
-namespace Admin\Hooks;
+namespace Admin\Hook;
 
 class NotfoundHooks extends \Asgard\Hook\HookContainer {
 	/**
@@ -8,7 +8,7 @@ class NotfoundHooks extends \Asgard\Hook\HookContainer {
 	public static function start($chain, $request) {
 		if(preg_match('/^admin/', $request->url->get())) {
 			$chain->getContainer()['hooks']->preHook('Asgard.Http.Exception.Asgard\Http\Exception\NotFoundException', function($chain, $e, &$response, $request) {
-				$response = $chain->getContainer()['httpKernel']->runController('Admin\Controllers\DefaultAdminController', '_404', $request)->setCode(404);
+				$response = $chain->getContainer()['httpKernel']->runController('Admin\Controller\DefaultAdmin', '_404', $request)->setCode(404);
 				$chain->stop();
 			});
 		}

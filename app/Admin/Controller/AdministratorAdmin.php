@@ -1,11 +1,11 @@
 <?php
-namespace Admin\Controllers;
+namespace Admin\Controller;
 
 /**
  * @Prefix("admin/administrators")
  */
-class AdministratorAdminController extends \Admin\Libs\Controller\EntityAdminController {
-	protected $_entity = 'Admin\Entities\Administrator';
+class AdministratorAdmin extends \Admin\Libs\Controller\EntityAdminController {
+	protected $_entity = 'Admin\Entity\Administrator';
 	
 	public function __construct() {
 		$this->_messages = [

@@ -24,7 +24,7 @@ class FilesWidget extends \Asgard\Form\Widget {
 		$uid = \Asgard\Common\Tools::randstr(10);
 		$container['html']->codeJS("
 			$(function(){
-				multiple_upload('$uid', '".$container['resolver']->url_for(['Admin\Controllers\FilesController', 'add'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name])."');
+				multiple_upload('$uid', '".$container['resolver']->url_for(['Admin\Controller\Files', 'add'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'file' => $name])."');
 			});");
 		$container['html']->includeJS('bundles/admin/uploadify/jquery.uploadify.min.js');
 		$container['html']->includeJS('bundles/admin/js/uploadify.php');
@@ -54,8 +54,8 @@ class FilesWidget extends \Asgard\Form\Widget {
 					foreach($entity->$name as $file):
 					?>
 					<li>
-						<a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'downloadOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Download')?></a>
-						 | <a href="<?=$container['resolver']->url_for(['Admin\Controllers\FilesController', 'deleteOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete')?></a>
+						<a href="<?=$container['resolver']->url_for(['Admin\Controller\Files', 'downloadOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Download')?></a>
+						 | <a href="<?=$container['resolver']->url_for(['Admin\Controller\Files', 'deleteOne'], ['entityAlias' => $container['adminManager']->getAlias(get_class($entity)), 'id' => $entity->id, 'pos' => $i, 'file' => $name]) ?>"><?=__('Delete')?></a>
 					</li>
 					<?php
 					$i++;
