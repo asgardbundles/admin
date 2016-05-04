@@ -64,7 +64,7 @@ class AdminGenerator extends \Asgard\Generator\AbstractGenerator {
 			if(!isset($entity['messages']['deleted']))
 				$entity['messages']['deleted'] = $this->translator->trans('admin.generator.deletedPlural', [':label'=>ucfirst($meta['label'])]);
 
-			$this->engine->processFile(__DIR__.'/generator/_EntityAdminController.php', $bundlePath.'Controllers/'.ucfirst($meta['name']).'Admin.php', ['bundle'=>$bundle, 'entity'=>$entity]);
+			$this->engine->processFile(__DIR__.'/generator/_EntityAdminController.php', $bundlePath.'Controller/'.ucfirst($meta['name']).'Admin.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$this->engine->processFile(__DIR__.'/generator/html/index.php', $bundlePath.'html/'.strtolower($meta['name']).'admin/index.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 			$this->engine->processFile(__DIR__.'/generator/html/form.php', $bundlePath.'html/'.strtolower($meta['name']).'admin/form.php', ['bundle'=>$bundle, 'entity'=>$entity]);
 
