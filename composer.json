@@ -1,14 +1,17 @@
 {
-	"name": "asgard/admin",
-	"license": "MIT",
-	"authors": [{
-		"name": "Michel Hognerud",
-		"email": "michel@hognerud.net"
-	}],
-	"require": {
-        "asgard/asgard": "0.*",
-        "asgard/auth": "0.*",
-		"asgard/imagecache": "0.*",
-		"asgard/data": "0.*"
-	}
+    "name": "asgard/admin",
+    "license": "MIT",
+    "authors": [{
+        "name": "Michel Hognerud",
+        "email": "michel@hognerud.net"
+    }],
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "require": {
+        "asgard/asgard": "~0.3.0",
+        "asgard/auth": "~0.3.0",
+        "asgard/imagecache": "~0.3.0",
+        "asgard/data": "~0.3.0"
+    }
 }
